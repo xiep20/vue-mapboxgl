@@ -9,6 +9,13 @@
         :layer-style="fillstyle"
         :data="geojsonurl"
       ></sm-geojson-layer>
+      <sm-animate-marker-layer
+        :features="pointFeatures"
+        type="rotatingTextBorder"
+        text-field="name"
+        :colors="['rgb(21, 209, 242)', 'rgba(21, 209, 242, 0.56)']"
+        :width="150"
+      ></sm-animate-marker-layer>
       <!-- <sm-echarts-layer :options="echartsOptions"></sm-echarts-layer> -->
     </sm-web-map>
     <cslayer></cslayer>
@@ -90,7 +97,7 @@ export default {
           visibility: "visible",
         }
       ),
-
+      pointFeatures: {},
       echartsOptions: {},
     };
   },
@@ -142,6 +149,11 @@ export default {
       this.mapm();
     },
     mapm() {
+      // var _this = this;
+      // _this.$http.get("data/hainan_point.json").then((data) => {
+      //   _this.pointFeatures = data;
+      // });
+
       window.map.on("click", "geojsonid", function (e) {
         var feature = e.features[0];
         window.map.setFilter("pointlayerhighlight", [

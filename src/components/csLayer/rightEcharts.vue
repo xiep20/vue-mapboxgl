@@ -2,11 +2,15 @@
   <div class="rightEcharts">
     <div class="page_2">
       <sm-border type="border9" class="common-border cb_3">
-        <div class="card_tit">[海口市]低保人口</div>
+        <div class="card_tit">
+          <span style="color: #ff0000">[{{ this.selname }}]</span>低保人口
+        </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
-        <div class="card_tit">[海口市]低保人口</div>
+        <div class="card_tit">
+          <span style="color: #ff0000">[{{ this.selname }}]</span>低保人口
+        </div>
         <sm-chart icon-class="" :options="s3ChartOptions"></sm-chart>
       </sm-border>
     </div>
@@ -244,6 +248,9 @@ export default {
       edata,
       ename,
       eyear,
+      chartGrid,
+      selnum: 0,
+      selname: ename[0],
 
       s2ChartOptions: {
         tooltip: {
@@ -331,11 +338,104 @@ export default {
   mounted() {
     document.getElementsByTagName("body")[0].style.background =
       "rgba(0, 0, 0, 0.9)";
+    this.timechange();
   },
   methods: {
     ...mapMutations({
       setMapEchartsOptions: "setMapEchartsOptions",
     }),
+    timechange() {
+      var _this = this;
+      setInterval(() => {
+        if (_this.selnum === 17) {
+          _this.selnum = 0;
+        } else {
+          _this.selnum = _this.selnum + 1;
+        }
+
+        _this.selname = _this.ename[_this.selnum];
+        _this.s2ChartOptions = {
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              // 坐标轴指示器，坐标轴触发有效
+              type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+            },
+          },
+          grid: _this.chartGrid,
+          xAxis: [
+            {
+              type: "category",
+              data: _this.eyear,
+              axisTick: {
+                alignWithLabel: true,
+              },
+            },
+          ],
+          yAxis: [
+            {
+              type: "value",
+            },
+          ],
+          series: [
+            {
+              name: _this.ename[0],
+              type: "bar",
+              barWidth: "60%",
+              data: _this.edata[0],
+            },
+          ],
+        };
+
+        _this.s3ChartOptions = {
+          tooltip: {
+            trigger: "item",
+          },
+          legend: {
+            top: "5%",
+            left: "center",
+          },
+          series: [
+            {
+              name: _this.ename[_this.selnum],
+              type: "pie",
+              radius: ["40%", "70%"],
+              avoidLabelOverlap: false,
+              itemStyle: {
+                borderRadius: 10,
+                borderColor: "#fff",
+                borderWidth: 2,
+              },
+              label: {
+                show: false,
+                position: "center",
+              },
+              emphasis: {
+                label: {
+                  show: true,
+                  fontSize: "40",
+                  fontWeight: "bold",
+                },
+              },
+              labelLine: {
+                show: false,
+              },
+              data: [
+                { value: _this.edata[_this.selnum][0], name: _this.eyear[0] },
+                { value: _this.edata[_this.selnum][1], name: _this.eyear[1] },
+                { value: _this.edata[_this.selnum][2], name: _this.eyear[2] },
+                { value: _this.edata[_this.selnum][3], name: _this.eyear[3] },
+                { value: _this.edata[_this.selnum][4], name: _this.eyear[4] },
+                { value: _this.edata[_this.selnum][5], name: _this.eyear[5] },
+                { value: _this.edata[_this.selnum][6], name: _this.eyear[6] },
+                { value: _this.edata[_this.selnum][7], name: _this.eyear[7] },
+                { value: _this.edata[_this.selnum][8], name: _this.eyear[8] },
+              ],
+            },
+          ],
+        };
+      }, 5000);
+    },
   },
 };
 </script>
