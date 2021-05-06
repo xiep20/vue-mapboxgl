@@ -1,31 +1,33 @@
 <template>
   <div class="MapIndex">
-    <sm-web-map :map-options="mapOptions" @load="mapload">
+    <div class="page_0">
+      <span>——————海南城市****分析</span>
+    </div>
+    <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
       <sm-geojson-layer
         layerId="geojsonid"
         :layer-style="fillstyle"
         :data="geojsonurl"
       ></sm-geojson-layer>
-      <sm-geojson-layer
-        layerId="pointlayerhighlight"
-        :layer-style="fillstyle2"
-        :data="geojsonurl"
-      ></sm-geojson-layer>
       <!-- <sm-echarts-layer :options="echartsOptions"></sm-echarts-layer> -->
     </sm-web-map>
     <cslayer></cslayer>
+    <rightEcharts></rightEcharts>
+    <timelist></timelist>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import cslayer from "./../components/csLayer/cslayer";
+import rightEcharts from "./../components/csLayer/rightEcharts";
+import timelist from "./../components/csLayer/timelist";
 export default {
   name: "mapindex",
   computed: {
     ...mapGetters(["getMapEchartsOptions"]),
   },
-  components: { cslayer },
+  components: { cslayer, rightEcharts, timelist },
   data() {
     return {
       mapOptions: {
@@ -64,34 +66,30 @@ export default {
           ],
         },
         interactive: false,
+        // scrollZoom: false,
+        // boxZoom: false,
+        // dragRotate: false,
+        // dragPan: false,
+        // keyboard: false,
+        // doubleClickZoom: false,
         center: [109.90008172422631, 19.26709562862932], // starting position
+        pitch: 40,
         zoom: 8, // starting zoom
       },
       geojsonurl: "data/hainan.json",
-      fillstyle: {
-        paint: {
-          "fill-color": ["get", "color"],
+      fillstyle: new this.VueiClient.commontypes.FillStyle(
+        {
           "fill-opacity": 0.8,
+          "fill-color": "#3fb1e3",
           "fill-translate": [0, 0],
           "fill-antialias": true,
           "fill-outline-color": "#3fb1e3",
           "fill-translate-anchor": "map",
         },
-        layout: {
+        {
           visibility: "visible",
-        },
-      },
-      fillstyle2: {
-        paint: {
-          "line-color": "#91ddff",
-          "fill-color": "#ff0000",
-          "fill-opacity": 0.6,
-        },
-        layout: {
-          visibility: "visible",
-        },
-        filter: ["in", "name", ""],
-      },
+        }
+      ),
 
       echartsOptions: {},
     };
@@ -111,16 +109,20 @@ export default {
       window.map = map.map;
       window.map.addLayer({
         id: "pointlayerhighlight",
-        type: "fill",
+        type: "fill-extrusion",
         source: {
           type: "geojson",
           data: "data/hainan.json",
         },
         layout: {},
         paint: {
-          "line-color": "#91ddff",
-          "fill-color": "#ff0000",
-          "fill-opacity": 0.6,
+          // "line-color": "#91ddff",
+          // "fill-color": "#ff0000",
+          // "fill-opacity": 0.6,
+          "fill-extrusion-color": "#5CB2D1",
+          "fill-extrusion-height": 5000,
+          "fill-extrusion-base": 0,
+          "fill-extrusion-opacity": 0.8,
         },
         filter: ["in", "name", ""],
       });
@@ -158,5 +160,17 @@ export default {
 .MapIndex {
   width: 100%;
   height: 100%;
+}
+
+.page_0 {
+  width: 100%;
+  height: 50px;
+  background: #38757b;
+  font-size: 24px;
+  padding: 0 20px;
+}
+.mapCon {
+  width: 100%;
+  height: calc(100% - 50px);
 }
 </style>

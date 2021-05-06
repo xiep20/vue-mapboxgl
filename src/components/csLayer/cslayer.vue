@@ -1,8 +1,5 @@
 <template>
   <div class="cslayer">
-    <div class="page_0">
-      <span>——————海南城市****分析</span>
-    </div>
     <div class="page_1">
       <sm-border type="border1" class="common-border cb_1">
         <div class="card_tit">城镇人口</div>
@@ -18,22 +15,6 @@
         <sm-chart icon-class="" :options="lineChartOptions"></sm-chart>
       </sm-border>
     </div>
-    <div class="page_2">
-      <sm-border type="border9" class="common-border cb_3">
-        <div class="card_tit">[海口市]低保人口</div>
-        <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
-      </sm-border>
-      <sm-border type="border1" class="common-border cb_4">
-        <div class="card_tit">[海口市]低保人口</div>
-        <sm-chart icon-class="" :options="s3ChartOptions"></sm-chart>
-      </sm-border>
-    </div>
-    <sm-time-line
-      :data="timelist"
-      autoPlay="true"
-      @timelinechanged="timelinechange"
-    >
-    </sm-time-line>
   </div>
 </template>
 
@@ -896,85 +877,6 @@ export default {
           },
         ],
       },
-      s2ChartOptions: {
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-          },
-        },
-        grid: chartGrid,
-        xAxis: [
-          {
-            type: "category",
-            data: eyear,
-            axisTick: {
-              alignWithLabel: true,
-            },
-          },
-        ],
-        yAxis: [
-          {
-            type: "value",
-          },
-        ],
-        series: [
-          {
-            name: ename[0],
-            type: "bar",
-            barWidth: "60%",
-            data: edata[0],
-          },
-        ],
-      },
-      s3ChartOptions: {
-        tooltip: {
-          trigger: "item",
-        },
-        legend: {
-          top: "5%",
-          left: "center",
-        },
-        series: [
-          {
-            name: ename[0],
-            type: "pie",
-            radius: ["40%", "70%"],
-            avoidLabelOverlap: false,
-            itemStyle: {
-              borderRadius: 10,
-              borderColor: "#fff",
-              borderWidth: 2,
-            },
-            label: {
-              show: false,
-              position: "center",
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: "40",
-                fontWeight: "bold",
-              },
-            },
-            labelLine: {
-              show: false,
-            },
-            data: [
-              { value: edata[0][0], name: eyear[0] },
-              { value: edata[0][1], name: eyear[1] },
-              { value: edata[0][2], name: eyear[2] },
-              { value: edata[0][3], name: eyear[3] },
-              { value: edata[0][4], name: eyear[4] },
-              { value: edata[0][5], name: eyear[5] },
-              { value: edata[0][6], name: eyear[6] },
-              { value: edata[0][7], name: eyear[7] },
-              { value: edata[0][8], name: eyear[8] },
-            ],
-          },
-        ],
-      },
       timelist: eyear,
     };
   },
@@ -987,46 +889,6 @@ export default {
     ...mapMutations({
       setMapEchartsOptions: "setMapEchartsOptions",
     }),
-    timelinechange(current) {
-      var minnum = 10000000000000000000000;
-      var maxnum = -10000000000000000000000;
-      for (var i = 0; i < this.edata.length; i++) {
-        var value = Number(this.edata[i][current.currentIndex]);
-        if (value < minnum) {
-          minnum = value;
-        }
-        if (value > maxnum) {
-          maxnum = value;
-        }
-      }
-      var sf = (maxnum - minnum) / 6;
-      var colorarr = [
-        "#FFFF00",
-        "#FFE100",
-        "#FFC300",
-        "#FFA600",
-        "#FF8800",
-        "#FF7500",
-        "#FF6600",
-      ];
-      var fc = ["match", ["get", "name"]];
-      for (var n = 0; n < this.edata.length; n++) {
-        var value2 = Number(this.edata[n][current.currentIndex]);
-        fc.push(this.ename[n]);
-        fc.push(colorarr[Math.floor((value2 - minnum) / sf)]);
-      }
-      fc.push("#A880FF");
-      window.map.setPaintProperty("geojsonid", "fill-color", fc);
-      // window.map.setPaintProperty("geojsonid", "fill-color", [
-      //   "match",
-      //   ["get", "name"],
-      //   "海口市",
-      //   "#FFD273",
-      //   "文昌市",
-      //   "#E86D68",
-      //   "#A880FF",
-      // ]);
-    },
   },
 };
 </script>
@@ -1035,10 +897,10 @@ export default {
 <style scoped>
 .cslayer {
   position: absolute;
-  top: 0;
+  top: 50px;
   left: 0;
   bottom: 0;
-  right: 0;
+  right: 70%;
 }
 .all-borders {
   width: 98%;
@@ -1102,21 +964,14 @@ export default {
   background: #dddcdc !important;
   color: #4f4f4f !important;
 }
-.page_0 {
-  width: 100%;
-  height: 50px;
-  background: #38757b;
-  font-size: 24px;
-  padding: 0 20px;
-}
 .page_1 {
-  width: 30%;
-  height: calc(100% - 50px);
+  width: 100%;
+  height: 100%; /* calc(100% - 50px); */
   float: left;
 }
 .page_2 {
-  width: 30%;
-  height: calc(100% - 50px);
+  width: 100%;
+  height: 100%; /* calc(100% - 50px); */
   float: right;
 }
 .cb_1 {
@@ -1128,16 +983,6 @@ export default {
   width: 100%;
   height: calc(40% - 15px);
   float: left;
-}
-.cb_3 {
-  width: 100%;
-  height: calc(50% - 15px);
-  float: right;
-}
-.cb_4 {
-  width: 100%;
-  height: calc(50% - 15px);
-  float: right;
 }
 .card_tit {
   background-color: #3e4241;
@@ -1152,11 +997,5 @@ export default {
 .sm-component-collapse-card {
   top: 30px;
   height: calc(100% - 40px);
-}
-.sm-component-time-line {
-  width: 38%;
-  position: absolute;
-  left: 31%;
-  bottom: 10px;
 }
 </style>
