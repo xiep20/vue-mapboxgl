@@ -4,11 +4,6 @@
       <span>——————海南城市****分析</span>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
-      <sm-geojson-layer
-        layerId="geojsonid"
-        :layer-style="fillstyle"
-        :data="geojsonurl"
-      ></sm-geojson-layer>
       <!-- <sm-animate-marker-layer
         :features="pointFeatures"
         type="rotatingTextBorder"
@@ -56,6 +51,14 @@ export default {
               ],
               tileSize: 256,
             },
+            citypolygon: {
+              type: "geojson",
+              data: "data/hainan.json",
+            },
+            citypoint: {
+              type: "geojson",
+              data: "data/hainan_point.json",
+            },
           },
           layers: [
             {
@@ -70,6 +73,37 @@ export default {
               source: "cva_w",
               "source-layer": "cva_w",
             },
+            {
+              id: "geojsonid",
+              type: "fill",
+              source: "citypolygon",
+              paint: {
+                "fill-opacity": 0.8,
+                "fill-color": "#3fb1e3",
+                "fill-translate": [0, 0],
+                "fill-antialias": true,
+                "fill-outline-color": "#3fb1e3",
+                "fill-translate-anchor": "map",
+              },
+              layout: {
+                visibility: "visible",
+              },
+            },
+            {
+              id: "citypointtext",
+              type: "symbol",
+              source: "citypoint",
+              layout: {
+                "text-field": "{name}",
+                "text-size": 13,
+              },
+              paint: {
+                "text-color": "#ffffff",
+                "text-halo-blur": 0,
+                "text-halo-color": "#3fb1e3",
+                "text-halo-width": 2,
+              },
+            },
           ],
         },
         interactive: false,
@@ -83,20 +117,6 @@ export default {
         pitch: 40,
         zoom: 8, // starting zoom
       },
-      geojsonurl: "data/hainan.json",
-      fillstyle: new this.VueiClient.commontypes.FillStyle(
-        {
-          "fill-opacity": 0.8,
-          "fill-color": "#3fb1e3",
-          "fill-translate": [0, 0],
-          "fill-antialias": true,
-          "fill-outline-color": "#3fb1e3",
-          "fill-translate-anchor": "map",
-        },
-        {
-          visibility: "visible",
-        }
-      ),
       pointFeatures: {},
       echartsOptions: {},
     };
@@ -133,19 +153,6 @@ export default {
         },
         filter: ["in", "name", ""],
       });
-      // window.map.addLayer({
-      //   id: "maine",
-      //   type: "fill",
-      //   source: {
-      //     type: "geojson",
-      //     data: "data/hainan.json",
-      //   },
-      //   layout: {},
-      //   paint: {
-      //     "fill-color": ["get", "color"],
-      //     "fill-opacity": 0.8,
-      //   },
-      // });
       this.mapm();
     },
     mapm() {

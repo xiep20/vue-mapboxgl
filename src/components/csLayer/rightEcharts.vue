@@ -1,7 +1,7 @@
 <template>
   <div class="rightEcharts">
     <div class="page_2">
-      <sm-border type="border9" class="common-border cb_3">
+      <sm-border type="border1" class="common-border cb_3">
         <div class="card_tit">
           <span style="color: #ff0000">[{{ this.selname }}]</span>低保人口
         </div>
@@ -236,7 +236,7 @@ export default {
       "2015",
       "2016",
       "2017",
-      "2018 ",
+      "2018",
     ];
     var chartGrid = {
       left: 50,
@@ -444,7 +444,7 @@ export default {
 <style scoped>
 .rightEcharts {
   position: absolute;
-  top: 50px;
+  top: calc(30% + 50px);
   left: 70%;
   bottom: 0;
   right: 0;

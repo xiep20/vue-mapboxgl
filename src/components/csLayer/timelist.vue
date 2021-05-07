@@ -6,6 +6,46 @@
       @timelinechanged="timelinechange"
     >
     </sm-time-line>
+    <sm-text-list
+      :content="textcontent"
+      :header="[
+        '低保人口',
+        '2010',
+        '2011',
+        '2012',
+        '2013',
+        '2014',
+        '2015',
+        '2016',
+        '2017',
+        '2018',
+      ]"
+      :fields="[
+        'city',
+        '2010',
+        '2011',
+        '2012',
+        '2013',
+        '2014',
+        '2015',
+        '2016',
+        '2017',
+        '2018',
+      ]"
+      :headerStyle="headerStyle"
+      :rowStyle="rowStyle"
+      :rows="rows"
+      :autoResize="true"
+      :autoRolling="true"
+    ></sm-text-list>
+    <div class="page_3">
+      <sm-border type="border9" class="common-border cb_5">
+        <div class="card_tit">
+          <span style="color: #ff0000">[{{ this.seltime }}年]</span> 低保人口
+        </div>
+        <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
+      </sm-border>
+    </div>
   </div>
 </template>
 
@@ -228,17 +268,88 @@ export default {
       "2015",
       "2016",
       "2017",
-      "2018 ",
+      "2018",
     ];
     return {
       edata,
       ename,
 
       timelist: eyear,
+      seltime: eyear[0],
+
+      s2ChartOptions: {
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+          },
+        },
+        grid: {
+          left: 50,
+          right: 50,
+          top: 35,
+          bottom: 35,
+        },
+        dataZoom: [
+          {
+            type: "inside",
+            start: 0,
+            end: 100,
+          },
+          {
+            start: 0,
+            end: 100,
+          },
+        ],
+        xAxis: [
+          {
+            type: "category",
+            data: ename,
+            axisTick: {
+              alignWithLabel: true,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: "value",
+          },
+        ],
+        series: [
+          {
+            type: "bar",
+            barWidth: "60%",
+            data: edata[0],
+          },
+        ],
+      },
+      rows: 3,
+      headerStyle: {},
+      rowStyle: {
+        oddStyle: {
+          background: "#5278b1bb",
+        },
+        evenStyle: {
+          background: "#2196F3bb",
+        },
+        height: 36,
+      },
+      textcontent: [],
     };
   },
   props: {},
   mounted() {
+    var arr = [];
+    for (var i = 0; i < this.edata.length; i++) {
+      for (var ii = 0; ii < this.edata[i].length; ii++) {
+        if (i === 0) {
+          arr.push({ city: this.ename[ii] });
+        }
+        arr[ii][this.timelist[i]] = this.edata[i][ii];
+      }
+    }
+    this.textcontent = arr;
     document.getElementsByTagName("body")[0].style.background =
       "rgba(0, 0, 0, 0.9)";
   },
@@ -285,6 +396,14 @@ export default {
       //   "#E86D68",
       //   "#A880FF",
       // ]);
+      this.seltime = this.timelist[current.currentIndex];
+      this.s2ChartOptions.series = [
+        {
+          type: "bar",
+          barWidth: "60%",
+          data: this.edata[current.currentIndex],
+        },
+      ];
     },
   },
 };
@@ -308,5 +427,41 @@ export default {
   position: absolute;
   left: 31%;
   bottom: 10px;
+}
+.page_3 {
+  position: fixed;
+  top: 50px;
+  right: 0%;
+  width: 30%;
+  height: 30%;
+  float: right;
+}
+.cb_5 {
+  width: 100%;
+  height: calc(100% - 15px);
+  float: right;
+}
+.card_tit {
+  background-color: #3e4241;
+  color: #73dee8;
+  width: 100%;
+  height: 30px;
+  padding: 0 10px;
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 600;
+}
+.sm-component-collapse-card {
+  top: 30px;
+  height: calc(100% - 40px);
+}
+.sm-component-text-list {
+  position: fixed;
+  top: 60px;
+  left: 31%;
+  width: 38%;
+}
+.sm-component-text-list .sm-component-text-list__list {
+  color: #ff0000;
 }
 </style>
