@@ -9,13 +9,13 @@
         :layer-style="fillstyle"
         :data="geojsonurl"
       ></sm-geojson-layer>
-      <sm-animate-marker-layer
+      <!-- <sm-animate-marker-layer
         :features="pointFeatures"
         type="rotatingTextBorder"
         text-field="name"
         :colors="['rgb(21, 209, 242)', 'rgba(21, 209, 242, 0.56)']"
         :width="150"
-      ></sm-animate-marker-layer>
+      ></sm-animate-marker-layer> -->
       <!-- <sm-echarts-layer :options="echartsOptions"></sm-echarts-layer> -->
     </sm-web-map>
     <cslayer></cslayer>

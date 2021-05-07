@@ -208,7 +208,7 @@ export default {
       "万宁市",
       "定安县",
       "屯昌县",
-      "澄迈县 ",
+      "澄迈县",
       "临高县",
       "儋州市",
       "东方市",
@@ -249,8 +249,8 @@ export default {
     timelinechange(current) {
       var minnum = 10000000000000000000000;
       var maxnum = -10000000000000000000000;
-      for (var i = 0; i < this.edata.length; i++) {
-        var value = Number(this.edata[i][current.currentIndex]);
+      for (var i = 0; i < this.edata[current.currentIndex].length; i++) {
+        var value = Number(this.edata[current.currentIndex][i]);
         if (value < minnum) {
           minnum = value;
         }
@@ -269,8 +269,8 @@ export default {
         "#FF6600",
       ];
       var fc = ["match", ["get", "name"]];
-      for (var n = 0; n < this.edata.length; n++) {
-        var value2 = Number(this.edata[n][current.currentIndex]);
+      for (var n = 0; n < this.edata[current.currentIndex].length; n++) {
+        var value2 = Number(this.edata[current.currentIndex][n]);
         fc.push(this.ename[n]);
         fc.push(colorarr[Math.floor((value2 - minnum) / sf)]);
       }

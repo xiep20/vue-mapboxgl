@@ -74,40 +74,29 @@ instance.interceptors.response.use(
 )
 
 http.get = function (url, options) {
-  let loading
-  if (!options || options.isShowLoading !== false) {
-    loading = document.getElementById('ajaxLoading')
-    loading.style.display = 'block'
-  }
   return new Promise((resolve, reject) => {
     instance
       .get(url, options)
       .then(response => {
-        if (!options || options.isShowLoading !== false) {
-          loading = document.getElementById('ajaxLoading')
-          loading.style.display = 'none'
-        }
-        if (response.code === 1) {
-          resolve(response.data)
-        } else {
-          Message.error({
-            message: response.msg
-          })
-          reject(response.msg)
-        }
-      })
-      .catch(e => {
-        console.log(e)
+        resolve(response)
+      }).catch(err => {
+        reject(err)
+        //   if (response.code === 1) {
+        //     resolve(response.data)
+        //   } else {
+        //     Message.error({
+        //       message: response.msg
+        //     })
+        //     reject(response.msg)
+        //   }
+        // })
+        // .catch(e => {
+        //   console.log(e)
       })
   })
 }
 
 http.post = function (url, data, options) {
-  let loading
-  if (!options || options.isShowLoading !== false) {
-    loading = document.getElementById('ajaxLoading')
-    loading.style.display = 'block'
-  }
   return new Promise((resolve, reject) => {
     instance
       .post(url, data, options)
