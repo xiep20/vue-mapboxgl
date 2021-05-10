@@ -8,30 +8,8 @@
     </sm-time-line>
     <sm-text-list
       :content="textcontent"
-      :header="[
-        '低保人口',
-        '2010',
-        '2011',
-        '2012',
-        '2013',
-        '2014',
-        '2015',
-        '2016',
-        '2017',
-        '2018',
-      ]"
-      :fields="[
-        'city',
-        '2010',
-        '2011',
-        '2012',
-        '2013',
-        '2014',
-        '2015',
-        '2016',
-        '2017',
-        '2018',
-      ]"
+      :header="textlistheader"
+      :fields="textlistfields"
       :headerStyle="headerStyle"
       :rowStyle="rowStyle"
       :rows="rows"
@@ -57,225 +35,12 @@ export default {
     ...mapGetters(["getMapEchartsOptions"]),
   },
   data() {
-    var edata = [
-      [
-        "16772",
-        "10786",
-        "7019",
-        "6308",
-        "4376",
-        "10746",
-        "5569",
-        "9004",
-        "11170",
-        "8882",
-        "28191",
-        "5142",
-        "9114",
-        "7345",
-        "4345",
-        "6427",
-        "9486",
-        "8836",
-      ],
-      [
-        "17274",
-        "10147",
-        "6711",
-        "6287",
-        "3786",
-        "10537",
-        "5454",
-        "9531",
-        "11221",
-        "8869",
-        "27908",
-        "5392",
-        "9682",
-        "8451",
-        "4654",
-        "7313",
-        "9563",
-        "8847",
-      ],
-      [
-        "13650",
-        "8334",
-        "5897",
-        "5351",
-        "3443",
-        "9586",
-        "4774",
-        "7055",
-        "11476",
-        "8997",
-        "27353",
-        "5286",
-        "8890",
-        "7589",
-        "4690",
-        "6707",
-        "9563",
-        "7834",
-      ],
-      [
-        "12103",
-        "7761",
-        "5778",
-        "5020",
-        "3050",
-        "9531",
-        "4340",
-        "6294",
-        "10294",
-        "7383",
-        "24622",
-        "5316",
-        "8890",
-        "7728",
-        "3893",
-        "6712",
-        "8713",
-        "7954",
-      ],
-      [
-        "11406",
-        "5763",
-        "4911",
-        "3690",
-        "2973",
-        "8592",
-        "3359",
-        "5355",
-        "9713",
-        "6512",
-        "22230",
-        "4806",
-        "7992",
-        "5254",
-        "3224",
-        "6707",
-        "6719",
-        "7035",
-      ],
-      [
-        "8830",
-        "4735",
-        "3825",
-        "3159",
-        "2707",
-        "7767",
-        "2942",
-        "3850",
-        "4804",
-        "2555",
-        "5898",
-        "3825",
-        "7874",
-        "4338",
-        "2559",
-        "6880",
-        "4249",
-        "6689",
-      ],
-      [
-        "6409",
-        "2608",
-        "3803",
-        "2372",
-        "2297",
-        "6641",
-        "2229",
-        "4386",
-        "5003",
-        "2443",
-        "6941",
-        "3957",
-        "6916",
-        "3878",
-        "2408",
-        "5129",
-        "3150",
-        "6328",
-      ],
-      [
-        "4796",
-        "2411",
-        "3713",
-        "2223",
-        "2197",
-        "5115",
-        "1989",
-        "3081",
-        "4579",
-        "2443",
-        "7031",
-        "855",
-        "6412",
-        "2619",
-        "2005",
-        "2318",
-        "2551",
-        "5701",
-      ],
-      [
-        "3536",
-        "1961",
-        "3741",
-        "1744",
-        "1175",
-        "4247",
-        "1582",
-        "2508",
-        "3775",
-        "1774",
-        "5220",
-        "353",
-        "5883",
-        "2059",
-        "1747",
-        "1283",
-        "1624",
-        "5352",
-      ],
-    ];
-    var ename = [
-      "海口市",
-      "三亚市",
-      "五指山市",
-      "文昌市",
-      "琼海市",
-      "万宁市",
-      "定安县",
-      "屯昌县",
-      "澄迈县",
-      "临高县",
-      "儋州市",
-      "东方市",
-      "乐东黎族自治县",
-      "琼中黎族苗族自治县",
-      "保亭黎族苗族自治县",
-      "陵水黎族自治县",
-      "白沙黎族自治县",
-      "昌江黎族自治县",
-    ];
-    var eyear = [
-      "2010",
-      "2011",
-      "2012",
-      "2013",
-      "2014",
-      "2015",
-      "2016",
-      "2017",
-      "2018",
-    ];
     return {
-      edata,
-      ename,
+      ename: [],
 
-      timelist: eyear,
-      seltime: eyear[0],
+      timelist: [],
+      seriesdata: [],
+      seltime: "",
 
       s2ChartOptions: {
         tooltip: {
@@ -305,7 +70,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: ename,
+            data: [],
             axisTick: {
               alignWithLabel: true,
             },
@@ -320,7 +85,7 @@ export default {
           {
             type: "bar",
             barWidth: "60%",
-            data: edata[0],
+            data: [],
           },
         ],
       },
@@ -336,20 +101,13 @@ export default {
         height: 36,
       },
       textcontent: [],
+      textlistheader: [],
+      textlistfields: [],
     };
   },
   props: {},
   mounted() {
-    var arr = [];
-    for (var i = 0; i < this.edata.length; i++) {
-      for (var ii = 0; ii < this.edata[i].length; ii++) {
-        if (i === 0) {
-          arr.push({ city: this.ename[ii] });
-        }
-        arr[ii][this.timelist[i]] = this.edata[i][ii];
-      }
-    }
-    this.textcontent = arr;
+    this.dibao();
     document.getElementsByTagName("body")[0].style.background =
       "rgba(0, 0, 0, 0.9)";
   },
@@ -357,11 +115,50 @@ export default {
     ...mapMutations({
       setMapEchartsOptions: "setMapEchartsOptions",
     }),
+
+    // 低保人口
+    dibao() {
+      var _this = this;
+      _this.$http.get("data/dibao.json").then((data) => {
+        var xdata = [];
+        var seriesdata = [];
+        var xh = 0;
+        var ldata = [];
+
+        var arr = [];
+        var d2xh = 0;
+        for (var d1 in data["低保人口"]) {
+          xdata.push(d1);
+          seriesdata.push([]);
+          // xh = 0;
+          d2xh = 0;
+          for (var d2 in data["低保人口"][d1]) {
+            if (xdata.length === 1) {
+              ldata.push(d2);
+              arr.push({ city: d2 });
+            }
+            seriesdata[xh].push(data["低保人口"][d1][d2]);
+            arr[d2xh][d1] = data["低保人口"][d1][d2];
+            d2xh++;
+          }
+          xh++;
+        }
+        this.textcontent = arr;
+        this.textlistheader = ["低保人口"].concat(xdata);
+        this.textlistfields = ["city"].concat(xdata);
+        _this.s2ChartOptions.xAxis[0].data = ldata;
+        _this.s2ChartOptions.series[0].data = seriesdata[0];
+        _this.timelist = xdata;
+        _this.ename = ldata;
+        _this.seltime = xdata[0];
+        _this.seriesdata = seriesdata;
+      });
+    },
     timelinechange(current) {
       var minnum = 10000000000000000000000;
       var maxnum = -10000000000000000000000;
-      for (var i = 0; i < this.edata[current.currentIndex].length; i++) {
-        var value = Number(this.edata[current.currentIndex][i]);
+      for (var i = 0; i < this.seriesdata[current.currentIndex].length; i++) {
+        var value = Number(this.seriesdata[current.currentIndex][i]);
         if (value < minnum) {
           minnum = value;
         }
@@ -380,8 +177,8 @@ export default {
         "#FF6600",
       ];
       var fc = ["match", ["get", "name"]];
-      for (var n = 0; n < this.edata[current.currentIndex].length; n++) {
-        var value2 = Number(this.edata[current.currentIndex][n]);
+      for (var n = 0; n < this.seriesdata[current.currentIndex].length; n++) {
+        var value2 = Number(this.seriesdata[current.currentIndex][n]);
         fc.push(this.ename[n]);
         fc.push(colorarr[Math.floor((value2 - minnum) / sf)]);
       }
@@ -401,7 +198,7 @@ export default {
         {
           type: "bar",
           barWidth: "60%",
-          data: this.edata[current.currentIndex],
+          data: this.seriesdata[current.currentIndex],
         },
       ];
     },
@@ -419,8 +216,9 @@ export default {
   right: 0;
 }
 .sm-component-collapse-card {
-  top: 30px;
-  height: calc(100% - 40px);
+  top: 0px;
+  /* height: calc(100% - 40px); */
+  height: 100%;
 }
 .sm-component-time-line {
   width: 38%;
@@ -451,10 +249,6 @@ export default {
   line-height: 30px;
   font-weight: 600;
 }
-.sm-component-collapse-card {
-  top: 30px;
-  height: calc(100% - 40px);
-}
 .sm-component-text-list {
   position: fixed;
   top: 60px;
@@ -463,5 +257,8 @@ export default {
 }
 .sm-component-text-list .sm-component-text-list__list {
   color: #ff0000;
+}
+.sm-component-text-list {
+  height: 130px;
 }
 </style>
