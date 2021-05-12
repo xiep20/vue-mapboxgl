@@ -25,232 +25,10 @@ export default {
     ...mapGetters(["getMapEchartsOptions"]),
   },
   data() {
-    var edata = [
-      [
-        "16772",
-        "10786",
-        "7019",
-        "6308",
-        "4376",
-        "10746",
-        "5569",
-        "9004",
-        "11170",
-        "8882",
-        "28191",
-        "5142",
-        "9114",
-        "7345",
-        "4345",
-        "6427",
-        "9486",
-        "8836",
-      ],
-      [
-        "17274",
-        "10147",
-        "6711",
-        "6287",
-        "3786",
-        "10537",
-        "5454",
-        "9531",
-        "11221",
-        "8869",
-        "27908",
-        "5392",
-        "9682",
-        "8451",
-        "4654",
-        "7313",
-        "9563",
-        "8847",
-      ],
-      [
-        "13650",
-        "8334",
-        "5897",
-        "5351",
-        "3443",
-        "9586",
-        "4774",
-        "7055",
-        "11476",
-        "8997",
-        "27353",
-        "5286",
-        "8890",
-        "7589",
-        "4690",
-        "6707",
-        "9563",
-        "7834",
-      ],
-      [
-        "12103",
-        "7761",
-        "5778",
-        "5020",
-        "3050",
-        "9531",
-        "4340",
-        "6294",
-        "10294",
-        "7383",
-        "24622",
-        "5316",
-        "8890",
-        "7728",
-        "3893",
-        "6712",
-        "8713",
-        "7954",
-      ],
-      [
-        "11406",
-        "5763",
-        "4911",
-        "3690",
-        "2973",
-        "8592",
-        "3359",
-        "5355",
-        "9713",
-        "6512",
-        "22230",
-        "4806",
-        "7992",
-        "5254",
-        "3224",
-        "6707",
-        "6719",
-        "7035",
-      ],
-      [
-        "8830",
-        "4735",
-        "3825",
-        "3159",
-        "2707",
-        "7767",
-        "2942",
-        "3850",
-        "4804",
-        "2555",
-        "5898",
-        "3825",
-        "7874",
-        "4338",
-        "2559",
-        "6880",
-        "4249",
-        "6689",
-      ],
-      [
-        "6409",
-        "2608",
-        "3803",
-        "2372",
-        "2297",
-        "6641",
-        "2229",
-        "4386",
-        "5003",
-        "2443",
-        "6941",
-        "3957",
-        "6916",
-        "3878",
-        "2408",
-        "5129",
-        "3150",
-        "6328",
-      ],
-      [
-        "4796",
-        "2411",
-        "3713",
-        "2223",
-        "2197",
-        "5115",
-        "1989",
-        "3081",
-        "4579",
-        "2443",
-        "7031",
-        "855",
-        "6412",
-        "2619",
-        "2005",
-        "2318",
-        "2551",
-        "5701",
-      ],
-      [
-        "3536",
-        "1961",
-        "3741",
-        "1744",
-        "1175",
-        "4247",
-        "1582",
-        "2508",
-        "3775",
-        "1774",
-        "5220",
-        "353",
-        "5883",
-        "2059",
-        "1747",
-        "1283",
-        "1624",
-        "5352",
-      ],
-    ];
-    var ename = [
-      "海口市",
-      "三亚市",
-      "五指山市",
-      "文昌市",
-      "琼海市",
-      "万宁市",
-      "定安县",
-      "屯昌县",
-      "澄迈县",
-      "临高县",
-      "儋州市",
-      "东方市",
-      "乐东黎族自治县",
-      "琼中黎族苗族自治县",
-      "保亭黎族苗族自治县",
-      "陵水黎族自治县",
-      "白沙黎族自治县",
-      "昌江黎族自治县",
-    ];
-    var eyear = [
-      "2010",
-      "2011",
-      "2012",
-      "2013",
-      "2014",
-      "2015",
-      "2016",
-      "2017",
-      "2018",
-    ];
-    var chartGrid = {
-      left: 50,
-      right: 50,
-      top: 35,
-      bottom: 35,
-    };
     return {
-      edata,
-      ename,
-      eyear,
-      chartGrid,
+      ename: [],
       selnum: 0,
-      selname: ename[0],
+      selname: "",
 
       s2ChartOptions: {
         tooltip: {
@@ -260,11 +38,16 @@ export default {
             type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
           },
         },
-        grid: chartGrid,
+        grid: {
+          left: 50,
+          right: 50,
+          top: 35,
+          bottom: 35,
+        },
         xAxis: [
           {
             type: "category",
-            data: eyear,
+            data: [],
             axisTick: {
               alignWithLabel: true,
             },
@@ -277,10 +60,10 @@ export default {
         ],
         series: [
           {
-            name: ename[0],
+            name: "",
             type: "bar",
             barWidth: "60%",
-            data: edata[0],
+            data: [],
           },
         ],
       },
@@ -294,7 +77,7 @@ export default {
         },
         series: [
           {
-            name: ename[0],
+            name: [],
             type: "pie",
             radius: ["40%", "70%"],
             avoidLabelOverlap: false,
@@ -317,25 +100,17 @@ export default {
             labelLine: {
               show: false,
             },
-            data: [
-              { value: edata[0][0], name: eyear[0] },
-              { value: edata[0][1], name: eyear[1] },
-              { value: edata[0][2], name: eyear[2] },
-              { value: edata[0][3], name: eyear[3] },
-              { value: edata[0][4], name: eyear[4] },
-              { value: edata[0][5], name: eyear[5] },
-              { value: edata[0][6], name: eyear[6] },
-              { value: edata[0][7], name: eyear[7] },
-              { value: edata[0][8], name: eyear[8] },
-            ],
+            data: [],
           },
         ],
       },
-      timelist: eyear,
+      timelist: [],
+      seriesdata: [],
     };
   },
   props: {},
   mounted() {
+    this.dibao();
     document.getElementsByTagName("body")[0].style.background =
       "rgba(0, 0, 0, 0.9)";
     this.timechange();
@@ -344,6 +119,48 @@ export default {
     ...mapMutations({
       setMapEchartsOptions: "setMapEchartsOptions",
     }),
+
+    // 低保
+    dibao() {
+      var _this = this;
+      _this.$http.get("data/dibao.json").then((data) => {
+        var year = [];
+        var seriesdata = [];
+        var xh = 0;
+        var ldata = [];
+
+        for (var d1 in data["低保人口"]) {
+          year.push(d1);
+          xh = 0;
+          for (var d2 in data["低保人口"][d1]) {
+            if (year.length === 1) {
+              ldata.push(d2);
+              seriesdata.push([]);
+            }
+            seriesdata[xh].push(data["低保人口"][d1][d2]);
+            xh++;
+          }
+        }
+
+        _this.s2ChartOptions.xAxis[0].data = year;
+        _this.s2ChartOptions.series[0].name = ldata[0];
+        _this.s2ChartOptions.series[0].data = seriesdata[0];
+
+        _this.s3ChartOptions.series[0].name = ldata[0];
+
+        var arr = [];
+        for (var a = 0; a < year.length; a++) {
+          arr.push({ value: seriesdata[a][0], name: year[a] });
+        }
+        _this.s3ChartOptions.series[0].data = arr;
+
+        _this.selnum = 0;
+        _this.timelist = year;
+        _this.ename = ldata;
+        _this.selname = ldata[0];
+        _this.seriesdata = seriesdata;
+      });
+    },
     timechange() {
       var _this = this;
       setInterval(() => {
@@ -354,86 +171,20 @@ export default {
         }
 
         _this.selname = _this.ename[_this.selnum];
-        _this.s2ChartOptions = {
-          tooltip: {
-            trigger: "axis",
-            axisPointer: {
-              // 坐标轴指示器，坐标轴触发有效
-              type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-            },
-          },
-          grid: _this.chartGrid,
-          xAxis: [
-            {
-              type: "category",
-              data: _this.eyear,
-              axisTick: {
-                alignWithLabel: true,
-              },
-            },
-          ],
-          yAxis: [
-            {
-              type: "value",
-            },
-          ],
-          series: [
-            {
-              name: _this.ename[0],
-              type: "bar",
-              barWidth: "60%",
-              data: _this.edata[0],
-            },
-          ],
-        };
 
-        _this.s3ChartOptions = {
-          tooltip: {
-            trigger: "item",
-          },
-          legend: {
-            top: "5%",
-            left: "center",
-          },
-          series: [
-            {
-              name: _this.ename[_this.selnum],
-              type: "pie",
-              radius: ["40%", "70%"],
-              avoidLabelOverlap: false,
-              itemStyle: {
-                borderRadius: 10,
-                borderColor: "#fff",
-                borderWidth: 2,
-              },
-              label: {
-                show: false,
-                position: "center",
-              },
-              emphasis: {
-                label: {
-                  show: true,
-                  fontSize: "40",
-                  fontWeight: "bold",
-                },
-              },
-              labelLine: {
-                show: false,
-              },
-              data: [
-                { value: _this.edata[_this.selnum][0], name: _this.eyear[0] },
-                { value: _this.edata[_this.selnum][1], name: _this.eyear[1] },
-                { value: _this.edata[_this.selnum][2], name: _this.eyear[2] },
-                { value: _this.edata[_this.selnum][3], name: _this.eyear[3] },
-                { value: _this.edata[_this.selnum][4], name: _this.eyear[4] },
-                { value: _this.edata[_this.selnum][5], name: _this.eyear[5] },
-                { value: _this.edata[_this.selnum][6], name: _this.eyear[6] },
-                { value: _this.edata[_this.selnum][7], name: _this.eyear[7] },
-                { value: _this.edata[_this.selnum][8], name: _this.eyear[8] },
-              ],
-            },
-          ],
-        };
+        _this.s2ChartOptions.series[0].name = _this.ename[_this.selnum];
+        _this.s2ChartOptions.series[0].data = _this.seriesdata[_this.selnum];
+
+        _this.s3ChartOptions.series[0].name = _this.selname;
+
+        var arr = [];
+        for (var a = 0; a < _this.timelist.length; a++) {
+          arr.push({
+            value: _this.seriesdata[a][_this.selnum],
+            name: _this.timelist[a],
+          });
+        }
+        _this.s3ChartOptions.series[0].data = arr;
       }, 5000);
     },
   },
