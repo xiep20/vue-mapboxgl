@@ -2,16 +2,16 @@
   <div class="cslayer">
     <div class="page_1">
       <sm-border type="border1" class="common-border cb_1">
-        <div class="card_tit">城镇人口</div>
+        <div class="card_tit"><span>城镇人口</span></div>
         <sm-chart icon-class="" :options="ChartOptions1"></sm-chart>
       </sm-border>
       <sm-border type="border1" class="common-border cb_1">
-        <div class="card_tit">人口规模增长率(PGR)</div>
+        <div class="card_tit"><span>人口规模增长率(PGR)</span></div>
         <sm-chart icon-class="" :options="ChartOptions2"></sm-chart>
       </sm-border>
       <!-- 人口规模增长率(PGR) -->
       <sm-border type="border8" class="common-border cb_2">
-        <div class="card_tit">低保人口</div>
+        <div class="card_tit"><span>低保人口</span></div>
         <sm-chart icon-class="" :options="lineChartOptions"></sm-chart>
       </sm-border>
     </div>
@@ -514,7 +514,7 @@ export default {
 <style scoped>
 .cslayer {
   position: absolute;
-  top: 50px;
+  top: 75px;
   left: 0;
   bottom: 0;
   right: 70%;
@@ -602,14 +602,22 @@ export default {
   float: left;
 }
 .card_tit {
-  background-color: #3e4241;
-  color: #73dee8;
-  width: 100%;
-  height: 30px;
-  padding: 0 10px;
-  font-size: 18px;
-  line-height: 30px;
-  font-weight: 600;
+  background: url(../../images/ksh33.png) no-repeat;
+    color: #73dee8;
+    /* width: 100%; */
+    height: 33px;
+    padding: 0 10px;
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: 600;
+    background-size: 100% 100%;     
+}
+.card_tit span{
+    display: inline-block;
+    color: #ffffff;
+   
+    position: absolute;
+    top: -.3rem;
 }
 .sm-component-collapse-card {
   top: 30px;

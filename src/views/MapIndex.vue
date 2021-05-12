@@ -1,7 +1,9 @@
 <template>
   <div class="MapIndex">
     <div class="page_0">
-      <span>——————海南城市****分析</span>
+      <div class="header-cen">
+      <h1>海南城市可视化分析</h1>
+      </div>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
       <!-- <sm-animate-marker-layer
@@ -36,21 +38,7 @@ export default {
         container: "map", // container id
         style: {
           version: 8,
-          sources: {
-            vec_w: {
-              type: "raster",
-              tiles: [
-                "https://t5.tianditu.gov.cn/DataServer?T=vec_w&tk=1d109683f4d84198e37a38c442d68311&x={x}&y={y}&l={z}",
-              ],
-              tileSize: 256,
-            },
-            cva_w: {
-              type: "raster",
-              tiles: [
-                "https://t5.tianditu.gov.cn/DataServer?T=cva_w&tk=1d109683f4d84198e37a38c442d68311&x={x}&y={y}&l={z}",
-              ],
-              tileSize: 256,
-            },
+          sources: {         
             citypolygon: {
               type: "geojson",
               data: "data/hainan.json",
@@ -61,25 +49,14 @@ export default {
             },
           },
           layers: [
-            {
-              id: "vec_w",
-              type: "raster",
-              source: "vec_w",
-              "source-layer": "vec_w",
-            },
-            {
-              id: "cva_w",
-              type: "raster",
-              source: "cva_w",
-              "source-layer": "cva_w",
-            },
+            
             {
               id: "geojsonid",
               type: "fill",
               source: "citypolygon",
               paint: {
                 "fill-opacity": 0.8,
-                "fill-color": "#3fb1e3",
+                "fill-color": "#0D1F49",
                 "fill-translate": [0, 0],
                 "fill-antialias": true,
                 "fill-outline-color": "#3fb1e3",
@@ -183,13 +160,33 @@ export default {
 
 .page_0 {
   width: 100%;
-  height: 50px;
-  background: #38757b;
+  height: 75px;
+  background: #0D1F49;
   font-size: 24px;
   padding: 0 20px;
+  
+}
+.page_0 .header-cen{
+    margin-left:30%;
+    width: 30%;
+    background: url(../images/b.png) no-repeat center top;
+    height: 1rem;
+    background-size: 100% 100%;
+    text-align: center;
+    line-height: 1rem;
+    height:75px;
+}
+.page_0 h1{
+    font-size: 27pt;
+    color: #ffffff;
+    letter-spacing: 0.1rem;
+    text-shadow: 0 0 0.3rem #00d8ff;
+    padding-left: 0.15rem;
+    padding-top:24px;
 }
 .mapCon {
-  width: 100%;
-  height: calc(100% - 50px);
+  width: 40%;
+  left: 30%;
+  height: calc(100% - 75px);
 }
 </style>
