@@ -258,6 +258,7 @@ export default {
 .sm-component-text-list .sm-component-text-list__list {
   color: #ff0000;
 }
+
 .sm-component-text-list {
   height: 130px;
 }

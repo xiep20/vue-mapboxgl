@@ -38,21 +38,7 @@ export default {
         container: "map", // container id
         style: {
           version: 8,
-          sources: {
-            vec_w: {
-              type: "raster",
-              tiles: [
-                "https://t5.tianditu.gov.cn/DataServer?T=vec_w&tk=1d109683f4d84198e37a38c442d68311&x={x}&y={y}&l={z}",
-              ],
-              tileSize: 256,
-            },
-            cva_w: {
-              type: "raster",
-              tiles: [
-                "https://t5.tianditu.gov.cn/DataServer?T=cva_w&tk=1d109683f4d84198e37a38c442d68311&x={x}&y={y}&l={z}",
-              ],
-              tileSize: 256,
-            },
+          sources: {         
             citypolygon: {
               type: "geojson",
               data: "data/hainan.json",
@@ -63,25 +49,14 @@ export default {
             },
           },
           layers: [
-            {
-              id: "vec_w",
-              type: "raster",
-              source: "vec_w",
-              "source-layer": "vec_w",
-            },
-            {
-              id: "cva_w",
-              type: "raster",
-              source: "cva_w",
-              "source-layer": "cva_w",
-            },
+            
             {
               id: "geojsonid",
               type: "fill",
               source: "citypolygon",
               paint: {
                 "fill-opacity": 0.8,
-                "fill-color": "#3fb1e3",
+                "fill-color": "#0D1F49",
                 "fill-translate": [0, 0],
                 "fill-antialias": true,
                 "fill-outline-color": "#3fb1e3",
@@ -210,7 +185,8 @@ export default {
     padding-top:24px;
 }
 .mapCon {
-  width: 100%;
+  width: 40%;
+  left: 30%;
   height: calc(100% - 75px);
 }
 </style>

@@ -9,23 +9,23 @@ import axios from './axios/httpConfig'
 
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
-// Vue.use(ElementUI)
+    // Vue.use(ElementUI)
 Vue.prototype.VueiClient = VueiClient
 Vue.use(VueiClient, {
-  theme: 'dark'
+    theme: 'dark'
 })
 window.a = new VueiClient.commontypes.FillStyle({
-  "fill-opacity": 0.8,
-  "fill-color": "#3fb1e3",
-  "fill-translate": [0, 0],
-  "fill-antialias": true,
-  "fill-outline-color": "#3fb1e3",
-  "fill-translate-anchor": "map",
+    "fill-opacity": 0.8,
+    "fill-color": "#0D1F49",
+    "fill-translate": [0, 0],
+    "fill-antialias": true,
+    "fill-outline-color": "#0D1F49",
+    "fill-translate-anchor": "map",
 }, {
-  visibility: "visible",
+    visibility: "visible",
 })
 new Vue({
-  router,
-  store,
-  render: h => h(App),
+    router,
+    store,
+    render: h => h(App),
 }).$mount('#app')
