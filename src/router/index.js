@@ -8,7 +8,11 @@ const routes = [{
   path: '/',
   name: 'MapIndex',
   component: MapIndex
-},{
+}, {
+  path: '/MapIndex',
+  name: 'MapIndex',
+  component: MapIndex
+}, {
   path: '/MapIndex2',
   name: 'MapIndex2',
   component: MapIndex2
