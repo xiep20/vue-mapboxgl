@@ -7,7 +7,7 @@
     </sm-web-map>
 
     <div class="page_1">
-      <sm-border type="border8" class="common-border cb_1">
+      <sm-border type="border1" class="common-border cb_1">
         <div class="card_tit">低保人口</div>
         <sm-chart icon-class="" :options="chartsOptions1"></sm-chart>
       </sm-border>
@@ -284,24 +284,24 @@ export default {
           },
           areaStyle: {
             normal: {
-              color: "rgba(255, 215, 0, 0.3)",
-              // color:  new echarts.graphic.LinearGradient(
-              //   0,
-              //   0,
-              //   0,
-              //   1,
-              //   [
-              //     {
-              //       offset: 0,
-              //       color: "rgba(255, 215, 0, 0.3)",
-              //     },
-              //     {
-              //       offset: 1,
-              //       color: "rgba(255, 215, 0, 0)",
-              //     },
-              //   ],
-              //   false
-              // ),
+              // color: "rgba(255, 215, 0, 0.3)",
+              color: new this.$echarts.graphic.LinearGradient(
+                0,
+                0,
+                0,
+                1,
+                [
+                  {
+                    offset: 0,
+                    color: "rgba(255, 215, 0, 0.3)",
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(255, 215, 0, 0)",
+                  },
+                ],
+                false
+              ),
               shadowColor: "rgba(0, 0, 0, 0.1)",
               shadowBlur: 5,
             },
