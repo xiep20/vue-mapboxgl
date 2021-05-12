@@ -228,7 +228,7 @@ export default {
 }
 .page_3 {
   position: fixed;
-  top: 50px;
+  top: 75px;
   right: 0%;
   width: 30%;
   height: 30%;
@@ -251,7 +251,7 @@ export default {
 }
 .sm-component-text-list {
   position: fixed;
-  top: 60px;
+  top: 74px;
   left: 31%;
   width: 38%;
 }

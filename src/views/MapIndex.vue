@@ -1,7 +1,9 @@
 <template>
   <div class="MapIndex">
     <div class="page_0">
-      <span>——————海南城市****分析</span>
+      <div class="header-cen">
+      <h1>海南城市可视化分析</h1>
+      </div>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
       <!-- <sm-animate-marker-layer
@@ -183,13 +185,32 @@ export default {
 
 .page_0 {
   width: 100%;
-  height: 50px;
-  background: #38757b;
+  height: 75px;
+  background: #0D1F49;
   font-size: 24px;
   padding: 0 20px;
+  
+}
+.page_0 .header-cen{
+    margin-left:30%;
+    width: 30%;
+    background: url(../images/b.png) no-repeat center top;
+    height: 1rem;
+    background-size: 100% 100%;
+    text-align: center;
+    line-height: 1rem;
+    height:75px;
+}
+.page_0 h1{
+    font-size: 27pt;
+    color: #ffffff;
+    letter-spacing: 0.1rem;
+    text-shadow: 0 0 0.3rem #00d8ff;
+    padding-left: 0.15rem;
+    padding-top:24px;
 }
 .mapCon {
   width: 100%;
-  height: calc(100% - 50px);
+  height: calc(100% - 75px);
 }
 </style>
