@@ -1,7 +1,9 @@
 <template>
   <div class="MapIndex">
     <div class="page_0">
-      <span>——————海南城市11.3统计</span>
+      <div class="header-cen">
+        <h1>海南城市可视化分析</h1>
+      </div>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
@@ -25,7 +27,7 @@
         <sm-chart
           icon-class=""
           :options="chartsOptions1"
-          style="height: 80%"
+          class="smchart"
         ></sm-chart>
       </sm-border>
 
@@ -34,7 +36,7 @@
         <sm-chart
           icon-class=""
           :options="chartsOptions2"
-          style="height: 80%"
+          class="smchart"
         ></sm-chart>
       </sm-border>
 
@@ -43,7 +45,33 @@
         <sm-chart
           icon-class=""
           :options="chartsOptions3"
-          style="height: 80%"
+          class="smchart"
+        ></sm-chart>
+      </sm-border>
+    </div>
+    <div class="page_2">
+      <sm-border type="border1" class="common-border cb_4">
+        <div class="card_tit">LCR</div>
+        <sm-chart
+          icon-class=""
+          :options="echartsOptions4"
+          class="smchart"
+        ></sm-chart>
+      </sm-border>
+      <sm-border type="border1" class="common-border cb_5">
+        <div class="card_tit">PGR</div>
+        <sm-chart
+          icon-class=""
+          :options="echartsOptions5"
+          class="smchart"
+        ></sm-chart>
+      </sm-border>
+      <sm-border type="border1" class="common-border cb_6">
+        <div class="card_tit">LCRPGR</div>
+        <sm-chart
+          icon-class=""
+          :options="echartsOptions6"
+          class="smchart"
         ></sm-chart>
       </sm-border>
     </div>
@@ -415,6 +443,167 @@ export default {
         ],
         series: [],
       },
+      echartsOptions4: {
+        backgroundColor: "#333",
+        legend: {
+          bottom: 10,
+          data: [],
+          itemGap: 20,
+          textStyle: {
+            color: "#fff",
+            fontSize: 14,
+          },
+        },
+        tooltip: {
+          padding: 10,
+          backgroundColor: "#222",
+          borderColor: "#777",
+          borderWidth: 1,
+        },
+        parallelAxis: [],
+        parallel: {
+          left: "8%",
+          right: "15%",
+          bottom: 50,
+          parallelAxisDefault: {
+            type: "value",
+            name: "指数",
+            nameLocation: "end",
+            nameGap: 20,
+            nameTextStyle: {
+              color: "#fff",
+              fontSize: 12,
+            },
+            axisLine: {
+              lineStyle: {
+                color: "#aaa",
+              },
+            },
+            axisTick: {
+              lineStyle: {
+                color: "#777",
+              },
+            },
+            splitLine: {
+              show: false,
+            },
+            axisLabel: {
+              color: "#fff",
+            },
+          },
+        },
+        series: [],
+      },
+      echartsOptions5: {
+        title: {
+          text: "PGR",
+          subtext: "",
+        },
+        tooltip: {
+          trigger: "axis",
+        },
+        legend: {
+          data: [],
+        },
+        grid: {
+          left: "10%",
+          top: "10%",
+          right: "8%",
+          bottom: "0%",
+        },
+        dataZoom: [
+          {
+            type: "inside",
+            start: 0,
+            end: 30,
+            filterMode: "filter",
+          },
+          {
+            start: 0,
+            end: 30,
+            filterMode: "filter",
+          },
+        ],
+        xAxis: [
+          {
+            type: "category",
+            boundaryGap: false,
+            data: [],
+            //除去x轴刻度
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              //控制x轴文本
+              show: true,
+              textStyle: {
+                color: "#8597c1",
+              },
+              // interval: 0,
+              rotate: 10,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: "value",
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: "#7bd6c763",
+              },
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: true,
+              lineStyle: {
+                type: "solid",
+                color: "#2a3751",
+                width: "0",
+              },
+            },
+          },
+        ],
+        series: [],
+      },
+      echartsOptions6: {
+        legend: {
+          data: []
+        },
+        tooltip: {},
+        // dataZoom: [
+        //   {
+        //     type: "inside",
+        //     start: 0,
+        //     end: 30,
+        //     filterMode: "filter",
+        //   },
+        //   {
+        //     start: 0,
+        //     end: 30,
+        //     filterMode: "filter",
+        //   },
+        // ],
+        xAxis: {
+          data: [],
+          name: "城市",
+          // axisLine: { onZero: true },
+          splitLine: { show: false },
+          // splitArea: { show: false },
+          axisLabel: {
+            rotate: 0,
+          },
+        },
+        yAxis: {},
+        grid: {
+          bottom: 10,
+        },
+        series: [],
+        animationEasing: "elasticOut",
+        animationDelayUpdate: function (idx) {
+          return idx * 5;
+        },
+      },
       p1selyaer: "",
       p1selcity: "",
     };
@@ -448,6 +637,9 @@ export default {
       _this.getoptions1(0);
       _this.getoptions2(0);
       _this.getoptions3(0);
+      _this.getoptions4();
+      _this.getoptions5();
+      _this.getoptions6();
       var ynum = 1;
       var cnum = 1;
       setInterval(() => {
@@ -870,6 +1062,121 @@ export default {
         },
       ];
     },
+    //
+    getoptions4() {
+      //this.info["人口"]
+      var seriesdata0 = [];
+      var palist = [];
+      palist.push({
+        dim: 0,
+        name: "城市",
+        type: "category",
+        inverse: true,
+        nameLocation: "start",
+      });
+      var dim = 1;
+      for (var d1 in this.info["LCR"]) {
+        palist.push({ dim: dim++, name: d1 });
+        var xh2 = 0;
+        for (var d2 in this.info["LCR"][d1]) {
+          if (dim === 2) {
+            seriesdata0.push([d2]);
+          }
+          seriesdata0[xh2].push(this.info["LCR"][d1][d2]);
+          xh2++;
+        }
+      }
+
+      this.echartsOptions4.legend.data = ["LCR"];
+
+      this.echartsOptions4.parallelAxis = palist;
+
+      this.echartsOptions4.series = [
+        {
+          name: "LCR",
+          type: "parallel",
+          lineStyle: {
+            normal: {
+              width: 1,
+              opacity: 0.5,
+            },
+          },
+          data: seriesdata0,
+        },
+      ];
+    },
+    getoptions5() {
+      var yearlist = [];
+      var citylist = [];
+      var data = [];
+      for (var d1 in this.info["PGR"]) {
+        yearlist.push(d1);
+        data.push({
+          name: d1,
+          type: "bar",
+          data: [],
+          areaStyle: {
+            normal: {
+              color: "#f0d0f0",
+              shadowColor: "rgba(0, 0, 0, 0.1)",
+              shadowBlur: 5,
+            },
+          },
+          markPoint: {
+            data: [
+              { type: "max", name: "最大值" },
+              { type: "min", name: "最小值" },
+            ],
+          },
+          markLine: {
+            data: [{ type: "average", name: "平均值" }],
+          },
+        });
+        for (var d2 in this.info["PGR"][d1]) {
+          if (yearlist.length === 1) {
+            citylist.push([d2]);
+          }
+          data[yearlist.length - 1].data.push(this.info["PGR"][d1][d2]);
+        }
+      }
+
+      this.echartsOptions5.legend.data = yearlist;
+
+      this.echartsOptions5.xAxis[0].data = citylist;
+
+      this.echartsOptions5.series = data;
+    },
+    getoptions6() {
+      var yearlist = [];
+      var citylist = [];
+      var data = [];
+      for (var d1 in this.info["LCRPGR"]) {
+        yearlist.push(d1);
+        data.push({
+          name: d1,
+          type: "bar",
+          emphasis: {
+            focus: "series",
+          },
+          animationDelay: function (idx) {
+            return idx * 10;
+          },
+          data: [],
+        });
+        for (var d2 in this.info["LCRPGR"][d1]) {
+          if (yearlist.length === 1) {
+            citylist.push([d2]);
+          }
+          data[yearlist.length - 1].data.push(this.info["LCRPGR"][d1][d2]);
+        }
+      }
+
+      this.echartsOptions6.legend.data = yearlist;
+
+      this.echartsOptions6.xAxis.data = citylist;
+
+      this.echartsOptions6.series = data;
+    },
   },
 };
 </script>
@@ -883,23 +1190,49 @@ export default {
 
 .page_0 {
   width: 100%;
-  height: 50px;
-  background: #38757b;
+  height: 75px;
+  background: #0d1f49;
   font-size: 24px;
   padding: 0 20px;
 }
+.page_0 .header-cen {
+  margin-left: 30%;
+  width: 30%;
+  background: url(../images/b.png) no-repeat center top;
+  height: 1rem;
+  background-size: 100% 100%;
+  text-align: center;
+  line-height: 1rem;
+  height: 75px;
+}
+.page_0 h1 {
+  font-size: 27pt;
+  color: #ffffff;
+  letter-spacing: 0.1rem;
+  text-shadow: 0 0 0.3rem #00d8ff;
+  padding-left: 0.15rem;
+  padding-top: 24px;
+}
 .mapCon {
   width: 100%;
-  height: calc(100% - 50px);
+  height: calc(100% - 75px);
 }
 
 .page_1 {
   width: 30%;
-  height: calc(99% - 50px);
+  height: calc(99% - 75px);
   float: left;
   position: absolute;
-  top: calc(50px + 1%);
+  top: calc(75px + 1%);
   left: 0;
+}
+.page_2 {
+  width: 30%;
+  height: calc(99% - 75px);
+  float: right;
+  position: absolute;
+  top: calc(75px + 1%);
+  right: 0;
 }
 .cb_1 {
   width: 100%;
@@ -916,7 +1249,24 @@ export default {
   height: calc(33% - 2px);
   float: left;
 }
-
+.cb_4 {
+  width: 100%;
+  height: calc(33% - 2px);
+  float: left;
+}
+.cb_5 {
+  width: 100%;
+  height: calc(33% - 2px);
+  float: left;
+}
+.cb_6 {
+  width: 100%;
+  height: calc(33% - 2px);
+  float: left;
+}
+.smchart {
+  height: calc(100% - 40px);
+}
 .card_tit {
   background: url(../images/ksh33.png) no-repeat;
   color: #73dee8;
