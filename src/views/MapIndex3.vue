@@ -8,25 +8,12 @@
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
 
-    <sm-text
-      class="showyaertext"
-      :title="p1selyaer + '年'"
-      textColor="#73dee8"
-      :fontStyle="{
-        fontSize: '24px',
-        lineHeight: '20px',
-        fontWeight: '700',
-        textAlign: 'center',
-      }"
-    >
-    </sm-text>
-
     <div class="page_1">
       <sm-border type="border1" class="common-border cb_1">
-        <div class="card_tit">{{ p1selyaer }} 年 — 人口</div>
+        <div class="card_tit">{{  }} 空气</div>
         <sm-chart
           icon-class=""
-          :options="chartsOptions1"
+          :options="echartsOptions1"
           class="smchart"
         ></sm-chart>
       </sm-border>
@@ -54,7 +41,7 @@
         <div class="card_tit"></div>
         <sm-chart
           icon-class=""
-          :options="echartsOptions7"
+          :options="echartsOptions4"
           class="smchart"
         ></sm-chart>
       </sm-border>
@@ -173,95 +160,57 @@ export default {
       },
       info: null,
       echartsOptions: {},
-      chartsOptions1: {
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
-            label: {
-              backgroundColor: "#6a7985",
-            },
-          },
-        },
-        textStyle: {
-          color: "#8597c1",
-        },
-        grid: {
-          left: "3%",
-          top: "6%",
-          right: "3%",
-          bottom: "0%",
-          containLabel: true,
-        },
-        // dataZoom: [
-        //   {
-        //     type: "inside",
-        //     start: 0,
-        //     end: 30,
-        //   },
-        //   {
-        //     start: 0,
-        //     end: 30,
-        //   },
-        // ],
-        xAxis: [
-          {
-            type: "category",
-            boundaryGap: false,
+      echartsOptions1: {
+        baseOption: {
+          timeline: {
+            axisType: "category",
+            autoPlay: true,
+            // currentIndex: 2,
+            playInterval: 1000,
             data: [],
-            axisLine: {
-              show: false, //x轴的线
-              lineStyle: {
-                color: ["#7bd6c763"],
-              },
-            },
-
-            // 控制网格线是否显示
-            splitLine: {
-              show: false,
-              lineStyle: {
-                // 使用深浅的间隔色
-                color: ["#fff"],
-              },
-            },
-            //除去x轴刻度
-            axisTick: {
-              show: false,
-            },
-            axisLabel: {
-              //控制x轴文本
-              show: true,
-              textStyle: {
-                color: "#8597c1",
-              },
-              // interval: 0,
-              rotate: 0,
-            },
           },
-        ],
-        yAxis: [
-          {
-            type: "value",
-            // min: 40,
-            // max: 80,
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: "#7bd6c763",
-              },
-            },
-            splitArea: { show: false }, //保留网格区域
-            axisLine: {
-              show: true,
-              lineStyle: {
-                type: "solid",
-                color: "#2a3751",
-                width: "0",
+          title: {
+            subtext: "",
+          },
+          tooltip: {},
+          legend: {
+            left: "right",
+            data: [],
+          },
+          calculable: true,
+          grid: {
+            top: 60,
+            bottom: 60,
+            tooltip: {
+              trigger: "axis",
+              axisPointer: {
+                type: "shadow",
+                label: {
+                  show: true,
+                  formatter: function (params) {
+                    return params.value.replace("\n", "");
+                  },
+                },
               },
             },
           },
-        ],
-        series: [],
+          xAxis: [
+            {
+              type: "category",
+              axisLabel: { rotate: 0 },
+              data: [],
+              splitLine: { show: false },
+            },
+          ],
+          yAxis: [
+            {
+              type: "value",
+              name: "值",
+            },
+          ],
+          series: [],
+        },
+        options: [],
       },
       chartsOptions2: {
         tooltip: {
@@ -604,58 +553,6 @@ export default {
           return idx * 5;
         },
       },
-      echartsOptions7: {
-        baseOption: {
-          timeline: {
-            axisType: "category",
-            autoPlay: true,
-            // currentIndex: 2,
-            playInterval: 1000,
-            data: [],
-          },
-          title: {
-            subtext: "",
-          },
-          tooltip: {},
-          legend: {
-            left: "right",
-            data: [],
-          },
-          calculable: true,
-          grid: {
-            top: 60,
-            bottom: 60,
-            tooltip: {
-              trigger: "axis",
-              axisPointer: {
-                type: "shadow",
-                label: {
-                  show: true,
-                  formatter: function (params) {
-                    return params.value.replace("\n", "");
-                  },
-                },
-              },
-            },
-          },
-          xAxis: [
-            {
-              type: "category",
-              axisLabel: { rotate: 0 },
-              data: [],
-              splitLine: { show: false },
-            },
-          ],
-          yAxis: [
-            {
-              type: "value",
-              name: "值",
-            },
-          ],
-          series: [],
-        },
-        options: [],
-      },
       p1selyaer: "",
       p1selcity: "",
     };
@@ -677,7 +574,7 @@ export default {
     },
     getinfo() {
       var _this = this;
-      _this.$http.get("data/1103.json").then((data) => {
+      _this.$http.get("data/1106.json").then((data) => {
         _this.info = data;
         _this.changeYear();
       });
@@ -703,25 +600,24 @@ export default {
           cnum = 0;
         }
         _this.mapm(ynum);
-        _this.getoptions1(ynum);
         _this.getoptions2(ynum);
         _this.getoptions3(cnum);
         ynum++;
         cnum++;
       }, 5000);
     },
-    // 人口map
+    // PM2.5空气map
     mapm(nowXH) {
       var xh = 0;
       var cityname = [];
       var poplist = [];
-      for (var d1 in this.info["人口"]) {
+      for (var d1 in this.info["PM2.5"]) {
         poplist.push([]);
-        for (var d2 in this.info["人口"][d1]) {
+        for (var d2 in this.info["PM2.5"][d1]) {
           if (xh === 0) {
             cityname.push(d2);
           }
-          poplist[xh].push(this.info["人口"][d1][d2]);
+          poplist[xh].push(this.info["PM2.5"][d1][d2]);
         }
         xh++;
       }
@@ -764,128 +660,42 @@ export default {
       window.map.setPaintProperty("geojsonid", "fill-extrusion-height", fh);
     },
     // 人口echarts
-    getoptions1(nowXH) {
-      var xh = 0;
-      var cityname = [];
-      var poplist = [];
-      for (var d1 in this.info["人口"]) {
-        if (nowXH === xh) {
-          this.p1selyaer = d1;
-        }
-        poplist.push([]);
-        for (var d2 in this.info["人口"][d1]) {
-          if (xh === 0) {
-            cityname.push(d2);
+    getoptions1() {
+      var yearlist = [];
+      var citylist = [];
+      var data = [];
+      for (var d1 in this.info["PM2.5"]) {
+        yearlist.push(d1);
+        data.push({
+          title: { text: "值" },
+          series: [{ data: [] }, { data: [] }, { data: [] }],
+        });
+        for (var d2 in this.info["PM2.5"][d1]) {
+          if (yearlist.length === 1) {
+            citylist.push([d2]);
           }
-          poplist[xh].push(this.info["人口"][d1][d2]);
+          data[yearlist.length - 1].series[0].data.push(
+            this.info["PM2.5"][d1][d2]
+          );
+          data[yearlist.length - 1].series[0].data.push(
+            this.info["SO2"][d1][d2]
+          );
+          data[yearlist.length - 1].series[0].data.push(
+            this.info["PM10"][d1][d2]
+          );
         }
-        xh++;
       }
 
-      var xData = cityname,
-        yData = poplist[nowXH];
-      this.chartsOptions1.xAxis[0].data = xData;
-      this.chartsOptions1.series = [
-        {
-          type: "bar",
-          color: "#FFD700",
-          smooth: true,
-          lineStyle: {
-            normal: {
-              width: 1,
-            },
-          },
-          areaStyle: {
-            normal: {
-              // color: "rgba(255, 215, 0, 0.3)",
-              color: new this.$echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: "rgba(255, 215, 0, 0.3)",
-                  },
-                  {
-                    offset: 1,
-                    color: "rgba(255, 215, 0, 0)",
-                  },
-                ],
-                false
-              ),
-              shadowColor: "rgba(0, 0, 0, 0.1)",
-              shadowBlur: 5,
-            },
-          },
-          data: yData,
-          markPoint: {
-            data: [
-              {
-                type: "min",
-                name: "最小值",
-                symbolSize: 50,
-                label: {
-                  formatter: "低",
-                  color: "#000",
-                },
-                itemStyle: {
-                  color: "#96f392",
-                  fontSize: 16,
-                },
-              },
-              {
-                coord: ["海口市", yData[0]],
-                symbolSize: 50,
-                label: {
-                  formatter: "海口市",
-                  color: "#fff",
-                  fontSize: 14,
-                },
-                itemStyle: {
-                  color: "rgb(194,53,49)",
-                },
-              },
-            ],
-          },
-          markLine: {
-            data: [
-              [
-                {
-                  name: "",
-                  coord: ["海口市", 0],
-                  lineStyle: {
-                    color: "rgb(194,53,49)",
-                    width: 2,
-                    curveness: 0.3,
-                    type: "dotted",
-                  },
-                  symbol: "none",
-                },
-                {
-                  coord: ["海口市", yData[0]],
-                  symbol: "none",
-                },
-              ],
-            ],
-          },
-        },
+      this.echartsOptions7.baseOption.timeline.data = yearlist;
+      this.echartsOptions7.baseOption.legend.data = ["PM2.5", "SO2", "PM10"];
+      this.echartsOptions7.baseOption.xAxis[0].data = citylist;
+      this.echartsOptions7.baseOption.series = [
+        { name: "PM2.5", type: "bar" },
+        { name: "SO2", type: "bar" },
+        { name: "PM10", type: "bar" },
       ];
-      this.chartsOptions1.graphic = [
-        {
-          type: "text",
-          left: "center",
-          top: "1%",
-          style: {
-            fill: "#fff",
-            text: "人口\n\n海口市 远优于 其它",
-            textAlign: "center",
-            fontSize: 13,
-            //font: 'bold 13px Microsoft YaHei'
-          },
-        },
-      ];
+
+      this.echartsOptions7.options = data;
     },
     // 建成区面积echarts
     getoptions2(nowXH) {
@@ -1229,44 +1039,6 @@ export default {
       this.echartsOptions6.xAxis.data = citylist;
 
       this.echartsOptions6.series = data;
-    },
-
-    getoptions7() {
-      var yearlist = [];
-      var citylist = [];
-      var data = [];
-      for (var d1 in this.info["LCRPGR"]) {
-        yearlist.push(d1);
-        data.push({
-          title: { text: "值" },
-          series: [{ data: [] }, { data: [] }, { data: [] }],
-        });
-        for (var d2 in this.info["LCRPGR"][d1]) {
-          if (yearlist.length === 1) {
-            citylist.push([d2]);
-          }
-          data[yearlist.length - 1].series[0].data.push(
-            this.info["LCR"][d1][d2]
-          );
-          data[yearlist.length - 1].series[0].data.push(
-            this.info["PGR"][d1][d2]
-          );
-          data[yearlist.length - 1].series[0].data.push(
-            this.info["LCRPGR"][d1][d2]
-          );
-        }
-      }
-
-      this.echartsOptions7.baseOption.timeline.data = yearlist;
-      this.echartsOptions7.baseOption.legend.data = ["LCR", "PGR", "LCRPGR"];
-      this.echartsOptions7.baseOption.xAxis[0].data = citylist;
-      this.echartsOptions7.baseOption.series = [
-        { name: "LCR", type: "bar" },
-        { name: "PGR", type: "bar" },
-        { name: "LCRPGR", type: "bar" },
-      ];
-
-      this.echartsOptions7.options = data;
     },
   },
 };
