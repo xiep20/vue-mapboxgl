@@ -4,13 +4,14 @@
       <div class="header-cen">
         <h1>海南城市可视化分析</h1>
       </div>
+      <headermenu Isactive="3"></headermenu>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
 
     <div class="page_1">
       <sm-border type="border1" class="common-border cb_1">
-        <div class="card_tit">{{  }} 空气</div>
+        <div class="card_tit">逐年空气指标</div>
         <sm-chart
           icon-class=""
           :options="echartsOptions1"
@@ -19,7 +20,7 @@
       </sm-border>
 
       <sm-border type="border1" class="common-border cb_2">
-        <div class="card_tit">{{ p1selyaer }} 年 — 城镇面积</div>
+        <div class="card_tit">{{ p1selcity }} CO2指标</div>
         <sm-chart
           icon-class=""
           :options="chartsOptions2"
@@ -62,19 +63,29 @@
         ></sm-chart>
       </sm-border>
     </div>
+    <div class="page_3">
+      <sm-time-line
+        :data="timelist"
+        autoPlay="true"
+        @timelinechanged="timelinechange"
+      >
+      </sm-time-line>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import headermenu from "./../components/headermenu";
 export default {
   name: "mapindex",
   computed: {
     ...mapGetters(["getMapEchartsOptions"]),
   },
-  components: {},
+  components: { headermenu },
   data() {
     return {
+      timelist: [],
       mapOptions: {
         container: "map", // container id
         style: {
@@ -164,9 +175,14 @@ export default {
         baseOption: {
           timeline: {
             axisType: "category",
+            // realtime: false,
+            // loop: false,
             autoPlay: true,
             // currentIndex: 2,
             playInterval: 1000,
+            // controlStyle: {
+            //     position: 'left'
+            // },
             data: [],
           },
           title: {
@@ -176,11 +192,12 @@ export default {
           legend: {
             left: "right",
             data: [],
+            selected: {},
           },
           calculable: true,
           grid: {
-            top: 60,
-            bottom: 60,
+            top: 30,
+            bottom: 80,
             tooltip: {
               trigger: "axis",
               axisPointer: {
@@ -197,7 +214,13 @@ export default {
           xAxis: [
             {
               type: "category",
-              axisLabel: { rotate: 0 },
+              axisLabel: {
+                interval: 0,
+                rotate: 0,
+                textStyle: {
+                  color: "#8597c1",
+                },
+              },
               data: [],
               splitLine: { show: false },
             },
@@ -205,7 +228,8 @@ export default {
           yAxis: [
             {
               type: "value",
-              name: "值",
+              name: "ug/m³",
+              splitArea: { show: false }, //保留网格区域
             },
           ],
           series: [],
@@ -583,45 +607,51 @@ export default {
     changeYear() {
       var _this = this;
       _this.mapm(0);
-      _this.getoptions1(0);
-      _this.getoptions2(0);
-      _this.getoptions3(0);
-      _this.getoptions4();
-      _this.getoptions5();
-      _this.getoptions6();
-      _this.getoptions7();
+      _this.getoptions1();
+      // _this.getoptions2(0);
+      // _this.getoptions3(0);
+      // _this.getoptions4();
+      // _this.getoptions5();
+      // _this.getoptions6();
+      // _this.getoptions7();
       var ynum = 1;
       var cnum = 1;
       setInterval(() => {
-        if (ynum == 4) {
+        if (ynum == 9) {
           ynum = 0;
         }
         if (cnum === 18) {
           cnum = 0;
         }
-        _this.mapm(ynum);
-        _this.getoptions2(ynum);
-        _this.getoptions3(cnum);
+        // _this.getoptions2(ynum);
+        // _this.getoptions3(cnum);
         ynum++;
         cnum++;
       }, 5000);
     },
+    timelinechange(current) {
+      this.mapm(current.currentIndex);
+    },
     // PM2.5空气map
     mapm(nowXH) {
-      var xh = 0;
       var cityname = [];
       var poplist = [];
+      var yearlist = [];
       for (var d1 in this.info["PM2.5"]) {
-        poplist.push([]);
+        cityname.push(d1);
+        var xh = 0;
         for (var d2 in this.info["PM2.5"][d1]) {
-          if (xh === 0) {
-            cityname.push(d2);
+          if (cityname.length === 1) {
+            yearlist.push(d2);
+            poplist.push([]);
           }
           poplist[xh].push(this.info["PM2.5"][d1][d2]);
+          xh++;
         }
-        xh++;
       }
-
+      if (this.timelist.length == 0) {
+        this.timelist = yearlist;
+      }
       var minnum = 10000000000000000000000;
       var maxnum = -10000000000000000000000;
       for (var i = 0; i < poplist[nowXH].length; i++) {
@@ -659,43 +689,68 @@ export default {
       window.map.setPaintProperty("geojsonid", "fill-extrusion-color", fc);
       window.map.setPaintProperty("geojsonid", "fill-extrusion-height", fh);
     },
-    // 人口echarts
+    // 空气echarts
     getoptions1() {
       var yearlist = [];
       var citylist = [];
       var data = [];
       for (var d1 in this.info["PM2.5"]) {
-        yearlist.push(d1);
-        data.push({
-          title: { text: "值" },
-          series: [{ data: [] }, { data: [] }, { data: [] }],
-        });
+        if (citylist.length % 2 === 0) {
+          citylist.push(d1);
+        } else {
+          citylist.push("\n" + d1);
+        }
+        var d2i = 0;
         for (var d2 in this.info["PM2.5"][d1]) {
-          if (yearlist.length === 1) {
-            citylist.push([d2]);
+          if (citylist.length === 1) {
+            yearlist.push([d2]);
+            data.push({
+              title: { text: "" },
+              series: [
+                { data: [] },
+                { data: [] },
+                { data: [] },
+                { data: [] },
+                { data: [] },
+                { data: [] },
+              ],
+            });
           }
-          data[yearlist.length - 1].series[0].data.push(
-            this.info["PM2.5"][d1][d2]
-          );
-          data[yearlist.length - 1].series[0].data.push(
-            this.info["SO2"][d1][d2]
-          );
-          data[yearlist.length - 1].series[0].data.push(
-            this.info["PM10"][d1][d2]
-          );
+          data[d2i].series[0].data.push(this.info["PM2.5"][d1][d2]);
+          data[d2i].series[1].data.push(this.info["SO2"][d1][d2]);
+          data[d2i].series[2].data.push(this.info["PM10"][d1][d2]);
+          data[d2i].series[3].data.push(this.info["NO2"][d1][d2]);
+          data[d2i].series[4].data.push(this.info["CO"][d1][d2]);
+          data[d2i].series[5].data.push(this.info["O3"][d1][d2]);
+          d2i++;
         }
       }
 
-      this.echartsOptions7.baseOption.timeline.data = yearlist;
-      this.echartsOptions7.baseOption.legend.data = ["PM2.5", "SO2", "PM10"];
-      this.echartsOptions7.baseOption.xAxis[0].data = citylist;
-      this.echartsOptions7.baseOption.series = [
+      this.echartsOptions1.baseOption.timeline.data = yearlist;
+      this.echartsOptions1.baseOption.legend.data = [
+        "PM2.5",
+        "SO2",
+        "PM10",
+        "NO2",
+        "CO",
+        "O3",
+      ];
+      this.echartsOptions1.baseOption.legend.selected = {
+        NO2: false,
+        CO: false,
+        O3: false,
+      };
+      this.echartsOptions1.baseOption.xAxis[0].data = citylist;
+      this.echartsOptions1.baseOption.series = [
         { name: "PM2.5", type: "bar" },
         { name: "SO2", type: "bar" },
         { name: "PM10", type: "bar" },
+        { name: "NO2", type: "bar" },
+        { name: "CO", type: "bar" },
+        { name: "O3", type: "bar" },
       ];
 
-      this.echartsOptions7.options = data;
+      this.echartsOptions1.options = data;
     },
     // 建成区面积echarts
     getoptions2(nowXH) {
@@ -1097,19 +1152,26 @@ export default {
   top: calc(75px + 1%);
   right: 0;
 }
+.page_3 {
+  width: 30%;
+  height: 80px;
+  position: absolute;
+  bottom: 20px;
+  left: 33%;
+}
 .cb_1 {
   width: 100%;
-  height: calc(33% - 2px);
+  height: calc(40% - 2px);
   float: left;
 }
 .cb_2 {
   width: 100%;
-  height: calc(33% - 2px);
+  height: calc(30% - 2px);
   float: left;
 }
 .cb_3 {
   width: 100%;
-  height: calc(33% - 2px);
+  height: calc(30% - 2px);
   float: left;
 }
 .cb_4 {

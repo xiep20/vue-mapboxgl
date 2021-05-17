@@ -4,6 +4,7 @@
       <div class="header-cen">
         <h1>海南城市可视化分析</h1>
       </div>
+      <headermenu Isactive="2"></headermenu>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
@@ -80,12 +81,13 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import headermenu from "./../components/headermenu";
 export default {
   name: "mapindex",
   computed: {
     ...mapGetters(["getMapEchartsOptions"]),
   },
-  components: {},
+  components: { headermenu },
   data() {
     return {
       mapOptions: {
@@ -1248,10 +1250,10 @@ export default {
           data[yearlist.length - 1].series[0].data.push(
             this.info["LCR"][d1][d2]
           );
-          data[yearlist.length - 1].series[0].data.push(
+          data[yearlist.length - 1].series[1].data.push(
             this.info["PGR"][d1][d2]
           );
-          data[yearlist.length - 1].series[0].data.push(
+          data[yearlist.length - 1].series[2].data.push(
             this.info["LCRPGR"][d1][d2]
           );
         }

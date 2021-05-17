@@ -2,8 +2,9 @@
   <div class="MapIndex">
     <div class="page_0">
       <div class="header-cen">
-      <h1>海南城市可视化分析</h1>
+        <h1>海南城市可视化分析</h1>
       </div>
+      <headermenu Isactive="1"></headermenu>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
       <!-- <sm-animate-marker-layer
@@ -26,19 +27,20 @@ import { mapGetters, mapMutations } from "vuex";
 import cslayer from "./../components/csLayer/cslayer";
 import rightEcharts from "./../components/csLayer/rightEcharts";
 import timelist from "./../components/csLayer/timelist";
+import headermenu from "./../components/headermenu";
 export default {
   name: "mapindex",
   computed: {
     ...mapGetters(["getMapEchartsOptions"]),
   },
-  components: { cslayer, rightEcharts, timelist },
+  components: { cslayer, rightEcharts, timelist, headermenu },
   data() {
     return {
       mapOptions: {
         container: "map", // container id
         style: {
           version: 8,
-          sources: {         
+          sources: {
             citypolygon: {
               type: "geojson",
               data: "data/hainan.json",
@@ -49,7 +51,6 @@ export default {
             },
           },
           layers: [
-            
             {
               id: "geojsonid",
               type: "fill",
@@ -161,28 +162,27 @@ export default {
 .page_0 {
   width: 100%;
   height: 75px;
-  background: #0D1F49;
+  background: #0d1f49;
   font-size: 24px;
   padding: 0 20px;
-  
 }
-.page_0 .header-cen{
-    margin-left:30%;
-    width: 30%;
-    background: url(../images/b.png) no-repeat center top;
-    height: 1rem;
-    background-size: 100% 100%;
-    text-align: center;
-    line-height: 1rem;
-    height:75px;
+.page_0 .header-cen {
+  margin-left: 30%;
+  width: 30%;
+  background: url(../images/b.png) no-repeat center top;
+  height: 1rem;
+  background-size: 100% 100%;
+  text-align: center;
+  line-height: 1rem;
+  height: 75px;
 }
-.page_0 h1{
-    font-size: 27pt;
-    color: #ffffff;
-    letter-spacing: 0.1rem;
-    text-shadow: 0 0 0.3rem #00d8ff;
-    padding-left: 0.15rem;
-    padding-top:24px;
+.page_0 h1 {
+  font-size: 27pt;
+  color: #ffffff;
+  letter-spacing: 0.1rem;
+  text-shadow: 0 0 0.3rem #00d8ff;
+  padding-left: 0.15rem;
+  padding-top: 24px;
 }
 .mapCon {
   width: 40%;
