@@ -10,22 +10,13 @@ import axios from './axios/httpConfig'
 
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
-    // Vue.use(ElementUI)
+// Vue.use(ElementUI)
 Vue.prototype.VueiClient = VueiClient
 Vue.use(VueiClient, {
     theme: 'dark'
 })
 Vue.prototype.$echarts = echarts
-window.a = new VueiClient.commontypes.FillStyle({
-    "fill-opacity": 0.8,
-    "fill-color": "#0D1F49",
-    "fill-translate": [0, 0],
-    "fill-antialias": true,
-    "fill-outline-color": "#0D1F49",
-    "fill-translate-anchor": "map",
-}, {
-    visibility: "visible",
-})
+window.echarts = echarts
 new Vue({
     router,
     store,

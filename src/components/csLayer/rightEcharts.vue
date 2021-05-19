@@ -150,7 +150,7 @@ export default {
 
         var arr = [];
         for (var a = 0; a < year.length; a++) {
-          arr.push({ value: seriesdata[a][0], name: year[a] });
+          arr.push({ value: seriesdata[0][a], name: year[a] });
         }
         _this.s3ChartOptions.series[0].data = arr;
 
@@ -180,7 +180,7 @@ export default {
         var arr = [];
         for (var a = 0; a < _this.timelist.length; a++) {
           arr.push({
-            value: _this.seriesdata[a][_this.selnum],
+            value: _this.seriesdata[_this.selnum][a],
             name: _this.timelist[a],
           });
         }

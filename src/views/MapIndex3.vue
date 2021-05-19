@@ -11,7 +11,7 @@
 
     <div class="page_1">
       <sm-border type="border1" class="common-border cb_1">
-        <div class="card_tit">逐年空气指标</div>
+        <div class="card_tit">逐年空气变化</div>
         <sm-chart
           icon-class=""
           :options="echartsOptions1"
@@ -20,16 +20,16 @@
       </sm-border>
 
       <sm-border type="border1" class="common-border cb_2">
-        <div class="card_tit">{{ p1selcity }} CO2指标</div>
+        <div class="card_tit">CO2排放量</div>
         <sm-chart
           icon-class=""
-          :options="chartsOptions2"
+          :options="echartsOptions2"
           class="smchart"
         ></sm-chart>
       </sm-border>
 
       <sm-border type="border1" class="common-border cb_3">
-        <div class="card_tit">{{ p1selcity }}</div>
+        <div class="card_tit">空气排放变化</div>
         <sm-chart
           icon-class=""
           :options="chartsOptions3"
@@ -47,7 +47,7 @@
         ></sm-chart>
       </sm-border>
       <sm-border type="border1" class="common-border cb_5">
-        <div class="card_tit">PGR</div>
+        <div class="card_tit">CO（mg/m3）</div>
         <sm-chart
           icon-class=""
           :options="echartsOptions5"
@@ -84,6 +84,12 @@ export default {
   },
   components: { headermenu },
   data() {
+    var barTopColor = ["#02c3f1", "#53e568", "#a154e9"];
+    var barBottomColor = [
+      "rgba(2,195,241,0.1)",
+      "rgba(83, 229, 104, 0.1)",
+      "rgba(161, 84, 233, 0.1)",
+    ];
     return {
       timelist: [],
       mapOptions: {
@@ -236,7 +242,16 @@ export default {
         },
         options: [],
       },
-      chartsOptions2: {
+      echartsOptions2: {
+        title: {
+          text: "",
+          subtext: "",
+          textStyle: {
+            color: "#00d8ff",
+            textBorderColor: "#e6ff00",
+          },
+          left: "20%",
+        },
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -256,17 +271,6 @@ export default {
           bottom: "0%",
           containLabel: true,
         },
-        // dataZoom: [
-        //   {
-        //     type: "inside",
-        //     start: 0,
-        //     end: 30,
-        //   },
-        //   {
-        //     start: 0,
-        //     end: 30,
-        //   },
-        // ],
         xAxis: [
           {
             type: "category",
@@ -327,6 +331,9 @@ export default {
         series: [],
       },
       chartsOptions3: {
+        title: {
+          text: "城市空气",
+        },
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -336,51 +343,25 @@ export default {
             },
           },
         },
-        textStyle: {
-          color: "#8597c1",
+        legend: {
+          data: [],
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {},
+          },
         },
         grid: {
           left: "3%",
-          top: "10%",
-          right: "10%",
-          bottom: "0%",
+          right: "4%",
+          bottom: "3%",
           containLabel: true,
         },
-        // dataZoom: [
-        //   {
-        //     type: "inside",
-        //     start: 0,
-        //     end: 30,
-        //   },
-        //   {
-        //     start: 0,
-        //     end: 30,
-        //   },
-        // ],
         xAxis: [
           {
             type: "category",
             boundaryGap: false,
             data: [],
-            axisLine: {
-              show: false, //x轴的线
-              lineStyle: {
-                color: ["#7bd6c763"],
-              },
-            },
-
-            // 控制网格线是否显示
-            splitLine: {
-              show: false,
-              lineStyle: {
-                // 使用深浅的间隔色
-                color: ["#fff"],
-              },
-            },
-            //除去x轴刻度
-            axisTick: {
-              show: false,
-            },
             axisLabel: {
               //控制x轴文本
               show: true,
@@ -395,149 +376,361 @@ export default {
         yAxis: [
           {
             type: "value",
-            // min: 40,
-            // max: 80,
             splitLine: {
               show: true,
               lineStyle: {
-                color: "#7bd6c763",
+                color: "#cbbf4063",
               },
             },
             splitArea: { show: false }, //保留网格区域
-            axisLine: {
-              show: true,
-              lineStyle: {
-                type: "solid",
-                color: "#2a3751",
-                width: "0",
-              },
-            },
           },
         ],
         series: [],
       },
       echartsOptions4: {
-        backgroundColor: "#333",
-        legend: {
-          bottom: 10,
-          data: [],
-          itemGap: 20,
-          textStyle: {
-            color: "#fff",
-            fontSize: 14,
-          },
-        },
-        tooltip: {
-          padding: 10,
-          backgroundColor: "#222",
-          borderColor: "#777",
-          borderWidth: 1,
-        },
-        parallelAxis: [],
-        parallel: {
-          left: "8%",
-          right: "15%",
-          bottom: 50,
-          parallelAxisDefault: {
-            type: "value",
-            name: "指数",
-            nameLocation: "end",
-            nameGap: 20,
-            nameTextStyle: {
-              color: "#fff",
-              fontSize: 12,
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#aaa",
-              },
-            },
-            axisTick: {
-              lineStyle: {
-                color: "#777",
-              },
-            },
-            splitLine: {
-              show: false,
-            },
-            axisLabel: {
-              color: "#fff",
-            },
-          },
-        },
-        series: [],
-      },
-      echartsOptions5: {
         title: {
-          text: "PGR",
+          text: "",
           subtext: "",
+          textStyle: {
+            color: "#00d8ff",
+            textBorderColor: "#e6ff00",
+          },
+          left: "20%",
         },
         tooltip: {
+          show: false,
           trigger: "axis",
-        },
-        legend: {
-          data: [],
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+          },
         },
         grid: {
-          left: "10%",
-          top: "10%",
-          right: "8%",
+          left: "0",
+          right: "3%",
           bottom: "0%",
+          top: "20%",
+          containLabel: true,
+          show: true,
+          borderColor: "rgba(0, 240, 255, 0.3)",
         },
-        dataZoom: [
-          {
-            type: "inside",
-            start: 0,
-            end: 30,
-            filterMode: "filter",
-          },
-          {
-            start: 0,
-            end: 30,
-            filterMode: "filter",
-          },
-        ],
         xAxis: [
           {
             type: "category",
-            boundaryGap: false,
             data: [],
-            //除去x轴刻度
             axisTick: {
+              alignWithLabel: false,
               show: false,
             },
             axisLabel: {
-              //控制x轴文本
               show: true,
+              fontSize: 11,
               textStyle: {
                 color: "#8597c1",
               },
-              // interval: 0,
-              rotate: 10,
+              formatter: "{value}年",
+              rotate: 0,
+            },
+            axisLine: {
+              show: true,
+              color: "#fff",
             },
           },
         ],
         yAxis: [
           {
             type: "value",
+            name: "生活垃圾清运量(万吨)",
+            nameTextStyle: {
+              color: "rgb(0,136,212)",
+            },
+
             splitLine: {
-              show: true,
-              lineStyle: {
-                color: "#7bd6c763",
-              },
+              show: false,
+            },
+            axisTick: {
+              show: false,
             },
             splitArea: { show: false }, //保留网格区域
             axisLine: {
-              show: true,
+              show: false,
               lineStyle: {
                 type: "solid",
                 color: "#2a3751",
                 width: "0",
               },
             },
+            axisLabel: {
+              show: true,
+              formatter: "{value}", //右侧Y轴文字显示
+              textStyle: {
+                color: "rgb(0,136,212)",
+              },
+            },
+            // min: 0,
+            // max: 120,
+          },
+          {
+            type: "value",
+            name: "生活垃圾无害化处理量(万吨)",
+            nameTextStyle: {
+              color: "rgb(219,50,51)",
+            },
+            position: "right",
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: "rgb(219,50,51)",
+              },
+            },
+            axisTick: {
+              show: false,
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: false,
+              lineStyle: {
+                type: "solid",
+                color: "#2a3751",
+                width: "0",
+              },
+            },
+            splitLine: {
+              show: false,
+              lineStyle: {
+                color: "#57617B",
+              },
+            },
+            // min: 0,
+            // max: 120,
           },
         ],
-        series: [],
+        // 控制x轴
+        series: [
+          {
+            name: "生活垃圾清运量 数值",
+            type: "line",
+
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(0, 136, 212, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(0, 136, 212, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 10,
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "rgb(0,136,212)",
+              },
+            },
+            data: [],
+          },
+          {
+            name: "生活垃圾无害化处理量",
+            type: "line",
+            yAxisIndex: 1, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(219, 50, 51, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(219, 50, 51, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 10,
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "rgb(219,50,51)",
+              },
+            },
+            data: [],
+            markArea: {},
+          },
+        ],
+        graphic: [],
+      },
+      echartsOptions5: {
+        backgroundColor: "#061326",
+        title: {
+          text: "CO排放",
+          top: 20,
+          left: "center",
+          textStyle: {
+            color: "#fff",
+            fontSize: 20,
+          },
+        },
+        grid: {
+          top: "25%",
+          bottom: "15%",
+        },
+        xAxis: {
+          data: [],
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: true,
+            margin: 15,
+            align: "center",
+            // formatter: function (params) {
+            //   return "{b|" + params + "}";
+            // },
+            textStyle: {
+              fontSize: 14,
+              color: "#ffffff",
+              rich: {
+                a: {
+                  fontSize: 12,
+                  color: "#ffffff",
+                },
+                b: {
+                  height: 20,
+                  fontSize: 14,
+                  color: "#ffffff",
+                },
+              },
+            },
+            rotate: 0,
+          },
+          interval: 0,
+        },
+        yAxis: {
+          splitLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: false,
+          },
+          splitArea: { show: false }, //保留网格区域
+        },
+        series: [
+          {
+            name: "柱顶部",
+            type: "pictorialBar",
+            symbolSize: [13, 6],
+            symbolOffset: [0, -3],
+            z: 12,
+            itemStyle: {
+              normal: {
+                color: function (params) {
+                  return barTopColor[params.dataIndex % 3];
+                },
+              },
+            },
+            label: {
+              show: true,
+              position: "top",
+              fontSize: 14,
+            },
+            symbolPosition: "end",
+            data: [],
+          },
+          {
+            name: "柱底部",
+            type: "pictorialBar",
+            symbolSize: [13, 6],
+            symbolOffset: [0, 3],
+            z: 12,
+            itemStyle: {
+              normal: {
+                color: function (params) {
+                  return barTopColor[params.dataIndex % 3];
+                },
+              },
+            },
+            data: [],
+          },
+          {
+            name: "第一圈",
+            type: "pictorialBar",
+            symbolSize: [24, 10],
+            symbolOffset: [0, 6],
+            z: 11,
+            itemStyle: {
+              normal: {
+                color: "transparent",
+                borderColor: "#3ACDC5",
+                borderWidth: 2,
+              },
+            },
+            data: [],
+          },
+          {
+            type: "bar",
+            itemStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 1,
+                    color: barTopColor[0],
+                  },
+                  {
+                    offset: 0,
+                    color: barBottomColor[1],
+                  },
+                ]),
+                opacity: 0.8,
+              },
+            },
+            z: 14,
+            silent: true,
+            barWidth: 12,
+            barGap: "-100%", // Make series be overlap
+            data: [],
+          },
+        ],
       },
       echartsOptions6: {
         legend: {
@@ -608,26 +801,12 @@ export default {
       var _this = this;
       _this.mapm(0);
       _this.getoptions1();
-      // _this.getoptions2(0);
-      // _this.getoptions3(0);
-      // _this.getoptions4();
-      // _this.getoptions5();
+      _this.getoptions2();
+      _this.getoptions3();
+      _this.getoptions4();
+      _this.getoptions5();
       // _this.getoptions6();
       // _this.getoptions7();
-      var ynum = 1;
-      var cnum = 1;
-      setInterval(() => {
-        if (ynum == 9) {
-          ynum = 0;
-        }
-        if (cnum === 18) {
-          cnum = 0;
-        }
-        // _this.getoptions2(ynum);
-        // _this.getoptions3(cnum);
-        ynum++;
-        cnum++;
-      }, 5000);
     },
     timelinechange(current) {
       this.mapm(current.currentIndex);
@@ -752,317 +931,276 @@ export default {
 
       this.echartsOptions1.options = data;
     },
-    // 建成区面积echarts
-    getoptions2(nowXH) {
-      var xh = 0;
-      var cityname = [];
-      var poplist = [];
-      for (var d1 in this.info["面积"]) {
-        if (nowXH === xh) {
-          this.p1selyaer = d1;
-        }
-        poplist.push([]);
-        for (var d2 in this.info["面积"][d1]) {
-          if (xh === 0) {
-            cityname.push(d2);
-          }
-          poplist[xh].push(this.info["面积"][d1][d2]);
-        }
-        xh++;
-      }
-
-      var xData = cityname,
-        yData = poplist[nowXH];
-      this.chartsOptions2.xAxis[0].data = xData;
-      this.chartsOptions2.series = [
-        {
-          type: "line",
-          color: "#FFD700",
-          smooth: true,
-          lineStyle: {
-            normal: {
-              width: 1,
-            },
-          },
-          areaStyle: {
-            normal: {
-              // color: "rgba(255, 215, 0, 0.3)",
-              color: new this.$echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: "rgba(255, 215, 0, 0.3)",
-                  },
-                  {
-                    offset: 1,
-                    color: "rgba(255, 215, 0, 0)",
-                  },
-                ],
-                false
-              ),
-              shadowColor: "rgba(0, 0, 0, 0.1)",
-              shadowBlur: 5,
-            },
-          },
-          data: yData,
-          markPoint: {
-            data: [
-              {
-                type: "min",
-                name: "最小值",
-                symbolSize: 25,
-                label: {
-                  formatter: "低",
-                  color: "#000",
-                },
-                itemStyle: {
-                  color: "#96f392",
-                },
-              },
-              {
-                coord: ["海口市", yData[7]],
-                symbolSize: 50,
-                label: {
-                  formatter: "海口市",
-                  color: "#fff",
-                  fontSize: 10,
-                },
-                itemStyle: {
-                  color: "rgb(194,53,49)",
-                },
-              },
-            ],
-          },
-          markLine: {
-            data: [
-              [
-                {
-                  name: "",
-                  coord: ["海口市", 0],
-                  lineStyle: {
-                    color: "rgb(194,53,49)",
-                    width: 2,
-                    curveness: 0.3,
-                    type: "dotted",
-                  },
-                  symbol: "none",
-                },
-                {
-                  coord: ["海口市", yData[7]],
-                  symbol: "none",
-                },
-              ],
-            ],
-          },
-        },
-      ];
-      this.chartsOptions2.graphic = [
-        {
-          type: "text",
-          left: "70%",
-          top: "1%",
-          style: {
-            fill: "#fff",
-            text: "城镇面积\n\n海口市 最大\n\n各地随年提升",
-            textAlign: "center",
-            fontSize: 13,
-            //font: 'bold 13px Microsoft YaHei'
-          },
-        },
-      ];
-    },
-    // 人口echarts
-    getoptions3(nowXH) {
+    //  CO2 echarts
+    getoptions2() {
+      var _this = this;
       var xh = 0;
       var cityname = [];
       var yearlist = [];
       var poplist = [];
-      for (var d1 in this.info["人口"]) {
-        yearlist.push(d1);
-        var xh2 = 0;
-        for (var d2 in this.info["人口"][d1]) {
+      for (var d1 in _this.info["CO2"]) {
+        cityname.push(d1);
+        // var xh2 = 0;
+        for (var d2 in _this.info["CO2"][d1]) {
           if (xh === 0) {
-            cityname.push(d2);
+            yearlist.push(d2);
             poplist.push([]);
           }
-          poplist[xh2].push(this.info["人口"][d1][d2]);
-          xh2++;
+          poplist[xh].push(_this.info["CO2"][d1][d2]);
+          // xh2++;
         }
         xh++;
       }
-      this.p1selcity = cityname[nowXH];
-      var xData = yearlist,
-        yData = poplist[nowXH];
-      this.chartsOptions3.xAxis[0].data = xData;
-      this.chartsOptions3.series = [
-        {
-          type: "line",
-          color: "#FFD700",
-          smooth: true,
-          lineStyle: {
-            normal: {
-              width: 1,
+      var nowXH = 0;
+      setInterval(() => {
+        if (nowXH === cityname.length) {
+          nowXH = 0;
+        }
+
+        var xData = yearlist,
+          yData = poplist[nowXH];
+        _this.echartsOptions2.xAxis[0].data = xData;
+        _this.echartsOptions2.title.text = cityname[nowXH];
+        _this.echartsOptions2.series = [
+          {
+            type: "line",
+            color: "#FFD700",
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                // color: "rgba(255, 215, 0, 0.3)",
+                color: new _this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(255, 215, 0, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(255, 215, 0, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 5,
+              },
+            },
+            data: yData,
+            markPoint: {
+              data: [
+                {
+                  type: "min",
+                  name: "最小值",
+                  symbolSize: 25,
+                  label: {
+                    formatter: "低",
+                    color: "#000",
+                  },
+                  itemStyle: {
+                    color: "#96f392",
+                  },
+                },
+                {
+                  type: "max",
+                  name: "最大值",
+                  symbolSize: 25,
+                  label: {
+                    formatter: "高",
+                    color: "#000",
+                  },
+                  itemStyle: {
+                    color: "#fff000",
+                  },
+                },
+              ],
             },
           },
-          areaStyle: {
-            normal: {
-              // color: "rgba(255, 215, 0, 0.3)",
-              color: new this.$echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: "rgba(255, 215, 0, 0.3)",
-                  },
-                  {
-                    offset: 1,
-                    color: "rgba(255, 215, 0, 0)",
-                  },
-                ],
-                false
-              ),
-              shadowColor: "rgba(0, 0, 0, 0.1)",
-              shadowBlur: 5,
+        ];
+        _this.echartsOptions2.graphic = [
+          {
+            type: "text",
+            left: "70%",
+            top: "1%",
+            style: {
+              fill: "#fff",
+              text: "二氧化碳排放量\n\n基本呈提升态",
+              textAlign: "center",
+              fontSize: 13,
+              //font: 'bold 13px Microsoft YaHei'
             },
           },
-          data: yData,
-          markPoint: {
-            data: [
-              {
-                type: "min",
-                symbol: "roundRect",
-                name: "最小值",
-                symbolSize: [80, 20],
-                label: {
-                  formatter: "{c}",
-                  color: "#fff",
-                },
-                itemStyle: {
-                  color: "#008000",
-                },
-              },
-              {
-                type: "max",
-                symbol: "roundRect",
-                name: "最大值",
-                symbolSize: [80, 20],
-                label: {
-                  formatter: "{c}",
-                  color: "#fff",
-                },
-                itemStyle: {
-                  color: "#ff0000",
-                },
-              },
-            ],
-          },
-        },
-      ];
-      this.chartsOptions3.graphic = [
-        {
-          type: "text",
-          left: "70%",
-          top: "1%",
-          style: {
-            fill: "#FFEB3B",
-            text: "每5年人口变化",
-            textAlign: "center",
-            fontSize: 18,
-            //font: 'bold 13px Microsoft YaHei'
-          },
-        },
-      ];
+        ];
+        nowXH++;
+      }, 2000);
+    },
+    // 人口echarts
+    getoptions3() {
+      var yearlist = [];
+      var citylist = [];
+      var fl = ["PM2.5", "SO2", "PM10", "CO", "O3", "NO2"];
+      var data = [];
+      for (var d1 in this.info["PM2.5"]) {
+        citylist.push(d1);
+        data.push([]);
+        for (var v = 0; v < fl.length; v++) {
+          data[citylist.length - 1].push({
+            name: fl[v],
+            type: "line",
+            stack: "总量",
+            // label: {
+            //   show: true,
+            //   position: "top",
+            // },
+            areaStyle: {},
+            emphasis: {
+              focus: "series",
+            },
+            data: [],
+          });
+        }
+        data[citylist.length - 1][fl.length - 1].label = {
+          show: true,
+          position: "top",
+        };
+        for (var d2 in this.info["PM2.5"][d1]) {
+          if (citylist.length === 1) {
+            yearlist.push(d2);
+          }
+          for (var c = 0; c < fl.length; c++) {
+            data[citylist.length - 1][c].data.push(this.info[fl[c]][d1][d2]);
+          }
+        }
+      }
+
+      this.chartsOptions3.legend.data = fl;
+      this.chartsOptions3.xAxis[0].data = yearlist;
+      this.chartsOptions3.series = data[0];
+      this.chartsOptions3.title.text = citylist[0];
+      var stn = 1;
+      setInterval(() => {
+        if (stn === citylist.length) {
+          stn = 0;
+        }
+        this.chartsOptions3.series = data[stn];
+        this.chartsOptions3.title.text = citylist[stn];
+        stn++;
+      }, 3000);
     },
     //
     getoptions4() {
       //this.info["人口"]
+      var citylist = [];
+      var yearlist = [];
       var seriesdata0 = [];
-      var palist = [];
-      palist.push({
-        dim: 0,
-        name: "城市",
-        type: "category",
-        inverse: true,
-        nameLocation: "start",
-      });
-      var dim = 1;
-      for (var d1 in this.info["LCR"]) {
-        palist.push({ dim: dim++, name: d1 });
-        var xh2 = 0;
-        for (var d2 in this.info["LCR"][d1]) {
-          if (dim === 2) {
-            seriesdata0.push([d2]);
+      for (var d1 in this.info["生活垃圾清运量"]) {
+        citylist.push(d1);
+        seriesdata0.push([[], []]);
+        for (var d2 in this.info["生活垃圾清运量"][d1]) {
+          if (citylist.length === 1) {
+            yearlist.push(d2);
           }
-          seriesdata0[xh2].push(this.info["LCR"][d1][d2]);
-          xh2++;
+          seriesdata0[citylist.length - 1][0].push(
+            this.info["生活垃圾清运量"][d1][d2]
+          );
+          seriesdata0[citylist.length - 1][1].push(
+            this.info["生活垃圾无害化处理量"][d1][d2]
+          );
         }
       }
 
-      this.echartsOptions4.legend.data = ["LCR"];
-
-      this.echartsOptions4.parallelAxis = palist;
-
-      this.echartsOptions4.series = [
+      this.echartsOptions4.xAxis[0].data = yearlist;
+      this.echartsOptions4.title.text = citylist[0];
+      this.echartsOptions4.series[0].data = seriesdata0[0][0];
+      this.echartsOptions4.series[1].data = seriesdata0[0][1];
+      this.echartsOptions4.graphic = [
         {
-          name: "LCR",
-          type: "parallel",
-          lineStyle: {
-            normal: {
-              width: 1,
-              opacity: 0.5,
-            },
+          type: "text",
+          left: "20%",
+          top: "23%",
+          $action: "merge",
+          style: {
+            fill: "#fff",
+            text: "现象：两曲线大体一致",
+            textAlign: "left",
+            fontSize: 13,
+            //font: 'bold 13px Microsoft YaHei'
           },
-          data: seriesdata0,
+          invisible: false,
+        },
+        {
+          type: "text",
+          left: "20%",
+          top: "33%",
+          $action: "merge",
+          style: {
+            fill: "#fff",
+            text: "原因：清运生活垃圾基本已做无害化处理",
+            textAlign: "left",
+            fontSize: 13,
+            //font: 'bold 13px Microsoft YaHei'
+          },
+          invisible: false,
         },
       ];
+      var stn = 1;
+      setInterval(() => {
+        if (stn === citylist.length) {
+          stn = 0;
+        }
+        this.echartsOptions4.title.text = citylist[stn];
+        this.echartsOptions4.series[0].data = seriesdata0[stn][0];
+        this.echartsOptions4.series[1].data = seriesdata0[stn][1];
+        stn++;
+      }, 3000);
     },
     getoptions5() {
+      //mg/m3
       var yearlist = [];
       var citylist = [];
       var data = [];
-      for (var d1 in this.info["PGR"]) {
-        yearlist.push(d1);
-        data.push({
-          name: d1,
-          type: "bar",
-          data: [],
-          areaStyle: {
-            normal: {
-              color: "#f0d0f0",
-              shadowColor: "rgba(0, 0, 0, 0.1)",
-              shadowBlur: 5,
-            },
-          },
-          markPoint: {
-            data: [
-              { type: "max", name: "最大值" },
-              { type: "min", name: "最小值" },
-            ],
-          },
-          markLine: {
-            data: [{ type: "average", name: "平均值" }],
-          },
-        });
-        for (var d2 in this.info["PGR"][d1]) {
-          if (yearlist.length === 1) {
-            citylist.push([d2]);
+      for (var d1 in this.info["CO"]) {
+        citylist.push(d1);
+        var y1 = 0;
+        for (var d2 in this.info["CO"][d1]) {
+          if (citylist.length === 1) {
+            data.push([]);
+            yearlist.push([d2]);
           }
-          data[yearlist.length - 1].data.push(this.info["PGR"][d1][d2]);
+          data[y1].push(this.info["CO"][d1][d2]);
+          y1++;
         }
       }
 
-      this.echartsOptions5.legend.data = yearlist;
+      this.echartsOptions5.title.text = yearlist[5] + "年";
+      this.echartsOptions5.xAxis.data = citylist;
 
-      this.echartsOptions5.xAxis[0].data = citylist;
-
-      this.echartsOptions5.series = data;
+      this.echartsOptions5.series[0].data = data[5];
+      this.echartsOptions5.series[1].data = data[5];
+      this.echartsOptions5.series[2].data = data[5];
+      this.echartsOptions5.series[3].data = data[5];
+      // this.echartsOptions5.series[4].data = data[0];
+      var stn = 5;
+      setInterval(() => {
+        if (stn === yearlist.length) {
+          stn = 5;
+        }
+        this.echartsOptions5.title.text = yearlist[stn] + "年";
+        this.echartsOptions5.series[0].data = data[stn];
+        this.echartsOptions5.series[1].data = data[stn];
+        this.echartsOptions5.series[2].data = data[stn];
+        this.echartsOptions5.series[3].data = data[stn];
+        stn++;
+      }, 3000);
     },
     getoptions6() {
       var yearlist = [];
