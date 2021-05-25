@@ -21,6 +21,13 @@
         >视图3</router-link
       >
     </div>
+    <div class="menu_item">
+      <router-link
+        :class="Isactive === '4' ? 'selIsactive' : 'isno'"
+        to="/MapIndex4"
+        >视图4</router-link
+      >
+    </div>
   </div>
 </template>
 

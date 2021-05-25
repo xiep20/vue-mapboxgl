@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import MapIndex from '@/views/MapIndex.vue'
 import MapIndex2 from '@/views/MapIndex2.vue'
 import MapIndex3 from '@/views/MapIndex3.vue'
+import MapIndex4 from '@/views/MapIndex4.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -21,6 +22,10 @@ const routes = [{
   path: '/MapIndex3',
   name: 'MapIndex3',
   component: MapIndex3
+}, {
+  path: '/MapIndex4',
+  name: 'MapIndex4',
+  component: MapIndex4
 }]
 
 const router = new VueRouter({
