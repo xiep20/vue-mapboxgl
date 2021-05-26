@@ -79,6 +79,7 @@
       <sm-time-line
         :data="timelist"
         autoPlay="true"
+        playInterval="5000"
         @timelinechanged="timelinechange"
       >
       </sm-time-line>
@@ -741,13 +742,13 @@ export default {
     // 切换年份
     changeYear() {
       var _this = this;
-      _this.mapm(0);
       _this.getoptions1();
       _this.getoptions2();
       _this.getoptions3();
       _this.getoptions4();
       _this.getoptions5();
       _this.getoptions6();
+      _this.mapm(0);
       // _this.getoptions7();
     },
     timelinechange(current) {
@@ -960,7 +961,9 @@ export default {
         }
         xh++;
       }
-      var nowXH = 0;
+      _this.echartsOptions1.title.text = yearlist[0] + "\n\n客运量";
+      _this.echartsOptions1.series[0].data = poplist[0];
+      var nowXH = 1;
       setInterval(() => {
         if (nowXH === yearlist.length) {
           nowXH = 0;
@@ -970,7 +973,7 @@ export default {
         _this.echartsOptions1.title.text = yearlist[nowXH] + "\n\n客运量";
         _this.echartsOptions1.series[0].data = poplist[nowXH];
         nowXH++;
-      }, 2000);
+      }, 5000);
     },
     //  十万人口受灾率
     getoptions2() {
@@ -992,7 +995,75 @@ export default {
         }
         xh++;
       }
-      var nowXH = 0;
+      var yData = poplist[0];
+      _this.echartsOptions2.xAxis[0].data = cityname;
+      _this.echartsOptions2.title.text = yearlist[0];
+      _this.echartsOptions2.series = [
+        {
+          type: "line",
+          color: "#FFD700",
+          smooth: true,
+          lineStyle: {
+            normal: {
+              width: 1,
+            },
+          },
+          areaStyle: {
+            normal: {
+              // color: "rgba(255, 215, 0, 0.3)",
+              color: new _this.$echarts.graphic.LinearGradient(
+                0,
+                0,
+                0,
+                1,
+                [
+                  {
+                    offset: 1,
+                    color: "rgba(172, 59, 42, 0.1)",
+                  },
+                  {
+                    offset: 0,
+                    color: "rgba(147, 206, 7, 0.3)",
+                  },
+                ],
+                false
+              ),
+              shadowColor: "rgba(0, 0, 0, 0.1)",
+              shadowBlur: 5,
+            },
+          },
+          data: yData,
+          markPoint: {
+            data: [
+              {
+                type: "min",
+                name: "最小值",
+                symbolSize: 25,
+                label: {
+                  formatter: "低",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#96f392",
+                },
+              },
+              {
+                type: "max",
+                name: "最大值",
+                symbolSize: 25,
+                label: {
+                  formatter: "高",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#fff000",
+                },
+              },
+            ],
+          },
+        },
+      ];
+      var nowXH = 1;
       setInterval(() => {
         if (nowXH === yearlist.length) {
           nowXH = 0;
@@ -1068,7 +1139,7 @@ export default {
           },
         ];
         nowXH++;
-      }, 2000);
+      }, 5000);
     },
     //  十万人口死亡失踪率
     getoptions3() {
@@ -1090,7 +1161,76 @@ export default {
         }
         xh++;
       }
-      var nowXH = 0;
+
+      var yData = poplist[0];
+      _this.echartsOptions3.xAxis[0].data = cityname;
+      _this.echartsOptions3.title.text = yearlist[0];
+      _this.echartsOptions3.series = [
+        {
+          type: "bar",
+          color: "#FFD700",
+          smooth: true,
+          lineStyle: {
+            normal: {
+              width: 1,
+            },
+          },
+          areaStyle: {
+            normal: {
+              // color: "rgba(255, 215, 0, 0.3)",
+              color: new _this.$echarts.graphic.LinearGradient(
+                0,
+                0,
+                0,
+                1,
+                [
+                  {
+                    offset: 0,
+                    color: "rgba(255, 215, 0, 0.3)",
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(255, 215, 0, 0)",
+                  },
+                ],
+                false
+              ),
+              shadowColor: "rgba(0, 0, 0, 0.1)",
+              shadowBlur: 5,
+            },
+          },
+          data: yData,
+          markPoint: {
+            data: [
+              {
+                type: "min",
+                name: "最小值",
+                symbolSize: 25,
+                label: {
+                  formatter: "低",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#96f392",
+                },
+              },
+              {
+                type: "max",
+                name: "最大值",
+                symbolSize: 25,
+                label: {
+                  formatter: "高",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#fff000",
+                },
+              },
+            ],
+          },
+        },
+      ];
+      var nowXH = 1;
       setInterval(() => {
         if (nowXH === yearlist.length) {
           nowXH = 0;
@@ -1166,7 +1306,7 @@ export default {
           },
         ];
         nowXH++;
-      }, 2000);
+      }, 5000);
     },
     //  直接经济损失占GDP比重
     getoptions4() {
@@ -1188,7 +1328,75 @@ export default {
         }
         xh++;
       }
-      var nowXH = 0;
+      var yData = poplist[0];
+      _this.echartsOptions4.xAxis[0].data = cityname;
+      _this.echartsOptions4.title.text = yearlist[0];
+      _this.echartsOptions4.series = [
+        {
+          type: "line",
+          color: "#FFD700",
+          smooth: true,
+          lineStyle: {
+            normal: {
+              width: 1,
+            },
+          },
+          areaStyle: {
+            normal: {
+              // color: "rgba(255, 215, 0, 0.3)",
+              color: new _this.$echarts.graphic.LinearGradient(
+                0,
+                0,
+                0,
+                1,
+                [
+                  {
+                    offset: 0,
+                    color: "rgba(255, 215, 0, 0.3)",
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(255, 215, 0, 0)",
+                  },
+                ],
+                false
+              ),
+              shadowColor: "rgba(0, 0, 0, 0.1)",
+              shadowBlur: 5,
+            },
+          },
+          data: yData,
+          markPoint: {
+            data: [
+              {
+                type: "min",
+                name: "最小值",
+                symbolSize: 25,
+                label: {
+                  formatter: "低",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#96f392",
+                },
+              },
+              {
+                type: "max",
+                name: "最大值",
+                symbolSize: 25,
+                label: {
+                  formatter: "高",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#fff000",
+                },
+              },
+            ],
+          },
+        },
+      ];
+      var nowXH = 1;
       setInterval(() => {
         if (nowXH === yearlist.length) {
           nowXH = 0;
@@ -1264,7 +1472,7 @@ export default {
           },
         ];
         nowXH++;
-      }, 2000);
+      }, 5000);
     },
     //  建成区绿化率
     getoptions5() {
@@ -1286,7 +1494,76 @@ export default {
         }
         xh++;
       }
-      var nowXH = 0;
+      var yData = poplist[0];
+      _this.echartsOptions5.xAxis[0].data = cityname;
+      _this.echartsOptions5.title.text = yearlist[0];
+      _this.echartsOptions5.series = [
+        {
+          type: "bar",
+          color: "#FFD700",
+          smooth: true,
+          barWidth: 6,
+          lineStyle: {
+            normal: {
+              width: 1,
+            },
+          },
+          areaStyle: {
+            normal: {
+              // color: "rgba(255, 215, 0, 0.3)",
+              color: new _this.$echarts.graphic.LinearGradient(
+                0,
+                0,
+                0,
+                1,
+                [
+                  {
+                    offset: 0,
+                    color: "rgba(255, 215, 0, 0.3)",
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(255, 215, 0, 0)",
+                  },
+                ],
+                false
+              ),
+              shadowColor: "rgba(0, 0, 0, 0.1)",
+              shadowBlur: 5,
+            },
+          },
+          data: yData,
+          markPoint: {
+            data: [
+              {
+                type: "min",
+                name: "最小值",
+                symbolSize: 25,
+                label: {
+                  formatter: "低",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#96f392",
+                },
+              },
+              {
+                type: "max",
+                name: "最大值",
+                symbolSize: 25,
+                label: {
+                  formatter: "高",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#fff000",
+                },
+              },
+            ],
+          },
+        },
+      ];
+      var nowXH = 1;
       setInterval(() => {
         if (nowXH === yearlist.length) {
           nowXH = 0;
@@ -1363,7 +1640,7 @@ export default {
           },
         ];
         nowXH++;
-      }, 2000);
+      }, 5000);
     },
     //  人均公园绿地面积
     getoptions6() {
@@ -1385,7 +1662,56 @@ export default {
         }
         xh++;
       }
-      var nowXH = 0;
+      var yData = poplist[0];
+      _this.echartsOptions6.xAxis[0].data = cityname;
+      _this.echartsOptions6.title.text = yearlist[0];
+      _this.echartsOptions6.series = [
+        {
+          type: "bar",
+          color: new _this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: "#83bff6" },
+            { offset: 0.5, color: "#188df0" },
+            { offset: 1, color: "#188df0" },
+          ]),
+          smooth: true,
+          barWidth: 6,
+          lineStyle: {
+            normal: {
+              width: 1,
+            },
+          },
+          data: yData,
+          markPoint: {
+            data: [
+              {
+                type: "min",
+                name: "最小值",
+                symbolSize: 25,
+                label: {
+                  formatter: "低",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#96f392",
+                },
+              },
+              {
+                type: "max",
+                name: "最大值",
+                symbolSize: 25,
+                label: {
+                  formatter: "高",
+                  color: "#000",
+                },
+                itemStyle: {
+                  color: "#fff000",
+                },
+              },
+            ],
+          },
+        },
+      ];
+      var nowXH = 1;
       setInterval(() => {
         if (nowXH === yearlist.length) {
           nowXH = 0;
@@ -1442,7 +1768,7 @@ export default {
           },
         ];
         nowXH++;
-      }, 2000);
+      }, 5000);
     },
   },
 };

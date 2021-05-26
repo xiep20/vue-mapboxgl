@@ -11,7 +11,7 @@
 
     <sm-text
       class="showyaertext"
-      :title="p1selyaer + '年'"
+      :title="p1selyaer + '年 人口'"
       textColor="#73dee8"
       :fontStyle="{
         fontSize: '24px',

@@ -39,7 +39,7 @@
     </div>
     <div class="page_2">
       <sm-border type="border1" class="common-border cb_4">
-        <div class="card_tit"></div>
+        <div class="card_tit">生活垃圾清运处理</div>
         <sm-chart
           icon-class=""
           :options="echartsOptions4"
@@ -55,7 +55,7 @@
         ></sm-chart>
       </sm-border>
       <sm-border type="border1" class="common-border cb_6">
-        <div class="card_tit">LCRPGR</div>
+        <div class="card_tit">空气</div>
         <sm-chart
           icon-class=""
           :options="echartsOptions6"
@@ -63,6 +63,19 @@
         ></sm-chart>
       </sm-border>
     </div>
+
+    <sm-text
+      class="showyaertext"
+      title="PM2.5"
+      textColor="#73dee8"
+      :fontStyle="{
+        fontSize: '18px',
+        lineHeight: '20px',
+        fontWeight: '600',
+        textAlign: 'center',
+      }"
+    >
+    </sm-text>
     <div class="page_3">
       <sm-time-line
         :data="timelist"
@@ -733,42 +746,80 @@ export default {
         ],
       },
       echartsOptions6: {
-        legend: {
-          data: [],
-        },
-        tooltip: {},
-        dataZoom: [
-          {
-            type: "inside",
-            start: 0,
-            end: 30,
-            filterMode: "filter",
+        backgroundColor: "#16162766",
+        title: {
+          text: "AQI",
+          left: "Left",
+          textStyle: {
+            color: "#eee",
           },
+        },
+        // visualMap: {
+        //     show: true,
+        //     min: 0,
+        //     max: 20,
+        //     dimension: 6,
+        //     inRange: {
+        //         colorLightness: [0.5, 0.8]
+        //     }
+        // },
+        radar: {
+          indicator: [
+            { name: "PM2.5", max: 40 },
+            { name: "PM10", max: 70 },
+            { name: "CO", max: 3 },
+            { name: "NO2", max: 30 },
+            { name: "SO2", max: 15 },
+            { name: "O3", max: 150 },
+          ],
+          shape: "circle",
+          splitNumber: 5,
+          name: {
+            textStyle: {
+              color: "rgb(238, 197, 102)",
+            },
+          },
+          splitLine: {
+            lineStyle: {
+              color: [
+                "rgba(238, 197, 102, 0.1)",
+                "rgba(238, 197, 102, 0.2)",
+                "rgba(238, 197, 102, 0.4)",
+                "rgba(238, 197, 102, 0.6)",
+                "rgba(238, 197, 102, 0.8)",
+                "rgba(238, 197, 102, 1)",
+              ].reverse(),
+            },
+          },
+          splitArea: {
+            show: false,
+          },
+          axisLine: {
+            lineStyle: {
+              color: "rgba(238, 197, 102, 0.5)",
+            },
+          },
+        },
+        series: [
           {
-            start: 0,
-            end: 60,
-            filterMode: "filter",
+            name: "",
+            type: "radar",
+            lineStyle: {
+              normal: {
+                width: 1,
+                opacity: 0.5,
+              },
+            },
+            data: [],
+            symbol: "none",
+            itemStyle: {
+              color: "#B3E4A1",
+            },
+            areaStyle: {
+              opacity: 0.05,
+            },
           },
         ],
-        xAxis: {
-          data: [],
-          name: "城市",
-          // axisLine: { onZero: true },
-          splitLine: { show: false },
-          // splitArea: { show: false },
-          axisLabel: {
-            rotate: 0,
-          },
-        },
-        yAxis: {},
-        grid: {
-          bottom: 10,
-        },
-        series: [],
-        animationEasing: "elasticOut",
-        animationDelayUpdate: function (idx) {
-          return idx * 5;
-        },
       },
       p1selyaer: "",
       p1selcity: "",
@@ -805,7 +856,7 @@ export default {
       _this.getoptions3();
       _this.getoptions4();
       _this.getoptions5();
-      // _this.getoptions6();
+      _this.getoptions6();
       // _this.getoptions7();
     },
     timelinechange(current) {
@@ -882,11 +933,10 @@ export default {
         var d2i = 0;
         for (var d2 in this.info["PM2.5"][d1]) {
           if (citylist.length === 1) {
-            yearlist.push([d2]);
+            yearlist.push(d2);
             data.push({
               title: { text: "" },
               series: [
-                { data: [] },
                 { data: [] },
                 { data: [] },
                 { data: [] },
@@ -899,8 +949,7 @@ export default {
           data[d2i].series[1].data.push(this.info["SO2"][d1][d2]);
           data[d2i].series[2].data.push(this.info["PM10"][d1][d2]);
           data[d2i].series[3].data.push(this.info["NO2"][d1][d2]);
-          data[d2i].series[4].data.push(this.info["CO"][d1][d2]);
-          data[d2i].series[5].data.push(this.info["O3"][d1][d2]);
+          data[d2i].series[4].data.push(this.info["O3"][d1][d2]);
           d2i++;
         }
       }
@@ -911,12 +960,10 @@ export default {
         "SO2",
         "PM10",
         "NO2",
-        "CO",
         "O3",
       ];
       this.echartsOptions1.baseOption.legend.selected = {
         NO2: false,
-        CO: false,
         O3: false,
       };
       this.echartsOptions1.baseOption.xAxis[0].data = citylist;
@@ -925,7 +972,6 @@ export default {
         { name: "SO2", type: "bar" },
         { name: "PM10", type: "bar" },
         { name: "NO2", type: "bar" },
-        { name: "CO", type: "bar" },
         { name: "O3", type: "bar" },
       ];
 
@@ -1206,32 +1252,37 @@ export default {
       var yearlist = [];
       var citylist = [];
       var data = [];
-      for (var d1 in this.info["LCRPGR"]) {
-        yearlist.push(d1);
-        data.push({
-          name: d1,
-          type: "bar",
-          emphasis: {
-            focus: "series",
-          },
-          animationDelay: function (idx) {
-            return idx * 10;
-          },
-          data: [],
-        });
-        for (var d2 in this.info["LCRPGR"][d1]) {
-          if (yearlist.length === 1) {
-            citylist.push([d2]);
+      for (var d1 in this.info["PM2.5"]) {
+        citylist.push(d1);
+        data.push([]);
+        var xh = 0;
+        for (var d2 in this.info["PM2.5"][d1]) {
+          if (citylist.length === 1) {
+            yearlist.push(d2);
           }
-          data[yearlist.length - 1].data.push(this.info["LCRPGR"][d1][d2]);
+          data[citylist.length - 1][xh] = [];
+          data[citylist.length - 1][xh].push(this.info["PM2.5"][d1][d2]);
+          data[citylist.length - 1][xh].push(this.info["PM10"][d1][d2]);
+          data[citylist.length - 1][xh].push(this.info["CO"][d1][d2]);
+          data[citylist.length - 1][xh].push(this.info["NO2"][d1][d2]);
+          data[citylist.length - 1][xh].push(this.info["SO2"][d1][d2]);
+          data[citylist.length - 1][xh].push(this.info["O3"][d1][d2]);
+          xh++;
         }
       }
 
-      this.echartsOptions6.legend.data = yearlist;
+      this.echartsOptions6.title.text = citylist[0];
+      this.echartsOptions6.series[0].data = data[0];
 
-      this.echartsOptions6.xAxis.data = citylist;
-
-      this.echartsOptions6.series = data;
+      var stn = 1;
+      setInterval(() => {
+        if (stn === yearlist.length) {
+          stn = 0;
+        }
+        this.echartsOptions6.title.text = citylist[stn];
+        this.echartsOptions6.series[0].data = data[stn];
+        stn++;
+      }, 3000);
     },
   },
 };
@@ -1350,7 +1401,7 @@ export default {
 }
 .showyaertext {
   position: absolute;
-  top: calc(50px + 2%);
-  left: 31%;
+  bottom: 100px;
+  right: 31%;
 }
 </style>
