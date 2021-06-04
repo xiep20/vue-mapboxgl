@@ -18,18 +18,6 @@
     </div>
     <div class="page_2"></div>
     <sm-text
-      class="showtext"
-      :title="contitle"
-      textColor="#f00"
-      :fontStyle="{
-        fontSize: '20px',
-        lineHeight: '28px',
-        fontWeight: '600',
-        textAlign: 'center',
-      }"
-    >
-    </sm-text>
-    <sm-text
       class="showtext2"
       :title="showcity"
       textColor="#ff0"
@@ -41,6 +29,20 @@
       }"
     >
     </sm-text>
+
+    <sm-radio-group
+      v-model="seltime"
+      class="timeline"
+      @change="timeradiochange"
+    >
+      <!-- <sm-radio-button value="2010"> 2010 </sm-radio-button>
+      <sm-radio-button value="2011"> 2011 </sm-radio-button>
+      <sm-radio-button value="2012"> 2012 </sm-radio-button>
+      <sm-radio-button value="2013"> 2013 </sm-radio-button> -->
+      <sm-radio-button v-for="(item, i) in timelist" :key="i" :value="item">
+        {{ item }}
+      </sm-radio-button>
+    </sm-radio-group>
   </div>
 </template>
 
@@ -118,12 +120,12 @@ export default {
               source: "citypolygon",
               layout: {},
               paint: {
-                "fill-extrusion-color": "#f00",
+                "fill-extrusion-color": "#00d8ff",
                 "fill-extrusion-height": 5000,
                 "fill-extrusion-base": 0,
-                "fill-extrusion-opacity": 0.4,
+                "fill-extrusion-opacity": 0.8,
               },
-              filter: ["in", "name", ""],
+              filter: ["in", "name", "海口市"],
             },
             {
               id: "citypointtext",
@@ -153,6 +155,7 @@ export default {
         pitch: 45,
         zoom: 8, // starting zoom
       },
+      info: null,
       s2ChartOptions: {
         tooltip: {
           trigger: "axis",
@@ -217,16 +220,19 @@ export default {
           },
         ],
       },
+      timelist: [],
+      citylist: [],
+      seriesdatalist: [],
     };
   },
   props: {},
   watch: {},
-  mounted() {
-    this.dibao();
-  },
+  mounted() {},
   methods: {
     mapload(map) {
+      var _this = this;
       window.map = map.map;
+      _this.dibao();
       window.map.on("click", "geojsonid", function (e) {
         var feature = e.features[0];
         window.map.setFilter("pointlayerhighlight", [
@@ -234,45 +240,117 @@ export default {
           "name",
           feature.properties.name,
         ]);
+        _this.showcity = feature.properties.name;
       });
     },
     // 低保人口
     dibao() {
       var _this = this;
       _this.$http.get("data/dibao.json").then((data) => {
-        var xdata = [];
-        var seriesdata = [];
-        var xh = 0;
-        var ldata = [];
-
-        var arr = [];
-        var d2xh = 0;
-        for (var d1 in data["低保人口"]) {
-          xdata.push(d1);
-          seriesdata.push([]);
-          // xh = 0;
-          d2xh = 0;
-          for (var d2 in data["低保人口"][d1]) {
-            if (xdata.length === 1) {
-              ldata.push(d2);
-              arr.push({ city: d2 });
-            }
-            seriesdata[xh].push(data["低保人口"][d1][d2]);
-            arr[d2xh][d1] = data["低保人口"][d1][d2];
-            d2xh++;
-          }
-          xh++;
-        }
-        this.textcontent = arr;
-        this.textlistheader = ["低保人口"].concat(xdata);
-        this.textlistfields = ["city"].concat(xdata);
-        _this.s2ChartOptions.yAxis.data = ldata;
-        _this.s2ChartOptions.series[0].data = seriesdata[0];
-        _this.timelist = xdata;
-        _this.ename = ldata;
-        _this.seltime = xdata[0];
-        _this.seriesdata = seriesdata;
+        _this.info = data;
+        _this.showecharts1();
       });
+    },
+    showecharts1() {
+      var _this = this;
+      var data = _this.info;
+      var xdata = [];
+      var seriesdata = [];
+      var xh = 0;
+      var ldata = [];
+
+      var arr = [];
+      var d2xh = 0;
+      for (var d1 in data["低保人口"]) {
+        xdata.push(d1);
+        seriesdata.push([]);
+        // xh = 0;
+        d2xh = 0;
+        for (var d2 in data["低保人口"][d1]) {
+          if (xdata.length === 1) {
+            ldata.push(d2);
+            arr.push({ city: d2 });
+          }
+          seriesdata[xh].push(data["低保人口"][d1][d2]);
+          arr[d2xh][d1] = data["低保人口"][d1][d2];
+          d2xh++;
+        }
+        xh++;
+      }
+      _this.timelist = xdata;
+      _this.citylist = ldata;
+      _this.seriesdatalist = seriesdata;
+      _this.seltime = _this.timelist[0];
+      _this.s2ChartOptions.yAxis.data = ldata;
+      _this.changeecharts1();
+      _this.changeCity();
+    },
+    changeecharts1() {
+      var _this = this;
+      _this.s2ChartOptions.series[0].data =
+        _this.seriesdatalist[_this.timelist.indexOf(_this.seltime)];
+      _this.timelinechange(_this.timelist.indexOf(_this.seltime));
+    },
+    //
+    timeradiochange() {
+      var _this = this;
+      _this.changeecharts1();
+    },
+    timelinechange(currentIndex) {
+      var minnum = 10000000000000000000000;
+      var maxnum = -10000000000000000000000;
+      for (var i = 0; i < this.seriesdatalist[currentIndex].length; i++) {
+        var value = Number(this.seriesdatalist[currentIndex][i]);
+        if (value < minnum) {
+          minnum = value;
+        }
+        if (value > maxnum) {
+          maxnum = value;
+        }
+      }
+      var sf = (maxnum - minnum) / 6;
+      var colorarr = [
+        "#FFFF00",
+        "#FFE100",
+        "#FFC300",
+        "#FFA600",
+        "#FF8800",
+        "#FF7500",
+        "#FF6600",
+      ];
+      var fc = ["match", ["get", "name"]];
+      for (var n = 0; n < this.seriesdatalist[currentIndex].length; n++) {
+        var value2 = Number(this.seriesdatalist[currentIndex][n]);
+        fc.push(this.citylist[n]);
+        fc.push(colorarr[Math.floor((value2 - minnum) / sf)]);
+      }
+      fc.push("#bebebe");
+      window.map.setPaintProperty("geojsonid", "fill-color", fc);
+      this.s2ChartOptions.series = [
+        {
+          type: "bar",
+          barWidth: "60%",
+          data: this.seriesdatalist[currentIndex],
+        },
+      ];
+    },
+    //城市改变
+    changeCity() {
+      var _this = this;
+      setInterval(() => {
+        var now = _this.citylist.indexOf(_this.showcity);
+        if (now == _this.citylist.length - 1) {
+          now = 0;
+        } else {
+          now++;
+        }
+        _this.showcity = _this.citylist[now];
+        window.map.setFilter("pointlayerhighlight", [
+          "in",
+          "name",
+          _this.showcity,
+        ]);
+      }, 5000);
     },
   },
 };
@@ -339,6 +417,11 @@ export default {
   top: 100px;
   left: 28%;
 }
+.showtext1 {
+  position: absolute;
+  top: 130px;
+  left: 28%;
+}
 .showtext2 {
   position: absolute;
   top: 100px;
@@ -362,5 +445,22 @@ export default {
 }
 .card_tit span {
   color: #ff0000;
+}
+.timeline {
+  position: absolute;
+  top: 100px;
+  left: 27%;
+}
+.sm-component-radio-button-wrapper {
+  border-color: #f5f5f588;
+  background-color: #287ab166;
+  font-size: 16px;
+  font-weight: 500;
+}
+.sm-component-radio-button-wrapper-checked,
+.sm-component-radio-button-wrapper-checked:not(.sm-component-radio-button-wrapper-disabled):first-child {
+  border-color: #00d8ff;
+  color: #fff;
+  background-color: #3782b5cc;
 }
 </style>
