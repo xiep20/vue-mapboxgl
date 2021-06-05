@@ -478,12 +478,13 @@ export default {
           now++;
         }
         _this.showcity = _this.citylist[now];
-        window.map.setFilter("pointlayerhighlight", [
-          "in",
-          "name",
-          _this.showcity,
-        ]);
-
+        if(window.map){
+          window.map.setFilter("pointlayerhighlight", [
+            "in",
+            "name",
+            _this.showcity,
+          ]);
+        }
         _this.s3ChartOptions.series[0].name = _this.ename[now];
         _this.s3ChartOptions.series[0].data = _this.seriesdata[now];
 
