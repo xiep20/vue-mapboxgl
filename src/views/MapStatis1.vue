@@ -16,7 +16,20 @@
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
       </sm-border>
     </div>
-    <div class="page_2"></div>
+    <div class="page_2">
+      <sm-border type="border1" class="common-border cb_3">
+        <div class="card_tit">
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>低保人口
+        </div>
+        <sm-chart icon-class="" :options="s3ChartOptions"></sm-chart>
+      </sm-border>
+      <sm-border type="border1" class="common-border cb_4">
+        <div class="card_tit">
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>低保人口
+        </div>
+        <sm-chart icon-class="" :options="s4ChartOptions"></sm-chart>
+      </sm-border>
+    </div>
     <sm-text
       class="showtext2"
       :title="showcity"
@@ -57,6 +70,9 @@ export default {
       contitle: "低保人数",
       showcity: "海口市",
       seltime: "2010",
+      ename: [],
+      seriesdata: [],
+      
       mapOptions: {
         container: "map", // container id
         style: {
@@ -220,6 +236,80 @@ export default {
           },
         ],
       },
+      s3ChartOptions: {
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+          },
+        },
+        grid: {
+          left: 50,
+          right: 50,
+          top: 35,
+          bottom: 35,
+        },
+        xAxis: [
+          {
+            type: "category",
+            data: [],
+            axisTick: {
+              alignWithLabel: true,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: "value",
+          },
+        ],
+        series: [
+          {
+            name: "",
+            type: "bar",
+            barWidth: "60%",
+            data: [],
+          },
+        ],
+      },
+      s4ChartOptions: {
+        tooltip: {
+          trigger: "item",
+        },
+        legend: {
+          top: "5%",
+          left: "center",
+        },
+        series: [
+          {
+            name: [],
+            type: "pie",
+            radius: ["40%", "70%"],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 10,
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+            label: {
+              show: false,
+              position: "center",
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: "40",
+                fontWeight: "bold",
+              },
+            },
+            labelLine: {
+              show: false,
+            },
+            data: [],
+          },
+        ],
+      },
       timelist: [],
       citylist: [],
       seriesdatalist: [],
@@ -249,6 +339,8 @@ export default {
       _this.$http.get("data/dibao.json").then((data) => {
         _this.info = data;
         _this.showecharts1();
+        //第二个统计图
+        _this.showcharts2();
       });
     },
     showecharts1() {
@@ -285,6 +377,47 @@ export default {
       _this.changeecharts1();
       _this.changeCity();
     },
+    showcharts2(){
+      var _this = this;
+      var data = _this.info;
+      var year = [];
+      var seriesdata = [];
+      var xh = 0;
+      var ldata = [];
+      
+      for (var d1 in data["低保人口"]) {
+        year.push(d1);
+        xh = 0;
+        for (var d2 in data["低保人口"][d1]) {
+          if (year.length === 1) {
+            ldata.push(d2);
+            seriesdata.push([]);
+          }
+          seriesdata[xh].push(data["低保人口"][d1][d2]);
+          xh++;
+        }
+      }
+      
+
+      _this.s3ChartOptions.xAxis[0].data = year;
+      _this.s3ChartOptions.series[0].name = ldata[0];
+      _this.s3ChartOptions.series[0].data = seriesdata[0];
+
+      _this.s4ChartOptions.series[0].name = ldata[0];
+
+      var arr = [];
+      for (var a = 0; a < year.length; a++) {
+        arr.push({ value: seriesdata[0][a], name: year[a] });
+      }
+      _this.s4ChartOptions.series[0].data = arr;
+      _this.ename = ldata;       
+      _this.seriesdata = seriesdata;
+      console.log(1)
+       console.log(seriesdata);
+      console.log(ldata);
+
+    },
+ 
     changeecharts1() {
       var _this = this;
       _this.s2ChartOptions.series[0].data =
@@ -337,7 +470,7 @@ export default {
     //城市改变
     changeCity() {
       var _this = this;
-      setInterval(() => {
+      setInterval(() => {       
         var now = _this.citylist.indexOf(_this.showcity);
         if (now == _this.citylist.length - 1) {
           now = 0;
@@ -350,6 +483,20 @@ export default {
           "name",
           _this.showcity,
         ]);
+
+        _this.s3ChartOptions.series[0].name = _this.ename[now];
+        _this.s3ChartOptions.series[0].data = _this.seriesdata[now];
+
+        _this.s4ChartOptions.series[0].name = _this.showcity;
+
+        var arr = [];
+        for (var a = 0; a < _this.timelist.length; a++) {
+          arr.push({
+            value: _this.seriesdata[now][a],
+            name: _this.timelist[a],
+          });
+        }
+        _this.s4ChartOptions.series[0].data = arr;
       }, 5000);
     },
   },
@@ -361,6 +508,12 @@ export default {
 .MapIndex {
   width: 100%;
   height: 100%;
+}
+.common-border {
+  margin-bottom: 10px;
+  width: 500px;
+  height: 450px;
+  z-index: 1000;
 }
 
 .page_0 {
