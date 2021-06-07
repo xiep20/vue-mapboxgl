@@ -14,6 +14,48 @@
         >SDG2</router-link
       >
     </div>
+    <div class="menu_item">
+      <router-link
+        :class="Isactive === '3' ? 'selIsactive' : 'isno'"
+        to="/MapStatis3"
+        >SDG3</router-link
+      >
+    </div>
+    <div class="menu_item">
+      <router-link
+        :class="Isactive === '4' ? 'selIsactive' : 'isno'"
+        to="/MapStatis4"
+        >SDG4</router-link
+      >
+    </div>
+    <div class="menu_item">
+      <router-link
+        :class="Isactive === '5' ? 'selIsactive' : 'isno'"
+        to="/MapStatis5"
+        >SDG5</router-link
+      >
+    </div>
+    <div class="menu_item">
+      <router-link
+        :class="Isactive === '6' ? 'selIsactive' : 'isno'"
+        to="/MapStatis6"
+        >SDG6</router-link
+      >
+    </div>
+    <div class="menu_item">
+      <router-link
+        :class="Isactive === '7' ? 'selIsactive' : 'isno'"
+        to="/MapStatis7"
+        >SDG6</router-link
+      >
+    </div>
+    <div class="menu_item">
+      <router-link
+        :class="Isactive === '8' ? 'selIsactive' : 'isno'"
+        to="/MapStatis8"
+        >SDG6</router-link
+      >
+    </div>
   </div>
 </template>
 

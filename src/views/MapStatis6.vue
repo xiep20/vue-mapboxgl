@@ -4,14 +4,14 @@
       <div class="header-cen">
         <h1>海南城市可视化分析</h1>
       </div>
-      <menu2 Isactive="1"></menu2>
+      <menu2 Isactive="6"></menu2>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
     <div class="page_1">
       <sm-border type="border9" class="common-border cb_1">
         <div class="card_tit">
-          <span>[{{ this.seltime }}年]</span> 低保人口
+          <span>[{{ this.seltime }}年]</span> 公路客运量
         </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
       </sm-border>
@@ -19,7 +19,7 @@
     <div class="page_2">
       <sm-border type="border1" class="common-border cb_3">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>低保人口
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
         </div>
         <sm-chart
           icon-class=""
@@ -29,7 +29,7 @@
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>低保人口
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
         </div>
         <sm-chart
           icon-class=""
@@ -56,10 +56,6 @@
       class="timeline"
       @change="timeradiochange"
     >
-      <!-- <sm-radio-button value="2010"> 2010 </sm-radio-button>
-      <sm-radio-button value="2011"> 2011 </sm-radio-button>
-      <sm-radio-button value="2012"> 2012 </sm-radio-button>
-      <sm-radio-button value="2013"> 2013 </sm-radio-button> -->
       <sm-radio-button v-for="(item, i) in timelist" :key="i" :value="item">
         {{ item }}
       </sm-radio-button>
@@ -75,7 +71,7 @@ export default {
   components: { menu2 },
   data() {
     return {
-      contitle: "低保人数",
+      contitle: "客运量",
       showcity: "海口市",
       seltime: "2010",
       ename: [],
@@ -248,79 +244,358 @@ export default {
         tooltip: {
           trigger: "axis",
           axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+            type: "cross",
+            label: {
+              backgroundColor: "#6a7985",
+            },
           },
         },
-        grid: {
-          left: 50,
-          right: 50,
-          top: 35,
-          bottom: 35,
+        textStyle: {
+          color: "#8597c1",
         },
+        grid: {
+          left: "3%",
+          top: "6%",
+          right: "3%",
+          bottom: "0%",
+          containLabel: true,
+        },
+        // dataZoom: [
+        //   {
+        //     type: "inside",
+        //     start: 0,
+        //     end: 30,
+        //   },
+        //   {
+        //     start: 0,
+        //     end: 30,
+        //   },
+        // ],
         xAxis: [
           {
             type: "category",
+            boundaryGap: false,
             data: [],
+            axisLine: {
+              show: false, //x轴的线
+              lineStyle: {
+                color: ["#7bd6c763"],
+              },
+            },
+
+            // 控制网格线是否显示
+            splitLine: {
+              show: false,
+              lineStyle: {
+                // 使用深浅的间隔色
+                color: ["#fff"],
+              },
+            },
+            //除去x轴刻度
             axisTick: {
-              alignWithLabel: true,
+              show: false,
+            },
+            axisLabel: {
+              //控制x轴文本
+              show: true,
+              textStyle: {
+                color: "#8597c1",
+              },
+              // interval: 0,
+              rotate: 0,
             },
           },
         ],
         yAxis: [
           {
             type: "value",
+            // min: 40,
+            // max: 80,
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: "#7bd6c763",
+              },
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: true,
+              lineStyle: {
+                type: "solid",
+                color: "#2a3751",
+                width: "0",
+              },
+            },
           },
         ],
         series: [
           {
-            name: "",
-            type: "bar",
-            barWidth: "60%",
+            type: "line",
+            color: "#FFD700",
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                // color: "rgba(255, 215, 0, 0.3)",
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(255, 215, 0, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(255, 215, 0, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 5,
+              },
+            },
             data: [],
+            markPoint: {
+              data: [
+                {
+                  type: "min",
+                  name: "最小值",
+                  symbolSize: 25,
+                  label: {
+                    formatter: "低",
+                    color: "#000",
+                  },
+                  itemStyle: {
+                    color: "#96f392",
+                  },
+                },
+                {
+                  coord: [],
+                  symbolSize: 50,
+                  label: {
+                    formatter: "",
+                    color: "#fff",
+                    fontSize: 10,
+                  },
+                  itemStyle: {
+                    color: "rgb(194,53,49)",
+                  },
+                },
+              ],
+            },
+            markLine: {
+              data: [
+                [
+                  {
+                    name: "",
+                    coord: [],
+                    lineStyle: {
+                      color: "rgb(194,53,49)",
+                      width: 2,
+                      curveness: 0.3,
+                      type: "dotted",
+                    },
+                    symbol: "none",
+                  },
+                  {
+                    coord: [],
+                    symbol: "none",
+                  },
+                ],
+              ],
+            },
           },
         ],
       },
       s4ChartOptions: {
         tooltip: {
-          trigger: "item",
-        },
-        legend: {
-          top: "5%",
-          left: "center",
-        },
-        series: [
-          {
-            name: [],
-            type: "pie",
-            radius: ["40%", "70%"],
-            avoidLabelOverlap: false,
-            itemStyle: {
-              borderRadius: 10,
-              borderColor: "#fff",
-              borderWidth: 2,
-            },
+          trigger: "axis",
+          axisPointer: {
+            type: "cross",
             label: {
-              show: false,
-              position: "center",
+              backgroundColor: "#6a7985",
             },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: "40",
-                fontWeight: "bold",
+          },
+        },
+        textStyle: {
+          color: "#8597c1",
+        },
+        grid: {
+          left: "3%",
+          top: "6%",
+          right: "3%",
+          bottom: "10%",
+          containLabel: true,
+        },
+        // dataZoom: [
+        //   {
+        //     type: "inside",
+        //     start: 0,
+        //     end: 30,
+        //   },
+        //   {
+        //     start: 0,
+        //     end: 30,
+        //   },
+        // ],
+        xAxis: [
+          {
+            type: "category",
+            boundaryGap: false,
+            data: [],
+            axisLine: {
+              show: false, //x轴的线
+              lineStyle: {
+                color: ["#7bd6c763"],
               },
             },
-            labelLine: {
+
+            // 控制网格线是否显示
+            splitLine: {
+              show: false,
+              lineStyle: {
+                // 使用深浅的间隔色
+                color: ["#fff"],
+              },
+            },
+            //除去x轴刻度
+            axisTick: {
               show: false,
             },
+            axisLabel: {
+              //控制x轴文本
+              show: true,
+              textStyle: {
+                color: "#8597c1",
+              },
+              // interval: 0,
+              rotate: 0,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: "value",
+            // min: 40,
+            // max: 80,
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: "#7bd6c763",
+              },
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: true,
+              lineStyle: {
+                type: "solid",
+                color: "#2a3751",
+                width: "0",
+              },
+            },
+          },
+        ],
+        series: [
+          {
+            type: "bar",
+            color: "#FFD700",
+            barWidth: "40%",
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                // color: "rgba(255, 215, 0, 0.3)",
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(255, 215, 0, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(255, 215, 0, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 5,
+              },
+            },
             data: [],
+            markPoint: {
+              data: [
+                {
+                  type: "min",
+                  name: "最小值",
+                  symbolSize: 50,
+                  label: {
+                    formatter: "低",
+                    color: "#000",
+                  },
+                  itemStyle: {
+                    color: "#96f392",
+                    fontSize: 16,
+                  },
+                },
+                {
+                  coord: [],
+                  symbolSize: 50,
+                  label: {
+                    formatter: "",
+                    color: "#fff",
+                    fontSize: 14,
+                  },
+                  itemStyle: {
+                    color: "rgb(194,53,49)",
+                  },
+                },
+              ],
+            },
+            markLine: {
+              data: [
+                [
+                  {
+                    name: "",
+                    coord: [],
+                    lineStyle: {
+                      color: "rgb(194,53,49)",
+                      width: 2,
+                      curveness: 0.3,
+                      type: "dotted",
+                    },
+                    symbol: "none",
+                  },
+                  {
+                    coord: [],
+                    symbol: "none",
+                  },
+                ],
+              ],
+            },
           },
         ],
       },
       timelist: [],
       citylist: [],
       seriesdatalist: [],
+      seriesdatalist2: [],
     };
   },
   props: {},
@@ -330,7 +605,7 @@ export default {
     mapload(map) {
       var _this = this;
       window.map = map.map;
-      _this.dibao();
+      _this.gatdata();
       window.map.on("click", "geojsonid", function (e) {
         var feature = e.features[0];
         window.map.setFilter("pointlayerhighlight", [
@@ -339,16 +614,15 @@ export default {
           feature.properties.name,
         ]);
         _this.showcity = feature.properties.name;
+        _this.getoptions2();
       });
     },
-    // 低保人口
-    dibao() {
+    // 客运量
+    gatdata() {
       var _this = this;
-      _this.$http.get("data/dibao.json").then((data) => {
+      _this.$http.get("data/qita.json").then((data) => {
         _this.info = data;
         _this.showecharts1();
-        //第二个统计图
-        _this.showcharts2();
       });
     },
     showecharts1() {
@@ -356,72 +630,36 @@ export default {
       var data = _this.info;
       var xdata = [];
       var seriesdata = [];
-      var xh = 0;
+      var seriesdata2 = [];
       var ldata = [];
 
-      var arr = [];
       var d2xh = 0;
-      for (var d1 in data["低保人口"]) {
-        xdata.push(d1);
-        seriesdata.push([]);
-        // xh = 0;
+      for (var d1 in data["统计年鉴客运量"]) {
+        ldata.push(d1);
+        seriesdata2.push([]);
         d2xh = 0;
-        for (var d2 in data["低保人口"][d1]) {
-          if (xdata.length === 1) {
-            ldata.push(d2);
-            arr.push({ city: d2 });
+        for (var d2 in data["统计年鉴客运量"][d1]) {
+          if (ldata.length === 1) {
+            xdata.push(d2);
+            seriesdata.push([]);
           }
-          seriesdata[xh].push(data["低保人口"][d1][d2]);
-          arr[d2xh][d1] = data["低保人口"][d1][d2];
+          seriesdata[d2xh].push(data["统计年鉴客运量"][d1][d2]);
+          seriesdata2[seriesdata2.length - 1].push(
+            data["统计年鉴客运量"][d1][d2]
+          );
           d2xh++;
         }
-        xh++;
       }
       _this.timelist = xdata;
       _this.citylist = ldata;
       _this.seriesdatalist = seriesdata;
+      _this.seriesdatalist2 = seriesdata2;
+
       _this.seltime = _this.timelist[0];
       _this.s2ChartOptions.yAxis.data = ldata;
       _this.changeecharts1();
       _this.changeCity();
-    },
-    showcharts2() {
-      var _this = this;
-      var data = _this.info;
-      var year = [];
-      var seriesdata = [];
-      var xh = 0;
-      var ldata = [];
-
-      for (var d1 in data["低保人口"]) {
-        year.push(d1);
-        xh = 0;
-        for (var d2 in data["低保人口"][d1]) {
-          if (year.length === 1) {
-            ldata.push(d2);
-            seriesdata.push([]);
-          }
-          seriesdata[xh].push(data["低保人口"][d1][d2]);
-          xh++;
-        }
-      }
-
-      _this.s3ChartOptions.xAxis[0].data = year;
-      _this.s3ChartOptions.series[0].name = ldata[0];
-      _this.s3ChartOptions.series[0].data = seriesdata[0];
-
-      _this.s4ChartOptions.series[0].name = ldata[0];
-
-      var arr = [];
-      for (var a = 0; a < year.length; a++) {
-        arr.push({ value: seriesdata[0][a], name: year[a] });
-      }
-      _this.s4ChartOptions.series[0].data = arr;
-      _this.ename = ldata;
-      _this.seriesdata = seriesdata;
-      console.log(1);
-      console.log(seriesdata);
-      console.log(ldata);
+      _this.getoptions2();
     },
 
     changeecharts1() {
@@ -473,9 +711,55 @@ export default {
         },
       ];
     },
+
+    // 建成区面积echarts
+    getoptions2() {
+      var _this = this;
+      if (_this.seriesdatalist2.length === 0) {
+        return;
+      }
+      var nowXH = _this.citylist.indexOf(_this.showcity);
+
+      _this.s3ChartOptions.xAxis[0].data = _this.timelist;
+      _this.s3ChartOptions.series[0].data = _this.seriesdatalist2[nowXH];
+      _this.s3ChartOptions.series[0].markPoint.data[1].coord = [
+        _this.seltime,
+        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
+      ];
+      _this.s3ChartOptions.series[0].markPoint.data[1].label["formatter"] =
+        _this.seltime;
+
+      _this.s3ChartOptions.series[0].markLine.data[0][0].coord = [
+        _this.seltime,
+        0,
+      ];
+      _this.s3ChartOptions.series[0].markLine.data[0][1].coord = [
+        _this.seltime,
+        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
+      ];
+
+      _this.s4ChartOptions.xAxis[0].data = _this.timelist;
+      _this.s4ChartOptions.series[0].data = _this.seriesdatalist2[nowXH];
+      _this.s4ChartOptions.series[0].markPoint.data[1].coord = [
+        _this.seltime,
+        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
+      ];
+      _this.s4ChartOptions.series[0].markPoint.data[1].label["formatter"] =
+        _this.seltime;
+
+      _this.s4ChartOptions.series[0].markLine.data[0][0].coord = [
+        _this.seltime,
+        0,
+      ];
+      _this.s4ChartOptions.series[0].markLine.data[0][1].coord = [
+        _this.seltime,
+        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
+      ];
+    },
     //城市改变
     changeCity() {
       var _this = this;
+
       if (window.si) {
         clearInterval(window.si);
       }
@@ -494,19 +778,7 @@ export default {
             _this.showcity,
           ]);
         }
-        _this.s3ChartOptions.series[0].name = _this.ename[now];
-        _this.s3ChartOptions.series[0].data = _this.seriesdata[now];
-
-        _this.s4ChartOptions.series[0].name = _this.showcity;
-
-        var arr = [];
-        for (var a = 0; a < _this.timelist.length; a++) {
-          arr.push({
-            value: _this.seriesdata[now][a],
-            name: _this.timelist[a],
-          });
-        }
-        _this.s4ChartOptions.series[0].data = arr;
+        _this.getoptions2();
       }, 5000);
     },
   },
