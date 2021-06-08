@@ -11,7 +11,7 @@
     <div class="page_1">
       <sm-border type="border9" class="common-border cb_1">
         <div class="card_tit">
-          <span>[{{ this.seltime }}年]</span> 公路客运量
+          <span>[{{ this.seltime }}年]</span>{{ this.selstatistype }}
         </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
       </sm-border>
@@ -19,7 +19,8 @@
     <div class="page_2">
       <sm-border type="border1" class="common-border cb_3">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
+          <span style="color: #ff0000">[{{ this.showcity }}]</span
+          >{{ this.selstatistype }}
         </div>
         <sm-chart
           icon-class=""
@@ -28,15 +29,30 @@
         ></sm-chart>
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
-        <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
-        </div>
         <sm-chart
           icon-class=""
           :options="s4ChartOptions"
           class="smchart"
         ></sm-chart>
       </sm-border>
+      <sm-border type="border1" class="common-border cb_4">
+        <sm-chart
+          icon-class=""
+          :options="s5ChartOptions"
+          class="smchart"
+        ></sm-chart>
+      </sm-border>
+      <!-- <sm-border type="border1" class="common-border cb_4">
+        <div class="card_tit">
+          <span style="color: #ff0000">[{{ this.showcity }}]</span
+          >十万人口受灾率
+        </div>
+        <sm-chart
+          icon-class=""
+          :options="s4ChartOptions"
+          class="smchart"
+        ></sm-chart>
+      </sm-border> -->
     </div>
     <sm-text
       class="showtext2"
@@ -51,6 +67,19 @@
     >
     </sm-text>
 
+    <sm-radio-group
+      v-model="selstatistype"
+      class="statistype"
+      @change="timeradiochange"
+    >
+      <sm-radio-button
+        v-for="(item, i) in statistypelist"
+        :key="i"
+        :value="item"
+      >
+        {{ item }}
+      </sm-radio-button>
+    </sm-radio-group>
     <sm-radio-group
       v-model="seltime"
       class="timeline"
@@ -71,9 +100,14 @@ export default {
   components: { menu2 },
   data() {
     return {
-      contitle: "客运量",
       showcity: "海口市",
       seltime: "2010",
+      selstatistype: "十万人口受灾率",
+      statistypelist: [
+        "十万人口受灾率",
+        "十万人口死亡失踪率",
+        "直接经济损失占GDP比重",
+      ],
       ename: [],
       seriesdata: [],
 
@@ -225,7 +259,7 @@ export default {
             //控制x轴文本
             show: true,
             textStyle: {
-              color: "#ffff00",
+              color: "#00fff0",
             },
             // interval: 0,
             rotate: 0,
@@ -235,12 +269,33 @@ export default {
         series: [
           {
             type: "bar",
+            color: new this.$echarts.graphic.LinearGradient(
+              0,
+              0,
+              1,
+              0,
+              ["rgba(253, 191, 25, 0.2)", "rgba(253, 191, 25, 1)"].map(
+                (color, offset) => ({
+                  color,
+                  offset,
+                })
+              )
+            ),
             barWidth: "40%",
             data: [],
           },
         ],
       },
       s3ChartOptions: {
+        title: {
+          text: "",
+          subtext: "",
+          textStyle: {
+            color: "#00d8ff",
+            textBorderColor: "#e6ff00",
+          },
+          left: "20%",
+        },
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -260,17 +315,6 @@ export default {
           bottom: "0%",
           containLabel: true,
         },
-        // dataZoom: [
-        //   {
-        //     type: "inside",
-        //     start: 0,
-        //     end: 30,
-        //   },
-        //   {
-        //     start: 0,
-        //     end: 30,
-        //   },
-        // ],
         xAxis: [
           {
             type: "category",
@@ -318,16 +362,54 @@ export default {
               },
             },
             splitArea: { show: false }, //保留网格区域
-            axisLine: {
-              show: true,
-              lineStyle: {
-                type: "solid",
-                color: "#2a3751",
-                width: "0",
-              },
-            },
+            // axisLine: {
+            //   show: true,
+            //   lineStyle: {
+            //     type: "solid",
+            //     color: "#2a3751",
+            //     width: "0",
+            //   },
+            // },
           },
         ],
+        visualMap: {
+          top: 10,
+          right: 10,
+          pieces: [
+            {
+              gt: 0,
+              lte: 2,
+              color: "#93CE07",
+            },
+            {
+              gt: 2,
+              lte: 5,
+              color: "#FBDB0F",
+            },
+            {
+              gt: 5,
+              lte: 8,
+              color: "#FC7D02",
+            },
+            {
+              gt: 8,
+              lte: 10,
+              color: "#FD0100",
+            },
+            {
+              gt: 10,
+              lte: 15,
+              color: "#AA069F",
+            },
+            {
+              gt: 20,
+              color: "#AC3B2A",
+            },
+          ],
+          outOfRange: {
+            color: "#999",
+          },
+        },
         series: [
           {
             type: "line",
@@ -348,12 +430,180 @@ export default {
                   1,
                   [
                     {
-                      offset: 0,
-                      color: "rgba(255, 215, 0, 0.3)",
+                      offset: 1,
+                      color: "rgba(172, 59, 42, 0.1)",
                     },
                     {
+                      offset: 0,
+                      color: "rgba(147, 206, 7, 0.3)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 5,
+              },
+            },
+            data: [],
+            markPoint: {
+              data: [
+                {
+                  type: "min",
+                  name: "最小值",
+                  symbolSize: 25,
+                  label: {
+                    formatter: "低",
+                    color: "#000",
+                  },
+                  itemStyle: {
+                    color: "#96f392",
+                  },
+                },
+                {
+                  coord: [],
+                  symbolSize: 50,
+                  label: {
+                    formatter: "",
+                    color: "#fff",
+                    fontSize: 10,
+                  },
+                  itemStyle: {
+                    color: "rgb(194,53,49)",
+                  },
+                },
+              ],
+            },
+            markLine: {
+              data: [
+                [
+                  {
+                    name: "",
+                    coord: [],
+                    lineStyle: {
+                      color: "rgb(194,53,49)",
+                      width: 2,
+                      curveness: 0.3,
+                      type: "dotted",
+                    },
+                    symbol: "none",
+                  },
+                  {
+                    coord: [],
+                    symbol: "none",
+                  },
+                ],
+              ],
+            },
+          },
+          {
+            type: "line",
+            color: "#FFD700",
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                // color: "rgba(255, 215, 0, 0.3)",
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
                       offset: 1,
-                      color: "rgba(255, 215, 0, 0)",
+                      color: "rgba(172, 59, 42, 0.1)",
+                    },
+                    {
+                      offset: 0,
+                      color: "rgba(147, 206, 7, 0.3)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 5,
+              },
+            },
+            data: [],
+            markPoint: {
+              data: [
+                {
+                  type: "min",
+                  name: "最小值",
+                  symbolSize: 25,
+                  label: {
+                    formatter: "低",
+                    color: "#000",
+                  },
+                  itemStyle: {
+                    color: "#96f392",
+                  },
+                },
+                {
+                  coord: [],
+                  symbolSize: 50,
+                  label: {
+                    formatter: "",
+                    color: "#fff",
+                    fontSize: 10,
+                  },
+                  itemStyle: {
+                    color: "rgb(194,53,49)",
+                  },
+                },
+              ],
+            },
+            markLine: {
+              data: [
+                [
+                  {
+                    name: "",
+                    coord: [],
+                    lineStyle: {
+                      color: "rgb(194,53,49)",
+                      width: 2,
+                      curveness: 0.3,
+                      type: "dotted",
+                    },
+                    symbol: "none",
+                  },
+                  {
+                    coord: [],
+                    symbol: "none",
+                  },
+                ],
+              ],
+            },
+          },
+          {
+            type: "line",
+            color: "#FFD700",
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                // color: "rgba(255, 215, 0, 0.3)",
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 1,
+                      color: "rgba(172, 59, 42, 0.1)",
+                    },
+                    {
+                      offset: 0,
+                      color: "rgba(147, 206, 7, 0.3)",
                     },
                   ],
                   false
@@ -416,98 +666,129 @@ export default {
         ],
       },
       s4ChartOptions: {
+        title: {
+          text: "",
+          subtext: "",
+          textStyle: {
+            color: "#00d8ff",
+            textBorderColor: "#e6ff00",
+          },
+          left: "20%",
+        },
         tooltip: {
+          show: false,
           trigger: "axis",
           axisPointer: {
-            type: "cross",
-            label: {
-              backgroundColor: "#6a7985",
-            },
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
           },
         },
-        textStyle: {
-          color: "#8597c1",
-        },
         grid: {
-          left: "3%",
-          top: "6%",
+          left: "0",
           right: "3%",
-          bottom: "10%",
+          bottom: "0%",
+          top: "20%",
           containLabel: true,
+          show: true,
+          borderColor: "rgba(0, 240, 255, 0.3)",
         },
-        // dataZoom: [
-        //   {
-        //     type: "inside",
-        //     start: 0,
-        //     end: 30,
-        //   },
-        //   {
-        //     start: 0,
-        //     end: 30,
-        //   },
-        // ],
         xAxis: [
           {
             type: "category",
-            boundaryGap: false,
             data: [],
-            axisLine: {
-              show: false, //x轴的线
-              lineStyle: {
-                color: ["#7bd6c763"],
-              },
-            },
-
-            // 控制网格线是否显示
-            splitLine: {
-              show: false,
-              lineStyle: {
-                // 使用深浅的间隔色
-                color: ["#fff"],
-              },
-            },
-            //除去x轴刻度
             axisTick: {
+              alignWithLabel: false,
               show: false,
             },
             axisLabel: {
-              //控制x轴文本
               show: true,
+              fontSize: 11,
               textStyle: {
                 color: "#8597c1",
               },
-              // interval: 0,
+              formatter: "{value}年",
               rotate: 0,
+            },
+            axisLine: {
+              show: true,
+              color: "#fff",
             },
           },
         ],
         yAxis: [
           {
             type: "value",
-            // min: 40,
-            // max: 80,
+            name: "十万人口受灾率",
+            nameTextStyle: {
+              color: "rgb(0,136,212)",
+            },
+
             splitLine: {
-              show: true,
-              lineStyle: {
-                color: "#7bd6c763",
-              },
+              show: false,
+            },
+            axisTick: {
+              show: false,
             },
             splitArea: { show: false }, //保留网格区域
             axisLine: {
-              show: true,
+              show: false,
               lineStyle: {
                 type: "solid",
                 color: "#2a3751",
                 width: "0",
               },
             },
+            axisLabel: {
+              show: true,
+              formatter: "{value}", //右侧Y轴文字显示
+              textStyle: {
+                color: "rgb(0,136,212)",
+              },
+            },
+            // min: 0,
+            // max: 120,
+          },
+          {
+            type: "value",
+            name: "十万人口死亡失踪率",
+            nameTextStyle: {
+              color: "rgb(219,50,51)",
+            },
+            position: "right",
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: "rgb(219,50,51)",
+              },
+            },
+            axisTick: {
+              show: false,
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: false,
+              lineStyle: {
+                type: "solid",
+                color: "#2a3751",
+                width: "0",
+              },
+            },
+            splitLine: {
+              show: false,
+              lineStyle: {
+                color: "#57617B",
+              },
+            },
+            // min: 0,
+            // max: 120,
           },
         ],
+        // 控制x轴
         series: [
           {
-            type: "bar",
-            color: "#FFD700",
-            barWidth: "40%",
+            name: "十万人口受灾率",
+            type: "line",
+
             smooth: true,
             lineStyle: {
               normal: {
@@ -516,7 +797,6 @@ export default {
             },
             areaStyle: {
               normal: {
-                // color: "rgba(255, 215, 0, 0.3)",
                 color: new this.$echarts.graphic.LinearGradient(
                   0,
                   0,
@@ -525,72 +805,273 @@ export default {
                   [
                     {
                       offset: 0,
-                      color: "rgba(255, 215, 0, 0.3)",
+                      color: "rgba(0, 136, 212, 0.3)",
                     },
                     {
                       offset: 1,
-                      color: "rgba(255, 215, 0, 0)",
+                      color: "rgba(0, 136, 212, 0)",
                     },
                   ],
                   false
                 ),
                 shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowBlur: 5,
+                shadowBlur: 10,
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "rgb(0,136,212)",
               },
             },
             data: [],
-            markPoint: {
-              data: [
-                {
-                  type: "min",
-                  name: "最小值",
-                  symbolSize: 50,
-                  label: {
-                    formatter: "低",
-                    color: "#000",
-                  },
-                  itemStyle: {
-                    color: "#96f392",
-                    fontSize: 16,
-                  },
-                },
-                {
-                  coord: [],
-                  symbolSize: 50,
-                  label: {
-                    formatter: "",
-                    color: "#fff",
-                    fontSize: 14,
-                  },
-                  itemStyle: {
-                    color: "rgb(194,53,49)",
-                  },
-                },
-              ],
+          },
+          {
+            name: "十万人口死亡失踪率",
+            type: "line",
+            yAxisIndex: 1, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
             },
-            markLine: {
-              data: [
-                [
-                  {
-                    name: "",
-                    coord: [],
-                    lineStyle: {
-                      color: "rgb(194,53,49)",
-                      width: 2,
-                      curveness: 0.3,
-                      type: "dotted",
+            areaStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(219, 50, 51, 0.3)",
                     },
-                    symbol: "none",
-                  },
-                  {
-                    coord: [],
-                    symbol: "none",
-                  },
-                ],
-              ],
+                    {
+                      offset: 1,
+                      color: "rgba(219, 50, 51, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 10,
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "rgb(219,50,51)",
+              },
+            },
+            data: [],
+            markArea: {},
+          },
+        ],
+        graphic: [],
+      },
+      s5ChartOptions: {
+        title: {
+          text: "",
+          subtext: "",
+          textStyle: {
+            color: "#00d8ff",
+            textBorderColor: "#e6ff00",
+          },
+          left: "20%",
+        },
+        tooltip: {
+          show: false,
+          trigger: "axis",
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+          },
+        },
+        grid: {
+          left: "0",
+          right: "3%",
+          bottom: "0%",
+          top: "20%",
+          containLabel: true,
+          show: true,
+          borderColor: "rgba(0, 240, 255, 0.3)",
+        },
+        xAxis: [
+          {
+            type: "category",
+            data: [],
+            axisTick: {
+              alignWithLabel: false,
+              show: false,
+            },
+            axisLabel: {
+              show: true,
+              fontSize: 11,
+              textStyle: {
+                color: "#8597c1",
+              },
+              formatter: "{value}年",
+              rotate: 0,
+            },
+            axisLine: {
+              show: true,
+              color: "#fff",
             },
           },
         ],
+        yAxis: [
+          {
+            type: "value",
+            name: "十万人口受灾率",
+            nameTextStyle: {
+              color: "rgb(0,136,212)",
+            },
+
+            splitLine: {
+              show: false,
+            },
+            axisTick: {
+              show: false,
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: false,
+              lineStyle: {
+                type: "solid",
+                color: "#2a3751",
+                width: "0",
+              },
+            },
+            axisLabel: {
+              show: true,
+              formatter: "{value}", //右侧Y轴文字显示
+              textStyle: {
+                color: "rgb(0,136,212)",
+              },
+            },
+            // min: 0,
+            // max: 120,
+          },
+          {
+            type: "value",
+            name: "直接经济损失占GDP比重",
+            nameTextStyle: {
+              color: "rgb(219,50,51)",
+            },
+            position: "right",
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: "rgb(219,50,51)",
+              },
+            },
+            axisTick: {
+              show: false,
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: false,
+              lineStyle: {
+                type: "solid",
+                color: "#2a3751",
+                width: "0",
+              },
+            },
+            splitLine: {
+              show: false,
+              lineStyle: {
+                color: "#57617B",
+              },
+            },
+            // min: 0,
+            // max: 120,
+          },
+        ],
+        // 控制x轴
+        series: [
+          {
+            name: "十万人口受灾率",
+            type: "line",
+
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(0, 136, 212, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(0, 136, 212, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 10,
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "rgb(0,136,212)",
+              },
+            },
+            data: [],
+          },
+          {
+            name: "直接经济损失占GDP比重",
+            type: "line",
+            yAxisIndex: 1, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(219, 50, 51, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(219, 50, 51, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 10,
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "rgb(219,50,51)",
+              },
+            },
+            data: [],
+            markArea: {},
+          },
+        ],
+        graphic: [],
       },
       timelist: [],
       citylist: [],
@@ -629,23 +1110,35 @@ export default {
       var _this = this;
       var data = _this.info;
       var xdata = [];
-      var seriesdata = [];
-      var seriesdata2 = [];
+      var seriesdata = [[], [], []];
+      var seriesdata2 = [[], [], []];
       var ldata = [];
 
       var d2xh = 0;
-      for (var d1 in data["统计年鉴客运量"]) {
+      for (var d1 in data["十万人口受灾率"]) {
         ldata.push(d1);
-        seriesdata2.push([]);
+        seriesdata2[0].push([]);
+        seriesdata2[1].push([]);
+        seriesdata2[2].push([]);
         d2xh = 0;
-        for (var d2 in data["统计年鉴客运量"][d1]) {
+        for (var d2 in data["十万人口受灾率"][d1]) {
           if (ldata.length === 1) {
             xdata.push(d2);
-            seriesdata.push([]);
+            seriesdata[0].push([]);
+            seriesdata[1].push([]);
+            seriesdata[2].push([]);
           }
-          seriesdata[d2xh].push(data["统计年鉴客运量"][d1][d2]);
-          seriesdata2[seriesdata2.length - 1].push(
-            data["统计年鉴客运量"][d1][d2]
+          seriesdata[0][d2xh].push(data["十万人口受灾率"][d1][d2]);
+          seriesdata[1][d2xh].push(data["十万人口死亡失踪率"][d1][d2]);
+          seriesdata[2][d2xh].push(data["直接经济损失占GDP比重"][d1][d2]);
+          seriesdata2[0][seriesdata2[0].length - 1].push(
+            data["十万人口受灾率"][d1][d2]
+          );
+          seriesdata2[1][seriesdata2[1].length - 1].push(
+            data["十万人口死亡失踪率"][d1][d2]
+          );
+          seriesdata2[2][seriesdata2[2].length - 1].push(
+            data["直接经济损失占GDP比重"][d1][d2]
           );
           d2xh++;
         }
@@ -664,9 +1157,12 @@ export default {
 
     changeecharts1() {
       var _this = this;
+      var typebh = _this.statistypelist.indexOf(_this.selstatistype);
+
       _this.s2ChartOptions.series[0].data =
-        _this.seriesdatalist[_this.timelist.indexOf(_this.seltime)];
+        _this.seriesdatalist[typebh][_this.timelist.indexOf(_this.seltime)];
       _this.timelinechange(_this.timelist.indexOf(_this.seltime));
+      _this.getoptions2();
     },
     //
     timeradiochange() {
@@ -676,8 +1172,13 @@ export default {
     timelinechange(currentIndex) {
       var minnum = 10000000000000000000000;
       var maxnum = -10000000000000000000000;
-      for (var i = 0; i < this.seriesdatalist[currentIndex].length; i++) {
-        var value = Number(this.seriesdatalist[currentIndex][i]);
+      var typebh = this.statistypelist.indexOf(this.selstatistype);
+      for (
+        var i = 0;
+        i < this.seriesdatalist[typebh][currentIndex].length;
+        i++
+      ) {
+        var value = Number(this.seriesdatalist[typebh][currentIndex][i]);
         if (value < minnum) {
           minnum = value;
         }
@@ -696,35 +1197,42 @@ export default {
         "#FF6600",
       ];
       var fc = ["match", ["get", "name"]];
-      for (var n = 0; n < this.seriesdatalist[currentIndex].length; n++) {
-        var value2 = Number(this.seriesdatalist[currentIndex][n]);
+      for (
+        var n = 0;
+        n < this.seriesdatalist[typebh][currentIndex].length;
+        n++
+      ) {
+        var value2 = Number(this.seriesdatalist[typebh][currentIndex][n]);
         fc.push(this.citylist[n]);
         fc.push(colorarr[Math.floor((value2 - minnum) / sf)]);
       }
       fc.push("#bebebe");
       window.map.setPaintProperty("geojsonid", "fill-color", fc);
-      this.s2ChartOptions.series = [
-        {
-          type: "bar",
-          barWidth: "60%",
-          data: this.seriesdatalist[currentIndex],
-        },
-      ];
+      this.s2ChartOptions.series[0].data =
+        this.seriesdatalist[typebh][currentIndex];
     },
 
     // 建成区面积echarts
     getoptions2() {
       var _this = this;
-      if (_this.seriesdatalist2.length === 0) {
+      if (
+        _this.seriesdatalist2.length === 0 ||
+        _this.seriesdatalist2[0].length === 0
+      ) {
         return;
       }
       var nowXH = _this.citylist.indexOf(_this.showcity);
 
+      var typebh = _this.statistypelist.indexOf(_this.selstatistype);
+
       _this.s3ChartOptions.xAxis[0].data = _this.timelist;
-      _this.s3ChartOptions.series[0].data = _this.seriesdatalist2[nowXH];
+      _this.s3ChartOptions.series[0].data =
+        _this.seriesdatalist2[typebh][nowXH];
       _this.s3ChartOptions.series[0].markPoint.data[1].coord = [
         _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
+        _this.seriesdatalist2[typebh][nowXH][
+          _this.timelist.indexOf(_this.seltime)
+        ],
       ];
       _this.s3ChartOptions.series[0].markPoint.data[1].label["formatter"] =
         _this.seltime;
@@ -735,31 +1243,25 @@ export default {
       ];
       _this.s3ChartOptions.series[0].markLine.data[0][1].coord = [
         _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
+        _this.seriesdatalist2[typebh][nowXH][
+          _this.timelist.indexOf(_this.seltime)
+        ],
       ];
 
-      _this.s4ChartOptions.xAxis[0].data = _this.timelist;
-      _this.s4ChartOptions.series[0].data = _this.seriesdatalist2[nowXH];
-      _this.s4ChartOptions.series[0].markPoint.data[1].coord = [
-        _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
-      ];
-      _this.s4ChartOptions.series[0].markPoint.data[1].label["formatter"] =
-        _this.seltime;
+      this.s4ChartOptions.xAxis[0].data = _this.timelist;
+      this.s4ChartOptions.title.text = _this.showcity;
+      this.s4ChartOptions.series[0].data = _this.seriesdatalist2[0][nowXH];
+      this.s4ChartOptions.series[1].data = _this.seriesdatalist2[1][nowXH];
 
-      _this.s4ChartOptions.series[0].markLine.data[0][0].coord = [
-        _this.seltime,
-        0,
-      ];
-      _this.s4ChartOptions.series[0].markLine.data[0][1].coord = [
-        _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
-      ];
+      this.s5ChartOptions.xAxis[0].data = _this.timelist;
+      // this.s5ChartOptions.title.text = _this.showcity;
+      this.s5ChartOptions.series[0].data = _this.seriesdatalist2[0][nowXH];
+      this.s5ChartOptions.series[1].data = _this.seriesdatalist2[2][nowXH];
     },
     //城市改变
     changeCity() {
       var _this = this;
-      
+
       if (window.si) {
         clearInterval(window.si);
       }
@@ -828,7 +1330,7 @@ export default {
   height: calc(100% - 75px);
 }
 .page_1 {
-  width: 26%;
+  width: 23%;
   height: calc(100% - 77px);
   float: left;
   position: absolute;
@@ -838,7 +1340,7 @@ export default {
   box-shadow: 3px 0px 0px 0px #03a9f440;
 }
 .page_2 {
-  width: 26%;
+  width: 30%;
   height: calc(100% - 89px);
   float: right;
   position: absolute;
@@ -850,17 +1352,17 @@ export default {
 .showtext {
   position: absolute;
   top: 100px;
-  left: 28%;
+  left: 24%;
 }
 .showtext1 {
   position: absolute;
   top: 130px;
-  left: 28%;
+  left: 24%;
 }
 .showtext2 {
   position: absolute;
   top: 100px;
-  right: 28%;
+  right: 31%;
 }
 .cb_1 {
   width: 100%;
@@ -869,12 +1371,12 @@ export default {
 }
 .cb_3 {
   width: 100%;
-  height: 50%;
+  height: 40%;
   float: left;
 }
 .cb_4 {
   width: 100%;
-  height: 50%;
+  height: 30%;
   float: left;
 }
 .card_tit {
@@ -891,17 +1393,22 @@ export default {
 .card_tit span {
   color: #ff0000;
 }
+.statistype {
+  position: absolute;
+  top: 150px;
+  left: 24%;
+}
 .timeline {
   position: absolute;
   top: 100px;
-  left: 27%;
+  left: 24%;
 }
 .smchart {
   height: calc(100% - 40px);
 }
 .sm-component-radio-button-wrapper {
-  border-color: #f5f5f588;
-  background-color: #287ab166;
+  border-color: #f5f5f5;
+  background-color: #287ab199;
   font-size: 16px;
   font-weight: 500;
 }
@@ -909,6 +1416,6 @@ export default {
 .sm-component-radio-button-wrapper-checked:not(.sm-component-radio-button-wrapper-disabled):first-child {
   border-color: #00d8ff;
   color: #fff;
-  background-color: #3782b5cc;
+  background-color: #3782b5dd;
 }
 </style>
