@@ -11,7 +11,7 @@
     <div class="page_1">
       <sm-border type="border9" class="common-border cb_1">
         <div class="card_tit">
-          <span>[{{ this.seltime }}年]</span> 公路客运量
+          <span>[{{ this.seltime }}年]</span> SO2排放量
         </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
       </sm-border>
@@ -29,11 +29,21 @@
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>SO2排放量
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>O3排放量
         </div>
         <sm-chart
           icon-class=""
           :options="s4ChartOptions"
+          class="smchart"
+        ></sm-chart>
+      </sm-border>
+      <sm-border type="border1" class="common-border cb_5">
+        <div class="card_tit">
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>温室气体排放量
+        </div>
+        <sm-chart
+          icon-class=""
+          :options="s5ChartOptions"
           class="smchart"
         ></sm-chart>
       </sm-border>
@@ -70,12 +80,20 @@ export default {
   computed: {},
   components: { menu3 },
   data() {
+    
     return {
       contitle: "客运量",
       showcity: "海口市",
       seltime: "2010",
       ename: [],
       seriesdata: [],
+      color: ['#0E7CE2', '#FF8352', '#E271DE', '#F8456B', '#00FFFF', '#4AEAB0'],
+      barTopColor: ["#02c3f1", "#53e568", "#a154e9"],
+      barBottomColor: [
+      "rgba(2,195,241,0.1)",
+      "rgba(83, 229, 104, 0.1)",
+      "rgba(161, 84, 233, 0.1)",
+    ],
 
       mapOptions: {
         container: "map", // container id
@@ -592,6 +610,75 @@ export default {
           },
         ],
       },
+      s5ChartOptions:{      
+        backgroundColor: "#16162766",       
+        // visualMap: {
+        //     show: true,
+        //     min: 0,
+        //     max: 20,
+        //     dimension: 6,
+        //     inRange: {
+        //         colorLightness: [0.5, 0.8]
+        //     }
+        // },
+        radar: {
+          indicator: [
+            { name: "PM2.5", max: 40 },
+            { name: "PM10", max: 70 },
+            { name: "CO", max: 3 },
+            { name: "NO2", max: 30 },
+            { name: "SO2", max: 15 },
+            { name: "O3", max: 150 },
+          ],
+          shape: "circle",
+          splitNumber: 5,
+          name: {
+            textStyle: {
+              color: "rgb(238, 197, 102)",
+            },
+          },
+          splitLine: {
+            lineStyle: {
+              color: [
+                "rgba(238, 197, 102, 0.1)",
+                "rgba(238, 197, 102, 0.2)",
+                "rgba(238, 197, 102, 0.4)",
+                "rgba(238, 197, 102, 0.6)",
+                "rgba(238, 197, 102, 0.8)",
+                "rgba(238, 197, 102, 1)",
+              ].reverse(),
+            },
+          },
+          splitArea: {
+            show: false,
+          },
+          axisLine: {
+            lineStyle: {
+              color: "rgba(238, 197, 102, 0.5)",
+            },
+          },
+        },
+        series: [
+          {
+            name: "",
+            type: "radar",
+            lineStyle: {
+              normal: {
+                width: 1,
+                opacity: 0.5,
+              },
+            },
+            data: [],
+            symbol: "none",
+            itemStyle: {
+              color: "#B3E4A1",
+            },
+            areaStyle: {
+              opacity: 0.05,
+            },
+          },
+        ],
+      },
       timelist: [],
       citylist: [],
       seriesdatalist: [],
@@ -615,12 +702,13 @@ export default {
         ]);
         _this.showcity = feature.properties.name;
         _this.getoptions2();
+        _this.getoptions6();
       });
     },
     // 客运量
     gatdata() {
       var _this = this;
-      _this.$http.get("data/qita.json").then((data) => {
+      _this.$http.get("data/1106.json").then((data) => {
         _this.info = data;
         _this.showecharts1();
       });
@@ -634,18 +722,18 @@ export default {
       var ldata = [];
 
       var d2xh = 0;
-      for (var d1 in data["统计年鉴客运量"]) {
+      for (var d1 in data["SO2"]) {
         ldata.push(d1);
         seriesdata2.push([]);
         d2xh = 0;
-        for (var d2 in data["统计年鉴客运量"][d1]) {
+        for (var d2 in data["SO2"][d1]) {
           if (ldata.length === 1) {
             xdata.push(d2);
             seriesdata.push([]);
           }
-          seriesdata[d2xh].push(data["统计年鉴客运量"][d1][d2]);
+          seriesdata[d2xh].push(data["SO2"][d1][d2]);
           seriesdata2[seriesdata2.length - 1].push(
-            data["统计年鉴客运量"][d1][d2]
+            data["SO2"][d1][d2]
           );
           d2xh++;
         }
@@ -660,6 +748,7 @@ export default {
       _this.changeecharts1();
       _this.changeCity();
       _this.getoptions2();
+      _this.getoptions6();
     },
 
     changeecharts1() {
@@ -755,6 +844,36 @@ export default {
         _this.seltime,
         _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
       ];
+     
+    },
+    getoptions6(){
+      var yearlist = [];
+      var citylist = [];
+      var _this = this;
+      if (_this.seriesdatalist2.length === 0) {
+        return;
+      }
+      var nowXH = _this.citylist.indexOf(_this.showcity);
+      var data = [];
+      for (var d1 in _this.info["PM2.5"]) {
+        citylist.push(d1);
+        data.push([]);
+        var xh = 0;
+        for (var d2 in _this.info["PM2.5"][d1]) {
+          if (citylist.length === 1) {
+            yearlist.push(d2);
+          }
+          data[citylist.length - 1][xh] = [];
+          data[citylist.length - 1][xh].push(_this.info["PM2.5"][d1][d2]);
+          data[citylist.length - 1][xh].push(_this.info["PM10"][d1][d2]);
+          data[citylist.length - 1][xh].push(_this.info["CO"][d1][d2]);
+          data[citylist.length - 1][xh].push(_this.info["NO2"][d1][d2]);
+          data[citylist.length - 1][xh].push(_this.info["SO2"][d1][d2]);
+          data[citylist.length - 1][xh].push(_this.info["O3"][d1][d2]);
+          xh++;
+        }
+      }
+      _this.s5ChartOptions.series[0].data = data[nowXH]
     },
     //城市改变
     changeCity() {
@@ -779,6 +898,7 @@ export default {
           ]);
         }
         _this.getoptions2();
+        _this.getoptions6();
       }, 5000);
     },
   },
@@ -869,12 +989,12 @@ export default {
 }
 .cb_3 {
   width: 100%;
-  height: 50%;
+  height: 33%;
   float: left;
 }
-.cb_4 {
+.cb_4, .cb_5 {
   width: 100%;
-  height: 50%;
+  height: 32%;
   float: left;
 }
 .card_tit {
