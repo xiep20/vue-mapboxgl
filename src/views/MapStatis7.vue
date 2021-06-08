@@ -2,9 +2,9 @@
   <div class="MapIndex">
     <div class="page_0">
       <div class="header-cen">
-        <h1>海南城市可视化分析</h1>
+        <h1>海南省应对气候变化指标监测与评估系统</h1>
       </div>
-      <menu2 Isactive="7"></menu2>
+      <menu3 Isactive="1"></menu3>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
@@ -64,11 +64,11 @@
 </template>
 
 <script>
-import menu2 from "./../components/headermenu/menu2";
+import menu3 from "./../components/headermenu/menu3";
 export default {
   name: "mapstatis1",
   computed: {},
-  components: { menu2 },
+  components: { menu3 },
   data() {
     return {
       contitle: "客运量",
@@ -802,7 +802,7 @@ export default {
   width: 100%;
   height: 75px;
   background: #0d1f49;
-  font-size: 24px;
+  font-size: 19px;
   padding: 0 20px;
 }
 .page_0 .header-cen {
@@ -816,7 +816,7 @@ export default {
   height: 75px;
 }
 .page_0 h1 {
-  font-size: 27pt;
+  font-size: 20pt;
   color: #ffffff;
   letter-spacing: 0.1rem;
   text-shadow: 0 0 0.3rem #00d8ff;
