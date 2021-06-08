@@ -42,20 +42,6 @@
         >SDG6</router-link
       >
     </div>
-    <div class="menu_item">
-      <router-link
-        :class="Isactive === '7' ? 'selIsactive' : 'isno'"
-        to="/MapStatis7"
-        >SDG6</router-link
-      >
-    </div>
-    <div class="menu_item">
-      <router-link
-        :class="Isactive === '8' ? 'selIsactive' : 'isno'"
-        to="/MapStatis8"
-        >SDG6</router-link
-      >
-    </div>
   </div>
 </template>
 

@@ -2,7 +2,7 @@
   <div class="MapIndex">
     <div class="page_0">
       <div class="header-cen">
-        <h1>海南城市可视化分析</h1>
+        <h1>海南省城市可持续发展指标监测与评估系统</h1>
       </div>
       <menu2 Isactive="1"></menu2>
     </div>
@@ -544,7 +544,7 @@ export default {
   height: 75px;
 }
 .page_0 h1 {
-  font-size: 27pt;
+  font-size: 19pt;
   color: #ffffff;
   letter-spacing: 0.1rem;
   text-shadow: 0 0 0.3rem #00d8ff;
@@ -567,7 +567,7 @@ export default {
 }
 .page_2 {
   width: 26%;
-  height: calc(100% - 77px);
+  height: calc(100% - 89px);
   float: right;
   position: absolute;
   top: 76px;

@@ -2,7 +2,7 @@
   <div class="MapIndex">
     <div class="page_0">
       <div class="header-cen">
-        <h1>海南城市可视化分析</h1>
+        <h1>海南省城市可持续发展指标监测与评估系统</h1>
       </div>
       <menu2 Isactive="6"></menu2>
     </div>
@@ -11,7 +11,7 @@
     <div class="page_1">
       <sm-border type="border9" class="common-border cb_1">
         <div class="card_tit">
-          <span>[{{ this.seltime }}年]</span> 公路客运量
+          <span>[{{ this.seltime }}年]</span> 城市公共开放空间
         </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
       </sm-border>
@@ -19,7 +19,7 @@
     <div class="page_2">
       <sm-border type="border1" class="common-border cb_3">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>城市公共开放空间
         </div>
         <sm-chart
           icon-class=""
@@ -29,7 +29,7 @@
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>城市公共开放空间
         </div>
         <sm-chart
           icon-class=""
@@ -417,67 +417,36 @@ export default {
       },
       s4ChartOptions: {
         tooltip: {
-          trigger: "axis",
+          trigger: 'axis',
           axisPointer: {
-            type: "cross",
-            label: {
-              backgroundColor: "#6a7985",
-            },
-          },
+              type: 'shadow'
+          }
         },
         textStyle: {
-          color: "#8597c1",
+          "color": "#c0c3cd",
+          "fontSize": 14
         },
         grid: {
-          left: "3%",
-          top: "6%",
+          left: "5%",
+          top: "8%",
           right: "3%",
           bottom: "10%",
-          containLabel: true,
         },
-        // dataZoom: [
-        //   {
-        //     type: "inside",
-        //     start: 0,
-        //     end: 30,
-        //   },
-        //   {
-        //     start: 0,
-        //     end: 30,
-        //   },
-        // ],
         xAxis: [
           {
-            type: "category",
-            boundaryGap: false,
-            data: [],
+            type: 'category',
+            data:[],          
             axisLine: {
-              show: false, //x轴的线
-              lineStyle: {
-                color: ["#7bd6c763"],
-              },
-            },
-
-            // 控制网格线是否显示
-            splitLine: {
-              show: false,
-              lineStyle: {
-                // 使用深浅的间隔色
-                color: ["#fff"],
-              },
-            },
-            //除去x轴刻度
-            axisTick: {
-              show: false,
+                lineStyle: {
+                    color: 'rgba(255,255,255,0.12)'
+                }
             },
             axisLabel: {
-              //控制x轴文本
-              show: true,
-              textStyle: {
-                color: "#8597c1",
-              },
-              // interval: 0,
-              rotate: 0,
+                margin: 10,
+                color: '#e2e9ff',
+                textStyle: {
+                    fontSize: 14
+                },
             },
           },
         ],
@@ -486,109 +455,75 @@ export default {
             type: "value",
             // min: 40,
             // max: 80,
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: "#7bd6c763",
-              },
+            axisLabel: {
+            formatter: '{value}',
+            color: '#e2e9ff',
             },
-            splitArea: { show: false }, //保留网格区域
             axisLine: {
-              show: true,
-              lineStyle: {
-                type: "solid",
-                color: "#2a3751",
-                width: "0",
-              },
+                show: false,
+                lineStyle: {
+                    color: 'rgba(255,255,255,1)'
+                }
             },
+            splitLine: {
+                lineStyle: {
+                    color: 'rgba(255,255,255,0.12)'
+                }
+            }
           },
         ],
         series: [
           {
-            type: "bar",
-            color: "#FFD700",
-            barWidth: "40%",
-            smooth: true,
-            lineStyle: {
-              normal: {
-                width: 1,
-              },
-            },
-            areaStyle: {
-              normal: {
-                // color: "rgba(255, 215, 0, 0.3)",
-                color: new this.$echarts.graphic.LinearGradient(
-                  0,
-                  0,
-                  0,
-                  1,
-                  [
-                    {
-                      offset: 0,
-                      color: "rgba(255, 215, 0, 0.3)",
-                    },
-                    {
-                      offset: 1,
-                      color: "rgba(255, 215, 0, 0)",
-                    },
-                  ],
-                  false
-                ),
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowBlur: 5,
-              },
-            },
+            type: 'bar',
             data: [],
-            markPoint: {
-              data: [
-                {
-                  type: "min",
-                  name: "最小值",
-                  symbolSize: 50,
-                  label: {
-                    formatter: "低",
-                    color: "#000",
-                  },
-                  itemStyle: {
-                    color: "#96f392",
-                    fontSize: 16,
-                  },
-                },
-                {
-                  coord: [],
-                  symbolSize: 50,
-                  label: {
-                    formatter: "",
-                    color: "#fff",
-                    fontSize: 14,
-                  },
-                  itemStyle: {
-                    color: "rgb(194,53,49)",
-                  },
-                },
-              ],
+            barWidth: '20px',
+            itemStyle: {
+                normal: {
+                    color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: 'rgba(0,244,255,1)' // 0% 处的颜色
+                    }, {
+                        offset: 1,
+                        color: 'rgba(0,77,167,1)' // 100% 处的颜色
+                    }], false),
+                    barBorderRadius: [30, 30, 30, 30],
+                    shadowColor: 'rgba(0,160,221,1)',
+                    shadowBlur: 4,
+                }
             },
-            markLine: {
-              data: [
-                [
-                  {
-                    name: "",
-                    coord: [],
-                    lineStyle: {
-                      color: "rgb(194,53,49)",
-                      width: 2,
-                      curveness: 0.3,
-                      type: "dotted",
-                    },
-                    symbol: "none",
-                  },
-                  {
-                    coord: [],
-                    symbol: "none",
-                  },
-                ],
-              ],
-            },
+            label: {
+                normal: {
+                    show: true,
+                    lineHeight: 30,
+                    width: 80,
+                    height: 30,
+                    backgroundColor: 'rgba(0,160,221,0.1)',
+                    borderRadius: 200,
+                    position: ['-8', '-60'],
+                    distance: 1,
+                    formatter: [
+                        '    {d|●}',
+                        ' {a|{c}}     \n',
+                        '    {b|}'
+                    ].join(','),
+                    rich: {
+                        d: {
+                            color: '#3CDDCF',
+                        },
+                        a: {
+                            color: '#fff',
+                            align: 'center',
+                        },
+                        b: {
+                            width: 1,
+                            height: 30,
+                            borderWidth: 1,
+                            borderColor: '#234e6c',
+                            align: 'left'
+                        },
+                    }
+                }
+            }            
           },
         ],
       },
@@ -634,18 +569,18 @@ export default {
       var ldata = [];
 
       var d2xh = 0;
-      for (var d1 in data["统计年鉴客运量"]) {
+      for (var d1 in data["城市公共开放空间"]) {
         ldata.push(d1);
         seriesdata2.push([]);
         d2xh = 0;
-        for (var d2 in data["统计年鉴客运量"][d1]) {
+        for (var d2 in data["城市公共开放空间"][d1]) {
           if (ldata.length === 1) {
             xdata.push(d2);
             seriesdata.push([]);
           }
-          seriesdata[d2xh].push(data["统计年鉴客运量"][d1][d2]);
+          seriesdata[d2xh].push(data["城市公共开放空间"][d1][d2]);
           seriesdata2[seriesdata2.length - 1].push(
-            data["统计年鉴客运量"][d1][d2]
+            data["城市公共开放空间"][d1][d2]
           );
           d2xh++;
         }
@@ -816,7 +751,7 @@ export default {
   height: 75px;
 }
 .page_0 h1 {
-  font-size: 27pt;
+  font-size: 19pt;
   color: #ffffff;
   letter-spacing: 0.1rem;
   text-shadow: 0 0 0.3rem #00d8ff;
@@ -839,7 +774,7 @@ export default {
 }
 .page_2 {
   width: 26%;
-  height: calc(100% - 77px);
+  height: calc(100% - 89px);
   float: right;
   position: absolute;
   top: 76px;
