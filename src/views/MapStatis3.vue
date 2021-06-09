@@ -11,7 +11,7 @@
     <div class="page_1">
       <sm-border type="border9" class="common-border cb_1">
         <div class="card_tit">
-          <span>[{{ this.seltime }}年]</span> 公路客运量
+          <span>[{{ this.seltime }}年]</span>{{ this.selstatistype }}
         </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
       </sm-border>
@@ -19,7 +19,8 @@
     <div class="page_2">
       <sm-border type="border1" class="common-border cb_3">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
+          <span style="color: #ff0000">[{{ this.showcity }}]</span
+          >
         </div>
         <sm-chart
           icon-class=""
@@ -29,11 +30,26 @@
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>LCRPGR
         </div>
         <sm-chart
           icon-class=""
           :options="s4ChartOptions"
+          class="smchart"
+        ></sm-chart>
+      </sm-border>
+      <sm-border type="border1" class="common-border cb_4">
+        <div class="card_tit">
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>
+        </div>
+        <sm-chart style="width:50%;float:left;"
+          icon-class=""
+          :options="s6ChartOptions"
+          class="smchart"
+        ></sm-chart>
+        <sm-chart style="width:50%;float:left;"
+          icon-class=""
+          :options="s6ChartOptions"
           class="smchart"
         ></sm-chart>
       </sm-border>
@@ -51,6 +67,19 @@
     >
     </sm-text>
 
+    <sm-radio-group
+      v-model="selstatistype"
+      class="statistype"
+      @change="timeradiochange"
+    >
+      <sm-radio-button
+        v-for="(item, i) in statistypelist"
+        :key="i"
+        :value="item"
+      >
+        {{ item }}
+      </sm-radio-button>
+    </sm-radio-group>
     <sm-radio-group
       v-model="seltime"
       class="timeline"
@@ -71,9 +100,10 @@ export default {
   components: { menu2 },
   data() {
     return {
-      contitle: "客运量",
       showcity: "海口市",
-      seltime: "2010",
+      seltime: "2005-2010",
+      selstatistype: "LCRPGR",
+      statistypelist: ["LCRPGR", "LCR", "PGR"],
       ename: [],
       seriesdata: [],
 
@@ -225,7 +255,7 @@ export default {
             //控制x轴文本
             show: true,
             textStyle: {
-              color: "#ffff00",
+              color: "#00fff0",
             },
             // interval: 0,
             rotate: 0,
@@ -235,12 +265,211 @@ export default {
         series: [
           {
             type: "bar",
+            color: new this.$echarts.graphic.LinearGradient(
+              0,
+              0,
+              1,
+              0,
+              ["rgba(22, 231, 56, 0.2)", "rgba(22, 231, 56, 1)"].map(
+                (color, offset) => ({
+                  color,
+                  offset,
+                })
+              )
+            ),
             barWidth: "40%",
             data: [],
           },
         ],
       },
       s3ChartOptions: {
+        grid: {
+          top: "25%",
+          bottom: "10%", //也可设置left和right设置距离来控制图表的大小
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+            label: {
+              show: true,
+            },
+          },
+        },
+        legend: {
+          data: ["LCRPGR", "LCR", "PGR"],
+          top: "15%",
+          textStyle: {
+            color: "#ffffff",
+          },
+        },
+        xAxis: {
+          data: [],
+          axisLine: {
+            show: true, //隐藏X轴轴线
+            lineStyle: {
+              color: "#01FCE3",
+            },
+          },
+          axisTick: {
+            show: false, //隐藏X轴刻度
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: "#ebf8ac", //X轴文字颜色
+            },
+            rotate: 0,
+          },
+        },
+        yAxis: [
+          {
+            type: "value",
+            name: "",
+            nameTextStyle: {
+              color: "#ebf8ac",
+            },
+            splitLine: {
+              show: false,
+            },
+            axisTick: {
+              show: true,
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: "#FFFFFF",
+              },
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: "#ebf8ac",
+              },
+              rotate: 0,
+            },
+          },
+          {
+            type: "value",
+            name: "",
+            nameTextStyle: {
+              color: "#ebf8ac",
+            },
+            position: "right",
+            splitLine: {
+              show: false,
+            },
+            axisTick: {
+              show: false,
+            },
+            axisLine: {
+              show: false,
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLabel: {
+              show: true,
+              formatter: "{value}", //右侧Y轴文字显示
+              textStyle: {
+                color: "#ebf8ac",
+              },
+              rotate: 0,
+            },
+          },
+          {
+            type: "value",
+            gridIndex: 0,
+            splitNumber: 8,
+            splitLine: {
+              show: false,
+            },
+            axisLine: {
+              show: false,
+            },
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              show: false,
+            },
+            splitArea: {
+              show: false,
+            },
+          },
+        ],
+        series: [
+          {
+            name: "LCRPGR",
+            type: "line",
+            yAxisIndex: 1, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用
+            smooth: true, //平滑曲线显示
+            showAllSymbol: true, //显示所有图形。
+            symbol: "circle", //标记的图形为实心圆
+            symbolSize: 10, //标记的大小
+            itemStyle: {
+              //折线拐点标志的样式
+              color: "#F57474",
+            },
+            lineStyle: {
+              color: "#F8B448",
+            },
+            areaStyle: {
+              color: "rgba(5,140,255, 0.4)",
+            },
+            data: [],
+          },
+          {
+            name: "LCR",
+            type: "bar",
+            barWidth: 15,
+            itemStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: "#8B78b6",
+                  },
+                  {
+                    offset: 1,
+                    color: "#8B78F6",
+                  },
+                ]),
+              },
+            },
+            data: [],
+          },
+          {
+            name: "PGR",
+            type: "bar",
+            barWidth: 15,
+            itemStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: "#1089b7",
+                  },
+                  {
+                    offset: 1,
+                    color: "#1089E7",
+                  },
+                ]),
+              },
+            },
+            data: [],
+          },
+        ],
+      },
+      s4ChartOptions: {
+        title: {
+          text: "",
+          subtext: "",
+          textStyle: {
+            color: "#00d8ff",
+            textBorderColor: "#e6ff00",
+          },
+          left: "20%",
+        },
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -260,17 +489,6 @@ export default {
           bottom: "0%",
           containLabel: true,
         },
-        // dataZoom: [
-        //   {
-        //     type: "inside",
-        //     start: 0,
-        //     end: 30,
-        //   },
-        //   {
-        //     start: 0,
-        //     end: 30,
-        //   },
-        // ],
         xAxis: [
           {
             type: "category",
@@ -318,14 +536,14 @@ export default {
               },
             },
             splitArea: { show: false }, //保留网格区域
-            axisLine: {
-              show: true,
-              lineStyle: {
-                type: "solid",
-                color: "#2a3751",
-                width: "0",
-              },
-            },
+            // axisLine: {
+            //   show: true,
+            //   lineStyle: {
+            //     type: "solid",
+            //     color: "#2a3751",
+            //     width: "0",
+            //   },
+            // },
           },
         ],
         series: [
@@ -348,12 +566,180 @@ export default {
                   1,
                   [
                     {
-                      offset: 0,
-                      color: "rgba(255, 215, 0, 0.3)",
+                      offset: 1,
+                      color: "rgba(172, 59, 42, 0.1)",
                     },
                     {
+                      offset: 0,
+                      color: "rgba(147, 206, 7, 0.3)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 5,
+              },
+            },
+            data: [],
+            markPoint: {
+              data: [
+                {
+                  type: "min",
+                  name: "最小值",
+                  symbolSize: 25,
+                  label: {
+                    formatter: "低",
+                    color: "#000",
+                  },
+                  itemStyle: {
+                    color: "#96f392",
+                  },
+                },
+                {
+                  coord: [],
+                  symbolSize: 50,
+                  label: {
+                    formatter: "",
+                    color: "#fff",
+                    fontSize: 10,
+                  },
+                  itemStyle: {
+                    color: "rgb(194,53,49)",
+                  },
+                },
+              ],
+            },
+            markLine: {
+              data: [
+                [
+                  {
+                    name: "",
+                    coord: [],
+                    lineStyle: {
+                      color: "rgb(194,53,49)",
+                      width: 2,
+                      curveness: 0.3,
+                      type: "dotted",
+                    },
+                    symbol: "none",
+                  },
+                  {
+                    coord: [],
+                    symbol: "none",
+                  },
+                ],
+              ],
+            },
+          },
+          {
+            type: "line",
+            color: "#FFD700",
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                // color: "rgba(255, 215, 0, 0.3)",
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
                       offset: 1,
-                      color: "rgba(255, 215, 0, 0)",
+                      color: "rgba(172, 59, 42, 0.1)",
+                    },
+                    {
+                      offset: 0,
+                      color: "rgba(147, 206, 7, 0.3)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 5,
+              },
+            },
+            data: [],
+            markPoint: {
+              data: [
+                {
+                  type: "min",
+                  name: "最小值",
+                  symbolSize: 25,
+                  label: {
+                    formatter: "低",
+                    color: "#000",
+                  },
+                  itemStyle: {
+                    color: "#96f392",
+                  },
+                },
+                {
+                  coord: [],
+                  symbolSize: 50,
+                  label: {
+                    formatter: "",
+                    color: "#fff",
+                    fontSize: 10,
+                  },
+                  itemStyle: {
+                    color: "rgb(194,53,49)",
+                  },
+                },
+              ],
+            },
+            markLine: {
+              data: [
+                [
+                  {
+                    name: "",
+                    coord: [],
+                    lineStyle: {
+                      color: "rgb(194,53,49)",
+                      width: 2,
+                      curveness: 0.3,
+                      type: "dotted",
+                    },
+                    symbol: "none",
+                  },
+                  {
+                    coord: [],
+                    symbol: "none",
+                  },
+                ],
+              ],
+            },
+          },
+          {
+            type: "line",
+            color: "#FFD700",
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                // color: "rgba(255, 215, 0, 0.3)",
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 1,
+                      color: "rgba(172, 59, 42, 0.1)",
+                    },
+                    {
+                      offset: 0,
+                      color: "rgba(147, 206, 7, 0.3)",
                     },
                   ],
                   false
@@ -415,180 +801,383 @@ export default {
           },
         ],
       },
-      s4ChartOptions: {
+      s5ChartOptions: {
+        title: {
+          text: "LCR",
+          subtext: "",
+          top: "5%",
+          textAlign: "center",
+          left: "20%",
+          textStyle: {
+            color: "#ff0000",
+            fontSize: 16,
+            fontWeight: "400",
+          },
+        },
+        color: ["#FFBE75", "#3EE2A5", "#6C77FD"],
         tooltip: {
           trigger: "axis",
-          axisPointer: {
-            type: "cross",
-            label: {
-              backgroundColor: "#6a7985",
-            },
+        },
+        legend: {
+          orient: "vertical",
+          x: "2%",
+          y: "center",
+          itemGap: 35,
+          data: [],
+          show: true,
+          textStyle: {
+            color: "#fff",
           },
         },
-        textStyle: {
-          color: "#8597c1",
+        toolbox: {
+          show: false,
         },
-        grid: {
-          left: "3%",
-          top: "6%",
-          right: "3%",
-          bottom: "10%",
-          containLabel: true,
-        },
-        // dataZoom: [
-        //   {
-        //     type: "inside",
-        //     start: 0,
-        //     end: 30,
-        //   },
-        //   {
-        //     start: 0,
-        //     end: 30,
-        //   },
-        // ],
-        xAxis: [
-          {
-            type: "category",
-            boundaryGap: false,
-            data: [],
-            axisLine: {
-              show: false, //x轴的线
-              lineStyle: {
-                color: ["#7bd6c763"],
-              },
-            },
-
-            // 控制网格线是否显示
-            splitLine: {
-              show: false,
-              lineStyle: {
-                // 使用深浅的间隔色
-                color: ["#fff"],
-              },
-            },
-            //除去x轴刻度
-            axisTick: {
-              show: false,
-            },
-            axisLabel: {
-              //控制x轴文本
-              show: true,
-              textStyle: {
-                color: "#8597c1",
-              },
-              // interval: 0,
-              rotate: 0,
-            },
-          },
-        ],
-        yAxis: [
-          {
-            type: "value",
-            // min: 40,
-            // max: 80,
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: "#7bd6c763",
-              },
-            },
-            splitArea: { show: false }, //保留网格区域
-            axisLine: {
-              show: true,
-              lineStyle: {
-                type: "solid",
-                color: "#2a3751",
-                width: "0",
-              },
-            },
-          },
-        ],
         series: [
           {
-            type: "bar",
-            color: "#FFD700",
-            barWidth: "40%",
-            smooth: true,
-            lineStyle: {
-              normal: {
-                width: 1,
+            name: "",
+            type: "pie",
+            radius: ["40%", "42%"],
+            hoverAnimation: false,
+            itemStyle: { normal: { label: { show: false, color: "#ddd" } } },
+            data: [
+              {
+                value: 0,
+                name: "",
+                itemStyle: {
+                  normal: { borderWidth: 5, borderColor: "#FF647C" },
+                },
               },
-            },
-            areaStyle: {
-              normal: {
-                // color: "rgba(255, 215, 0, 0.3)",
-                color: new this.$echarts.graphic.LinearGradient(
-                  0,
-                  0,
-                  0,
-                  1,
-                  [
-                    {
-                      offset: 0,
-                      color: "rgba(255, 215, 0, 0.3)",
-                    },
-                    {
-                      offset: 1,
-                      color: "rgba(255, 215, 0, 0)",
-                    },
-                  ],
-                  false
-                ),
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowBlur: 5,
-              },
-            },
-            data: [],
-            markPoint: {
-              data: [
-                {
-                  type: "min",
-                  name: "最小值",
-                  symbolSize: 50,
-                  label: {
-                    formatter: "低",
-                    color: "#000",
-                  },
-                  itemStyle: {
-                    color: "#96f392",
-                    fontSize: 16,
+              {
+                value: 0,
+                name: "",
+                itemStyle: {
+                  normal: {
+                    label: { show: false },
+                    labelLine: { show: false },
+                    color: "rgba(0, 0, 0, 0)",
+                    borderColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 0,
                   },
                 },
-                {
-                  coord: [],
-                  symbolSize: 50,
-                  label: {
-                    formatter: "",
-                    color: "#fff",
-                    fontSize: 14,
-                  },
-                  itemStyle: {
-                    color: "rgb(194,53,49)",
+              },
+            ],
+          },
+          {
+            name: "",
+            type: "gauge",
+            detail: false,
+            splitNumber: 10,
+            radius: "40%",
+            center: ["50%", "50%"],
+            startAngle: 0,
+            endAngle: -356,
+            axisLine: { show: false, lineStyle: { width: 0, shadowBlur: 0 } },
+            axisTick: {
+              show: true,
+              lineStyle: { color: "rgba(220,220,220,0.5)", width: 2 },
+              length: 2,
+              splitNumber: 5,
+            },
+            splitLine: {
+              show: false,
+              length: 2,
+              lineStyle: { color: "rgba(220,220,220,0.1)" },
+            },
+            axisLabel: { show: false },
+          },
+          {
+            name: "",
+            type: "pie",
+            radius: ["55%", "57%"],
+            hoverAnimation: false,
+            itemStyle: { normal: { label: { show: false, color: "#ddd" } } },
+            data: [
+              {
+                value: 0,
+                name: "",
+                itemStyle: {
+                  normal: { borderWidth: 5, borderColor: "#FFBE75" },
+                },
+              },
+              {
+                value: 200,
+                name: "",
+                itemStyle: {
+                  normal: {
+                    label: { show: false },
+                    labelLine: { show: false },
+                    color: "rgba(0, 0, 0, 0)",
+                    borderColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 0,
                   },
                 },
-              ],
+              },
+            ],
+          },
+          {
+            name: "",
+            type: "gauge",
+            detail: false,
+            splitNumber: 10,
+            radius: "55%",
+            center: ["50%", "50%"],
+            startAngle: 0,
+            endAngle: -356,
+            axisLine: { show: false, lineStyle: { width: 0, shadowBlur: 0 } },
+            axisTick: {
+              show: true,
+              lineStyle: { color: "rgba(220,220,220,0.5)", width: 2 },
+              length: 2,
+              splitNumber: 5,
             },
-            markLine: {
-              data: [
-                [
-                  {
-                    name: "",
-                    coord: [],
-                    lineStyle: {
-                      color: "rgb(194,53,49)",
-                      width: 2,
-                      curveness: 0.3,
-                      type: "dotted",
-                    },
-                    symbol: "none",
-                  },
-                  {
-                    coord: [],
-                    symbol: "none",
-                  },
-                ],
-              ],
+            splitLine: {
+              show: false,
+              length: 2,
+              lineStyle: { color: "rgba(220,220,220,0.1)" },
             },
+            axisLabel: { show: false },
+          },
+          {
+            name: "",
+            type: "pie",
+            radius: ["70%", "72%"],
+            hoverAnimation: false,
+            itemStyle: { normal: { label: { show: false, color: "#ddd" } } },
+            data: [
+              {
+                value: 0,
+                name: "",
+                itemStyle: {
+                  normal: { borderWidth: 5, borderColor: "#3EE2A5" },
+                },
+              },
+              {
+                value: 200,
+                name: "",
+                itemStyle: {
+                  normal: {
+                    label: { show: false },
+                    labelLine: { show: false },
+                    color: "rgba(0, 0, 0, 0)",
+                    borderColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 0,
+                  },
+                },
+              },
+            ],
+          },
+          {
+            name: "",
+            type: "gauge",
+            detail: false,
+            splitNumber: 10,
+            radius: "70%",
+            center: ["50%", "50%"],
+            startAngle: 0,
+            endAngle: 356,
+            axisLine: { show: false, lineStyle: { width: 0, shadowBlur: 0 } },
+            axisTick: {
+              show: true,
+              lineStyle: { color: "rgba(220,220,220,0.5)", width: 2 },
+              length: 2,
+              splitNumber: 5,
+            },
+            splitLine: {
+              show: false,
+              length: 5,
+              lineStyle: { color: "rgba(220,220,220,0.1)" },
+            },
+            axisLabel: { show: false },
+          },
+        ],
+      },
+      s6ChartOptions: {
+        title: {
+          text: "PGR",
+          subtext: "",
+          top: "5%",
+          textAlign: "center",
+          left: "20%",
+          textStyle: {
+            color: "#ff0000",
+            fontSize: 16,
+            fontWeight: "400",
+          },
+        },
+        color: ["#FFBE75", "#3EE2A5", "#6C77FD"],
+        tooltip: {
+          trigger: "axis",
+        },
+        legend: {
+          orient: "vertical",
+          x: "2%",
+          y: "center",
+          itemGap: 35,
+          data: [],
+          show: true,
+          textStyle: {
+            color: "#fff",
+          },
+        },
+        toolbox: {
+          show: false,
+        },
+        series: [
+          {
+            name: "",
+            type: "pie",
+            radius: ["40%", "42%"],
+            hoverAnimation: false,
+            itemStyle: { normal: { label: { show: false, color: "#ddd" } } },
+            data: [
+              {
+                value: 0,
+                name: "",
+                itemStyle: {
+                  normal: { borderWidth: 5, borderColor: "#FF647C" },
+                },
+              },
+              {
+                value: 0,
+                name: "",
+                itemStyle: {
+                  normal: {
+                    label: { show: false },
+                    labelLine: { show: false },
+                    color: "rgba(0, 0, 0, 0)",
+                    borderColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 0,
+                  },
+                },
+              },
+            ],
+          },
+          {
+            name: "",
+            type: "gauge",
+            detail: false,
+            splitNumber: 10,
+            radius: "40%",
+            center: ["50%", "50%"],
+            startAngle: 0,
+            endAngle: -356,
+            axisLine: { show: false, lineStyle: { width: 0, shadowBlur: 0 } },
+            axisTick: {
+              show: true,
+              lineStyle: { color: "rgba(220,220,220,0.5)", width: 2 },
+              length: 2,
+              splitNumber: 5,
+            },
+            splitLine: {
+              show: false,
+              length: 2,
+              lineStyle: { color: "rgba(220,220,220,0.1)" },
+            },
+            axisLabel: { show: false },
+          },
+          {
+            name: "",
+            type: "pie",
+            radius: ["55%", "57%"],
+            hoverAnimation: false,
+            itemStyle: { normal: { label: { show: false, color: "#ddd" } } },
+            data: [
+              {
+                value: 0,
+                name: "",
+                itemStyle: {
+                  normal: { borderWidth: 5, borderColor: "#FFBE75" },
+                },
+              },
+              {
+                value: 200,
+                name: "",
+                itemStyle: {
+                  normal: {
+                    label: { show: false },
+                    labelLine: { show: false },
+                    color: "rgba(0, 0, 0, 0)",
+                    borderColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 0,
+                  },
+                },
+              },
+            ],
+          },
+          {
+            name: "",
+            type: "gauge",
+            detail: false,
+            splitNumber: 10,
+            radius: "55%",
+            center: ["50%", "50%"],
+            startAngle: 0,
+            endAngle: -356,
+            axisLine: { show: false, lineStyle: { width: 0, shadowBlur: 0 } },
+            axisTick: {
+              show: true,
+              lineStyle: { color: "rgba(220,220,220,0.5)", width: 2 },
+              length: 2,
+              splitNumber: 5,
+            },
+            splitLine: {
+              show: false,
+              length: 2,
+              lineStyle: { color: "rgba(220,220,220,0.1)" },
+            },
+            axisLabel: { show: false },
+          },
+          {
+            name: "",
+            type: "pie",
+            radius: ["70%", "72%"],
+            hoverAnimation: false,
+            itemStyle: { normal: { label: { show: false, color: "#ddd" } } },
+            data: [
+              {
+                value: 0,
+                name: "",
+                itemStyle: {
+                  normal: { borderWidth: 5, borderColor: "#3EE2A5" },
+                },
+              },
+              {
+                value: 200,
+                name: "",
+                itemStyle: {
+                  normal: {
+                    label: { show: false },
+                    labelLine: { show: false },
+                    color: "rgba(0, 0, 0, 0)",
+                    borderColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 0,
+                  },
+                },
+              },
+            ],
+          },
+          {
+            name: "",
+            type: "gauge",
+            detail: false,
+            splitNumber: 10,
+            radius: "70%",
+            center: ["50%", "50%"],
+            startAngle: 0,
+            endAngle: 356,
+            axisLine: { show: false, lineStyle: { width: 0, shadowBlur: 0 } },
+            axisTick: {
+              show: true,
+              lineStyle: { color: "rgba(220,220,220,0.5)", width: 2 },
+              length: 2,
+              splitNumber: 5,
+            },
+            splitLine: {
+              show: false,
+              length: 5,
+              lineStyle: { color: "rgba(220,220,220,0.1)" },
+            },
+            axisLabel: { show: false },
           },
         ],
       },
@@ -620,7 +1209,7 @@ export default {
     // 客运量
     gatdata() {
       var _this = this;
-      _this.$http.get("data/qita.json").then((data) => {
+      _this.$http.get("data/1103.json").then((data) => {
         _this.info = data;
         _this.showecharts1();
       });
@@ -629,34 +1218,42 @@ export default {
       var _this = this;
       var data = _this.info;
       var xdata = [];
-      var seriesdata = [];
-      var seriesdata2 = [];
+      var seriesdata = [[], [], []];
+      var seriesdata2 = [[], [], []];
       var ldata = [];
 
       var d2xh = 0;
-      for (var d1 in data["统计年鉴客运量"]) {
+      for (var d1 in data["LCRPGR"]) {
         ldata.push(d1);
-        seriesdata2.push([]);
+        seriesdata2[0].push([]);
+        seriesdata2[1].push([]);
+        seriesdata2[2].push([]);
         d2xh = 0;
-        for (var d2 in data["统计年鉴客运量"][d1]) {
+        for (var d2 in data["LCRPGR"][d1]) {
           if (ldata.length === 1) {
             xdata.push(d2);
-            seriesdata.push([]);
+            seriesdata[0].push([]);
+            seriesdata[1].push([]);
+            seriesdata[2].push([]);
           }
-          seriesdata[d2xh].push(data["统计年鉴客运量"][d1][d2]);
-          seriesdata2[seriesdata2.length - 1].push(
-            data["统计年鉴客运量"][d1][d2]
+          seriesdata[0][d2xh].push(data["LCRPGR"][d1][d2]);
+          seriesdata[1][d2xh].push(data["LCR"][d1][d2]);
+          seriesdata[2][d2xh].push(data["PGR"][d1][d2]);
+          seriesdata2[0][seriesdata2[0].length - 1].push(
+            data["LCRPGR"][d1][d2]
           );
+          seriesdata2[1][seriesdata2[1].length - 1].push(data["LCR"][d1][d2]);
+          seriesdata2[2][seriesdata2[2].length - 1].push(data["PGR"][d1][d2]);
           d2xh++;
         }
       }
-      _this.timelist = xdata;
-      _this.citylist = ldata;
-      _this.seriesdatalist = seriesdata;
-      _this.seriesdatalist2 = seriesdata2;
+      _this.timelist = ldata;
+      _this.citylist = xdata;
+      _this.seriesdatalist = seriesdata2;
+      _this.seriesdatalist2 = seriesdata;
 
       _this.seltime = _this.timelist[0];
-      _this.s2ChartOptions.yAxis.data = ldata;
+      _this.s2ChartOptions.yAxis.data = xdata;
       _this.changeecharts1();
       _this.changeCity();
       _this.getoptions2();
@@ -664,9 +1261,12 @@ export default {
 
     changeecharts1() {
       var _this = this;
+      var typebh = _this.statistypelist.indexOf(_this.selstatistype);
+
       _this.s2ChartOptions.series[0].data =
-        _this.seriesdatalist[_this.timelist.indexOf(_this.seltime)];
+        _this.seriesdatalist[typebh][_this.timelist.indexOf(_this.seltime)];
       _this.timelinechange(_this.timelist.indexOf(_this.seltime));
+      _this.getoptions2();
     },
     //
     timeradiochange() {
@@ -676,8 +1276,13 @@ export default {
     timelinechange(currentIndex) {
       var minnum = 10000000000000000000000;
       var maxnum = -10000000000000000000000;
-      for (var i = 0; i < this.seriesdatalist[currentIndex].length; i++) {
-        var value = Number(this.seriesdatalist[currentIndex][i]);
+      var typebh = this.statistypelist.indexOf(this.selstatistype);
+      for (
+        var i = 0;
+        i < this.seriesdatalist[typebh][currentIndex].length;
+        i++
+      ) {
+        var value = Number(this.seriesdatalist[typebh][currentIndex][i]);
         if (value < minnum) {
           minnum = value;
         }
@@ -696,53 +1301,42 @@ export default {
         "#FF6600",
       ];
       var fc = ["match", ["get", "name"]];
-      for (var n = 0; n < this.seriesdatalist[currentIndex].length; n++) {
-        var value2 = Number(this.seriesdatalist[currentIndex][n]);
+      for (
+        var n = 0;
+        n < this.seriesdatalist[typebh][currentIndex].length;
+        n++
+      ) {
+        var value2 = Number(this.seriesdatalist[typebh][currentIndex][n]);
         fc.push(this.citylist[n]);
         fc.push(colorarr[Math.floor((value2 - minnum) / sf)]);
       }
       fc.push("#bebebe");
       window.map.setPaintProperty("geojsonid", "fill-color", fc);
-      this.s2ChartOptions.series = [
-        {
-          type: "bar",
-          barWidth: "60%",
-          data: this.seriesdatalist[currentIndex],
-        },
-      ];
+      this.s2ChartOptions.series[0].data =
+        this.seriesdatalist[typebh][currentIndex];
     },
 
     // 建成区面积echarts
     getoptions2() {
       var _this = this;
-      if (_this.seriesdatalist2.length === 0) {
+      if (
+        _this.seriesdatalist2.length === 0 ||
+        _this.seriesdatalist2[0].length === 0
+      ) {
         return;
       }
       var nowXH = _this.citylist.indexOf(_this.showcity);
 
-      _this.s3ChartOptions.xAxis[0].data = _this.timelist;
-      _this.s3ChartOptions.series[0].data = _this.seriesdatalist2[nowXH];
-      _this.s3ChartOptions.series[0].markPoint.data[1].coord = [
-        _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
-      ];
-      _this.s3ChartOptions.series[0].markPoint.data[1].label["formatter"] =
-        _this.seltime;
-
-      _this.s3ChartOptions.series[0].markLine.data[0][0].coord = [
-        _this.seltime,
-        0,
-      ];
-      _this.s3ChartOptions.series[0].markLine.data[0][1].coord = [
-        _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
-      ];
+      _this.s3ChartOptions.xAxis.data = _this.timelist;
+      _this.s3ChartOptions.series[0].data = _this.seriesdatalist2[0][nowXH];
+      _this.s3ChartOptions.series[1].data = _this.seriesdatalist2[1][nowXH];
+      _this.s3ChartOptions.series[2].data = _this.seriesdatalist2[2][nowXH];
 
       _this.s4ChartOptions.xAxis[0].data = _this.timelist;
-      _this.s4ChartOptions.series[0].data = _this.seriesdatalist2[nowXH];
+      _this.s4ChartOptions.series[0].data = _this.seriesdatalist2[0][nowXH];
       _this.s4ChartOptions.series[0].markPoint.data[1].coord = [
         _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
+        _this.seriesdatalist2[0][nowXH][_this.timelist.indexOf(_this.seltime)],
       ];
       _this.s4ChartOptions.series[0].markPoint.data[1].label["formatter"] =
         _this.seltime;
@@ -753,13 +1347,29 @@ export default {
       ];
       _this.s4ChartOptions.series[0].markLine.data[0][1].coord = [
         _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
+        _this.seriesdatalist2[0][nowXH][_this.timelist.indexOf(_this.seltime)],
       ];
+
+      this.s5ChartOptions.legend.data = _this.timelist;
+      this.s6ChartOptions.legend.data = _this.timelist;
+      for (var ti = 0; ti < _this.timelist.length; ti++) {
+        this.s5ChartOptions.series[ti*2].data[0].value =
+          _this.seriesdatalist2[1][nowXH][ti];
+        this.s5ChartOptions.series[ti*2].data[0].name = _this.timelist[ti];
+        this.s5ChartOptions.series[ti*2].data[1].value = 0.1;
+        this.s5ChartOptions.series[ti*2].data[1].name = _this.timelist[ti];
+
+        this.s6ChartOptions.series[ti*2].data[0].value =
+          _this.seriesdatalist2[2][nowXH][ti];
+        this.s6ChartOptions.series[ti*2].data[0].name = _this.timelist[ti];
+        this.s6ChartOptions.series[ti*2].data[1].value = 0.1;
+        this.s6ChartOptions.series[ti*2].data[1].name = _this.timelist[ti];
+      }
     },
     //城市改变
     changeCity() {
       var _this = this;
-      
+
       if (window.si) {
         clearInterval(window.si);
       }
@@ -828,7 +1438,7 @@ export default {
   height: calc(100% - 75px);
 }
 .page_1 {
-  width: 26%;
+  width: 23%;
   height: calc(100% - 77px);
   float: left;
   position: absolute;
@@ -838,7 +1448,7 @@ export default {
   box-shadow: 3px 0px 0px 0px #03a9f440;
 }
 .page_2 {
-  width: 26%;
+  width: 30%;
   height: calc(100% - 89px);
   float: right;
   position: absolute;
@@ -850,17 +1460,17 @@ export default {
 .showtext {
   position: absolute;
   top: 100px;
-  left: 28%;
+  left: 24%;
 }
 .showtext1 {
   position: absolute;
   top: 130px;
-  left: 28%;
+  left: 24%;
 }
 .showtext2 {
   position: absolute;
   top: 100px;
-  right: 28%;
+  right: 31%;
 }
 .cb_1 {
   width: 100%;
@@ -869,12 +1479,12 @@ export default {
 }
 .cb_3 {
   width: 100%;
-  height: 50%;
+  height: 40%;
   float: left;
 }
 .cb_4 {
   width: 100%;
-  height: 50%;
+  height: 30%;
   float: left;
 }
 .card_tit {
@@ -891,17 +1501,22 @@ export default {
 .card_tit span {
   color: #ff0000;
 }
+.statistype {
+  position: absolute;
+  top: 150px;
+  left: 24%;
+}
 .timeline {
   position: absolute;
   top: 100px;
-  left: 27%;
+  left: 24%;
 }
 .smchart {
   height: calc(100% - 40px);
 }
 .sm-component-radio-button-wrapper {
-  border-color: #f5f5f588;
-  background-color: #287ab166;
+  border-color: #f5f5f5;
+  background-color: #287ab199;
   font-size: 16px;
   font-weight: 500;
 }
@@ -909,6 +1524,6 @@ export default {
 .sm-component-radio-button-wrapper-checked:not(.sm-component-radio-button-wrapper-disabled):first-child {
   border-color: #00d8ff;
   color: #fff;
-  background-color: #3782b5cc;
+  background-color: #3782b5dd;
 }
 </style>

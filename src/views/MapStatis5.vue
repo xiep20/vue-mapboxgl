@@ -11,7 +11,7 @@
     <div class="page_1">
       <sm-border type="border9" class="common-border cb_1">
         <div class="card_tit">
-          <span>[{{ this.seltime }}年]</span> 公路客运量
+          <span>[{{ this.seltime }}年]</span> 生活垃圾清运量
         </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
       </sm-border>
@@ -19,7 +19,8 @@
     <div class="page_2">
       <sm-border type="border1" class="common-border cb_3">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
+          <span style="color: #ff0000">[{{ this.showcity }}]</span
+          >生活垃圾清运量
         </div>
         <sm-chart
           icon-class=""
@@ -29,7 +30,8 @@
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>公路客运量
+          <span style="color: #ff0000">[{{ this.showcity }}]</span
+          >生活垃圾清运量
         </div>
         <sm-chart
           icon-class=""
@@ -71,7 +73,6 @@ export default {
   components: { menu2 },
   data() {
     return {
-      contitle: "客运量",
       showcity: "海口市",
       seltime: "2010",
       ename: [],
@@ -186,11 +187,12 @@ export default {
         },
         grid: {
           left: 75,
-          right: 35,
+          right: 45,
           top: 50,
           bottom: 50,
         },
         xAxis: {
+          name: "万吨",
           type: "value",
           splitArea: { show: false }, //保留网格区域
           axisLabel: {
@@ -620,7 +622,7 @@ export default {
     // 客运量
     gatdata() {
       var _this = this;
-      _this.$http.get("data/qita.json").then((data) => {
+      _this.$http.get("data/1106.json").then((data) => {
         _this.info = data;
         _this.showecharts1();
       });
@@ -634,18 +636,18 @@ export default {
       var ldata = [];
 
       var d2xh = 0;
-      for (var d1 in data["统计年鉴客运量"]) {
+      for (var d1 in data["生活垃圾清运量"]) {
         ldata.push(d1);
         seriesdata2.push([]);
         d2xh = 0;
-        for (var d2 in data["统计年鉴客运量"][d1]) {
+        for (var d2 in data["生活垃圾清运量"][d1]) {
           if (ldata.length === 1) {
             xdata.push(d2);
             seriesdata.push([]);
           }
-          seriesdata[d2xh].push(data["统计年鉴客运量"][d1][d2]);
+          seriesdata[d2xh].push(data["生活垃圾清运量"][d1][d2]);
           seriesdata2[seriesdata2.length - 1].push(
-            data["统计年鉴客运量"][d1][d2]
+            data["生活垃圾清运量"][d1][d2]
           );
           d2xh++;
         }
@@ -759,7 +761,7 @@ export default {
     //城市改变
     changeCity() {
       var _this = this;
-      
+
       if (window.si) {
         clearInterval(window.si);
       }
