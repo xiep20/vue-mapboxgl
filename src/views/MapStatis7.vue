@@ -4,7 +4,7 @@
       <div class="header-cen">
         <h1>海南省城市可持续发展指标监测与评估系统</h1>
       </div>
-      <menu2 Isactive="2"></menu2>
+      <menu3 Isactive="1"></menu3>
     </div>
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
@@ -77,11 +77,11 @@
 </template>
 
 <script>
-import menu2 from "./../components/headermenu/menu2";
+import menu3 from "./../components/headermenu/menu3";
 export default {
   name: "mapstatis1",
   computed: {},
-  components: { menu2 },
+  components: { menu3 },
   data() {
     return {
       showcity: "海口市",
