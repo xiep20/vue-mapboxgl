@@ -9,11 +9,17 @@
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
     <div class="page_1">
-      <sm-border type="border9" class="common-border cb_1">
+      <sm-border type="border1" class="common-border cb_1">
         <div class="card_tit">
           <span>[{{ this.seltime }}年]</span> SO2排放量
         </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
+      </sm-border>
+      <sm-border type="border1" class="common-border cb_1_1">
+        <div class="card_tit">
+          <span>[{{ this.showcity }}]</span> NO2排放量、CO排放量
+        </div>
+        <sm-chart icon-class="" :options="s2ChartOptions_1"></sm-chart>
       </sm-border>
     </div>
     <div class="page_2">
@@ -197,67 +203,289 @@ export default {
       s2ChartOptions: {
         tooltip: {
           trigger: "axis",
-          axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-          },
+          padding: [2, 10],
+          textStyle: {
+              fontSize: 16
+          }
         },
         grid: {
-          left: 75,
+          left: 25,
           right: 35,
-          top: 50,
-          bottom: 50,
+          top: 10,
+          bottom: 70,
         },
         xAxis: {
-          type: "value",
-          splitArea: { show: false }, //保留网格区域
-          axisLabel: {
-            //控制x轴文本
-            show: true,
-            textStyle: {
-              color: "#8597c1",
+          type: 'category',
+          boundaryGap: false,
+          
+          splitLine: {
+            show: false,
+            lineStyle: {
+              // 使用深浅的间隔色
+              color: ["#fff"],
             },
-            // interval: 0,
-            rotate: 0,
+          },
+          //除去x轴刻度
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+              lineStyle: {
+                  width: 3
+              }
+          },
+         
+          axisLabel: {
+              rotate: 45,
+              textStyle: {
+                color: "#8597c1",
+              },            
           },
         },
         yAxis: {
-          type: "category",
+          type: "value",
           data: [],
           splitLine: {
-            show: true,
-            lineStyle: {
-              color: "#7bd6c763",
-            },
+              show: false
           },
           splitArea: { show: false }, //保留网格区域
           axisLine: {
-            show: true,
-            lineStyle: {
-              type: "solid",
-              color: "#2a3751",
-              width: "0",
-            },
+              lineStyle: {
+                  width: 3,
+                  color: {
+                      type: 'linear',
+                      x: 0,
+                      y: 0,
+                      x2: 0,
+                      y2: 1,
+                      colorStops: [{
+                          offset: 0,
+                          color: 'red'
+                      }, {
+                          offset: 1,
+                          color: 'blue'
+                      }],
+                      globalCoord: false // 缺省为 false
+                  }
+              }
+          },
+          axisTick: {
+              lineStyle: {
+                  width: 3
+              }
           },
           axisLabel: {
-            //控制x轴文本
-            show: true,
-            textStyle: {
-              color: "#ffff00",
-            },
-            // interval: 0,
-            rotate: 0,
-          },
+              fontWeight: "bold",
+          }
         },
 
         series: [
           {
-            type: "bar",
-            barWidth: "40%",
+            type: "line",
+            symbol: 'circle',
+            symbolSize: 10,
+            smooth: true,
+            animationDuration: 2000,
+            itemStyle: {
+                normal: {
+                    color: 'rgb(103, 99, 99)',
+                    shadowBlur: 2,
+                    shadowColor: "rgba(0, 0, 0, .12)",
+                    shadowOffsetX: 2,
+                    shadowOffsetY: 2
+                }
+            },
+            lineStyle: {
+                normal: {
+                    width: 3,
+                    shadowColor: 'rgba(0,0,0,0.4)',
+                    shadowBlur: 10,
+                    shadowOffsetX: 4,
+                    shadowOffsetY: 10
+                }
+            },
             data: [],
           },
         ],
       },
+      s2ChartOptions_1:{
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+              type: "shadow",
+              label: {
+                  show: true
+              }
+          }
+        },
+        grid: {
+          left: 25,
+          right: 35,
+          top: 50,
+          bottom: 70,
+        },
+         legend: {
+            data: ["NO2排放量", "CO排放量"],
+            top: "5%",
+            textStyle: {
+                color: "#ffffff"
+            }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          
+          splitLine: {
+            show: false,
+            lineStyle: {
+              // 使用深浅的间隔色
+              color: ["#fff"],
+            },
+          },
+          //除去x轴刻度
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+              lineStyle: {
+                  width: 3
+              }
+          },
+         
+          axisLabel: {
+              rotate: 45,
+              textStyle: {
+                color: "#8597c1",
+              },            
+          },
+        },
+        yAxis: [{
+           splitLine: {
+              show: false
+          },
+          splitArea: { show: false }, //保留网格区域
+          axisLine: {
+              lineStyle: {
+                  width: 3,
+                  color: {
+                      type: 'linear',
+                      x: 0,
+                      y: 0,
+                      x2: 0,
+                      y2: 1,
+                      colorStops: [{
+                          offset: 0,
+                          color: 'red'
+                      }, {
+                          offset: 1,
+                          color: 'blue'
+                      }],
+                      globalCoord: false // 缺省为 false
+                  }
+              }
+          },
+          axisTick: {
+              lineStyle: {
+                  width: 3
+              }
+          },
+          axisLabel: {
+              fontWeight: "bold",
+          }
+             
+        },
+        {
+            type: "value",
+             splitArea: { show: false }, //保留网格区域
+            nameTextStyle: {
+                color: "#ebf8ac"
+            },
+            position: "right",
+            splitLine: {
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+            axisLine: {
+                show: false
+            },
+            axisLabel: {
+                show: true,
+                formatter: "{value} ", //右侧Y轴文字显示
+                textStyle: {
+                    color: "#ebf8ac"
+                }
+            }
+        },
+        {
+            type: "value",
+            gridIndex: 0,
+            min: 50,
+            max: 100,
+            splitNumber: 8,
+            splitLine: {
+                show: false
+            },
+            axisLine: {
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                show: false
+            },
+            splitArea: {
+                show: true,
+                areaStyle: {
+                    color: ["rgba(250,250,250,0.0)", "rgba(250,250,250,0.05)"]
+                }
+            }
+        }
+    ],
+    series: [
+      {
+            name: "NO2排放量",
+            type: "line",
+            yAxisIndex: 1, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用
+            smooth: true, //平滑曲线显示
+            showAllSymbol: true, //显示所有图形。
+            symbol: "circle", //标记的图形为实心圆
+            symbolSize: 10, //标记的大小
+            itemStyle: {
+                //折线拐点标志的样式
+                color: "#058cff"
+            },
+            lineStyle: {
+                color: "#058cff"
+            },
+            areaStyle:{
+                color: "rgba(5,140,255, 0.2)"
+            },
+            data: []
+        },
+        {
+            name: "CO排放量",
+            type: "bar",
+            barWidth: 15,
+            itemStyle: {
+                normal: {
+                    color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: "#00FFE3"
+                        },
+                        {
+                            offset: 1,
+                            color: "#4693EC"
+                        }
+                    ])
+                }
+            },
+            data: []
+        }]
+      },
+      s2ChartOptions_2:{},
       s3ChartOptions: {
         tooltip: {
           trigger: "axis",
@@ -744,7 +972,7 @@ export default {
       _this.seriesdatalist2 = seriesdata2;
 
       _this.seltime = _this.timelist[0];
-      _this.s2ChartOptions.yAxis.data = ldata;
+      _this.s2ChartOptions.xAxis.data = ldata;
       _this.changeecharts1();
       _this.changeCity();
       _this.getoptions2();
@@ -794,8 +1022,7 @@ export default {
       window.map.setPaintProperty("geojsonid", "fill-color", fc);
       this.s2ChartOptions.series = [
         {
-          type: "bar",
-          barWidth: "60%",
+          type: "line",
           data: this.seriesdatalist[currentIndex],
         },
       ];
@@ -810,6 +1037,10 @@ export default {
       var nowXH = _this.citylist.indexOf(_this.showcity);
 
       _this.s3ChartOptions.xAxis[0].data = _this.timelist;
+      _this.s2ChartOptions_1.xAxis.data = _this.timelist;
+      _this.s2ChartOptions_1.series[0].data = Object.values(_this.info['NO2'][_this.showcity]);
+      _this.s2ChartOptions_1.series[1].data = Object.values(_this.info['CO'][_this.showcity]);
+
       _this.s3ChartOptions.series[0].data = _this.seriesdatalist2[nowXH];
       _this.s3ChartOptions.series[0].markPoint.data[1].coord = [
         _this.seltime,
@@ -864,12 +1095,12 @@ export default {
             yearlist.push(d2);
           }
           data[citylist.length - 1][xh] = [];
-          data[citylist.length - 1][xh].push(_this.info["PM2.5"][d1][d2]);
-          data[citylist.length - 1][xh].push(_this.info["PM10"][d1][d2]);
-          data[citylist.length - 1][xh].push(_this.info["CO"][d1][d2]);
-          data[citylist.length - 1][xh].push(_this.info["NO2"][d1][d2]);
-          data[citylist.length - 1][xh].push(_this.info["SO2"][d1][d2]);
-          data[citylist.length - 1][xh].push(_this.info["O3"][d1][d2]);
+          data[citylist.length - 1][xh].push(_this.info["PM2.5"][d1][_this.seltime]);
+          data[citylist.length - 1][xh].push(_this.info["PM10"][d1][_this.seltime]);
+          data[citylist.length - 1][xh].push(_this.info["CO"][d1][_this.seltime]);
+          data[citylist.length - 1][xh].push(_this.info["NO2"][d1][_this.seltime]);
+          data[citylist.length - 1][xh].push(_this.info["SO2"][d1][_this.seltime]);
+          data[citylist.length - 1][xh].push(_this.info["O3"][d1][_this.seltime]);
           xh++;
         }
       }
@@ -984,7 +1215,12 @@ export default {
 }
 .cb_1 {
   width: 100%;
-  height: 100%;
+  height: 49%;
+  float: left;
+}
+.cb_1_1 {
+  width: 100%;
+  height: 49%;
   float: left;
 }
 .cb_3 {
