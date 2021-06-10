@@ -30,12 +30,21 @@
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span
-          >生活垃圾清运量
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>PM2.5
         </div>
         <sm-chart
           icon-class=""
           :options="s4ChartOptions"
+          class="smchart"
+        ></sm-chart>
+      </sm-border>
+      <sm-border type="border1" class="common-border cb_5">
+        <div class="card_tit">
+          <span style="color: #ff0000">[{{ this.showcity }}]</span>PM10
+        </div>
+        <sm-chart
+          icon-class=""
+          :options="s5ChartOptions"
           class="smchart"
         ></sm-chart>
       </sm-border>
@@ -75,6 +84,8 @@ export default {
     return {
       showcity: "海口市",
       seltime: "2010",
+      selstatistype: "生活垃圾清运量",
+      statistypelist: ["生活垃圾清运量", "PM2.5", "PM10"],
       ename: [],
       seriesdata: [],
 
@@ -243,6 +254,209 @@ export default {
         ],
       },
       s3ChartOptions: {
+        title: {
+          text: "",
+          subtext: "",
+          textStyle: {
+            color: "#00d8ff",
+            textBorderColor: "#e6ff00",
+          },
+          left: "20%",
+        },
+        tooltip: {
+          show: false,
+          trigger: "axis",
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+          },
+        },
+        grid: {
+          left: "0",
+          right: "3%",
+          bottom: "0%",
+          top: "20%",
+          containLabel: true,
+          show: true,
+          borderColor: "rgba(0, 240, 255, 0.3)",
+        },
+        xAxis: [
+          {
+            type: "category",
+            data: [],
+            axisTick: {
+              alignWithLabel: false,
+              show: false,
+            },
+            axisLabel: {
+              show: true,
+              fontSize: 11,
+              textStyle: {
+                color: "#8597c1",
+              },
+              formatter: "{value}年",
+              rotate: 0,
+            },
+            axisLine: {
+              show: true,
+              color: "#fff",
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: "value",
+            name: "生活垃圾清运量(万吨)",
+            nameTextStyle: {
+              color: "rgb(0,136,212)",
+            },
+
+            splitLine: {
+              show: false,
+            },
+            axisTick: {
+              show: false,
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: false,
+              lineStyle: {
+                type: "solid",
+                color: "#2a3751",
+                width: "0",
+              },
+            },
+            axisLabel: {
+              show: true,
+              formatter: "{value}", //右侧Y轴文字显示
+              textStyle: {
+                color: "rgb(0,136,212)",
+              },
+            },
+            // min: 0,
+            // max: 120,
+          },
+          {
+            type: "value",
+            name: "生活垃圾无害化处理量(万吨)",
+            nameTextStyle: {
+              color: "rgb(219,50,51)",
+            },
+            position: "right",
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: "rgb(219,50,51)",
+              },
+            },
+            axisTick: {
+              show: false,
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: false,
+              lineStyle: {
+                type: "solid",
+                color: "#2a3751",
+                width: "0",
+              },
+            },
+            splitLine: {
+              show: false,
+              lineStyle: {
+                color: "#57617B",
+              },
+            },
+            // min: 0,
+            // max: 120,
+          },
+        ],
+        // 控制x轴
+        series: [
+          {
+            name: "生活垃圾清运量 数值",
+            type: "line",
+
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(0, 136, 212, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(0, 136, 212, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 10,
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "rgb(0,136,212)",
+              },
+            },
+            data: [],
+          },
+          {
+            name: "生活垃圾无害化处理量",
+            type: "line",
+            yAxisIndex: 0, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 1,
+              },
+            },
+            areaStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(219, 50, 51, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(219, 50, 51, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 10,
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "rgb(219,50,51)",
+              },
+            },
+            data: [],
+            markArea: {},
+          },
+        ],
+      },
+      s3ChartOptions_: {
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -418,6 +632,15 @@ export default {
         ],
       },
       s4ChartOptions: {
+        title: {
+          text: "",
+          subtext: "",
+          textStyle: {
+            color: "#00d8ff",
+            textBorderColor: "#e6ff00",
+          },
+          left: "20%",
+        },
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -432,22 +655,11 @@ export default {
         },
         grid: {
           left: "3%",
-          top: "6%",
+          top: "10%",
           right: "3%",
-          bottom: "10%",
+          bottom: "5%",
           containLabel: true,
         },
-        // dataZoom: [
-        //   {
-        //     type: "inside",
-        //     start: 0,
-        //     end: 30,
-        //   },
-        //   {
-        //     start: 0,
-        //     end: 30,
-        //   },
-        // ],
         xAxis: [
           {
             type: "category",
@@ -485,6 +697,7 @@ export default {
         ],
         yAxis: [
           {
+            name: "ug/m³",
             type: "value",
             // min: 40,
             // max: 80,
@@ -507,9 +720,8 @@ export default {
         ],
         series: [
           {
-            type: "bar",
+            type: "line",
             color: "#FFD700",
-            barWidth: "40%",
             smooth: true,
             lineStyle: {
               normal: {
@@ -546,51 +758,194 @@ export default {
                 {
                   type: "min",
                   name: "最小值",
-                  symbolSize: 50,
+                  symbolSize: 25,
                   label: {
                     formatter: "低",
                     color: "#000",
                   },
                   itemStyle: {
                     color: "#96f392",
-                    fontSize: 16,
                   },
                 },
                 {
-                  coord: [],
-                  symbolSize: 50,
+                  type: "max",
+                  name: "最大值",
+                  symbolSize: 25,
                   label: {
-                    formatter: "",
-                    color: "#fff",
-                    fontSize: 14,
+                    formatter: "高",
+                    color: "#000",
                   },
                   itemStyle: {
-                    color: "rgb(194,53,49)",
+                    color: "#fff000",
                   },
                 },
               ],
             },
-            markLine: {
-              data: [
-                [
-                  {
-                    name: "",
-                    coord: [],
-                    lineStyle: {
-                      color: "rgb(194,53,49)",
-                      width: 2,
-                      curveness: 0.3,
-                      type: "dotted",
-                    },
-                    symbol: "none",
-                  },
-                  {
-                    coord: [],
-                    symbol: "none",
-                  },
-                ],
-              ],
+          },
+        ],
+        graphic: [
+          {
+            type: "text",
+            right: "10%",
+            top: "1%",
+            style: {
+              fill: "#fff",
+              text: "PM2.5值基本较低，未有增长",
+              textAlign: "center",
+              fontSize: 13,
+              //font: 'bold 13px Microsoft YaHei'
             },
+          },
+        ],
+      },
+      s5ChartOptions:{
+        grid: {
+          top: "25%",
+          bottom: "10%", //也可设置left和right设置距离来控制图表的大小
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+            label: {
+              show: true,
+            },
+          },
+        },
+        xAxis: {
+          data: [],
+          axisLine: {
+            show: true, //隐藏X轴轴线
+            lineStyle: {
+              color: "#01FCE3",
+            },
+          },
+          axisTick: {
+            show: false, //隐藏X轴刻度
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: "#ebf8ac", //X轴文字颜色
+            },
+            rotate: 0,
+          },
+        },
+        yAxis: [
+          {
+            type: "value",
+            name: "",
+            nameTextStyle: {
+              color: "#ebf8ac",
+            },
+            splitLine: {
+              show: false,
+            },
+            axisTick: {
+              show: true,
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: "#FFFFFF",
+              },
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: "#ebf8ac",
+              },
+              rotate: 0,
+            },
+          },
+          {
+            type: "value",
+            name: "",
+            nameTextStyle: {
+              color: "#ebf8ac",
+            },
+            position: "right",
+            splitLine: {
+              show: false,
+            },
+            axisTick: {
+              show: false,
+            },
+            axisLine: {
+              show: false,
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLabel: {
+              show: true,
+              formatter: "{value}", //右侧Y轴文字显示
+              textStyle: {
+                color: "#ebf8ac",
+              },
+              rotate: 0,
+            },
+          },
+          {
+            type: "value",
+            gridIndex: 0,
+            splitNumber: 8,
+            splitLine: {
+              show: false,
+            },
+            axisLine: {
+              show: false,
+            },
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              show: false,
+            },
+            splitArea: {
+              show: false,
+            },
+          },
+        ],
+        series: [
+          {
+            name: "PM10",
+            type: "line",
+            yAxisIndex: 1, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用
+            smooth: true, //平滑曲线显示
+            showAllSymbol: true, //显示所有图形。
+            symbol: "circle", //标记的图形为实心圆
+            symbolSize: 10, //标记的大小
+            itemStyle: {
+              //折线拐点标志的样式
+              color: "#F57474",
+            },
+            lineStyle: {
+              color: "#F8B448",
+            },
+            areaStyle: {
+              color: "rgba(5,140,255, 0.4)",
+            },
+            data: [],
+          },
+          {
+            name: "PM10",
+            type: "bar",
+            barWidth: 15,
+            itemStyle: {
+              normal: {
+                color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: "#F8B448",
+                  },
+                  {
+                    offset: 1,
+                    color: "#1089E7",
+                  },
+                ]),
+              },
+            },
+            data: [],
           },
         ],
       },
@@ -631,24 +986,38 @@ export default {
       var _this = this;
       var data = _this.info;
       var xdata = [];
-      var seriesdata = [];
-      var seriesdata2 = [];
+      var seriesdata = [[], [], [], []];
+      var seriesdata2 = [[], [], [], []];
       var ldata = [];
 
       var d2xh = 0;
       for (var d1 in data["生活垃圾清运量"]) {
         ldata.push(d1);
-        seriesdata2.push([]);
+        seriesdata2[0].push([]);
+        seriesdata2[1].push([]);
+        seriesdata2[2].push([]);
+        seriesdata2[3].push([]);
         d2xh = 0;
         for (var d2 in data["生活垃圾清运量"][d1]) {
           if (ldata.length === 1) {
             xdata.push(d2);
-            seriesdata.push([]);
+            seriesdata[0].push([]);
+            seriesdata[1].push([]);
+            seriesdata[2].push([]);
+            seriesdata[3].push([]);
           }
-          seriesdata[d2xh].push(data["生活垃圾清运量"][d1][d2]);
-          seriesdata2[seriesdata2.length - 1].push(
+          seriesdata[0][d2xh].push(data["生活垃圾清运量"][d1][d2]);
+          seriesdata[1][d2xh].push(data["生活垃圾无害化处理量"][d1][d2]);
+          seriesdata[2][d2xh].push(data["PM2.5"][d1][d2]);
+          seriesdata[3][d2xh].push(data["PM10"][d1][d2]);
+          seriesdata2[0][seriesdata2[0].length - 1].push(
             data["生活垃圾清运量"][d1][d2]
           );
+          seriesdata2[1][seriesdata2[1].length - 1].push(
+            data["生活垃圾无害化处理量"][d1][d2]
+          );
+          seriesdata2[2][seriesdata2[2].length - 1].push(data["PM2.5"][d1][d2]);
+          seriesdata2[3][seriesdata2[2].length - 1].push(data["PM10"][d1][d2]);
           d2xh++;
         }
       }
@@ -666,8 +1035,10 @@ export default {
 
     changeecharts1() {
       var _this = this;
+      var typebh = _this.statistypelist.indexOf(_this.selstatistype);
+
       _this.s2ChartOptions.series[0].data =
-        _this.seriesdatalist[_this.timelist.indexOf(_this.seltime)];
+        _this.seriesdatalist[typebh][_this.timelist.indexOf(_this.seltime)];
       _this.timelinechange(_this.timelist.indexOf(_this.seltime));
     },
     //
@@ -678,8 +1049,13 @@ export default {
     timelinechange(currentIndex) {
       var minnum = 10000000000000000000000;
       var maxnum = -10000000000000000000000;
-      for (var i = 0; i < this.seriesdatalist[currentIndex].length; i++) {
-        var value = Number(this.seriesdatalist[currentIndex][i]);
+      var typebh = this.statistypelist.indexOf(this.selstatistype);
+      for (
+        var i = 0;
+        i < this.seriesdatalist[typebh][currentIndex].length;
+        i++
+      ) {
+        var value = Number(this.seriesdatalist[typebh][currentIndex][i]);
         if (value < minnum) {
           minnum = value;
         }
@@ -698,8 +1074,12 @@ export default {
         "#FF6600",
       ];
       var fc = ["match", ["get", "name"]];
-      for (var n = 0; n < this.seriesdatalist[currentIndex].length; n++) {
-        var value2 = Number(this.seriesdatalist[currentIndex][n]);
+      for (
+        var n = 0;
+        n < this.seriesdatalist[typebh][currentIndex].length;
+        n++
+      ) {
+        var value2 = Number(this.seriesdatalist[typebh][currentIndex][n]);
         fc.push(this.citylist[n]);
         fc.push(colorarr[Math.floor((value2 - minnum) / sf)]);
       }
@@ -709,7 +1089,7 @@ export default {
         {
           type: "bar",
           barWidth: "60%",
-          data: this.seriesdatalist[currentIndex],
+          data: this.seriesdatalist[typebh][currentIndex],
         },
       ];
     },
@@ -722,41 +1102,19 @@ export default {
       }
       var nowXH = _this.citylist.indexOf(_this.showcity);
 
-      _this.s3ChartOptions.xAxis[0].data = _this.timelist;
-      _this.s3ChartOptions.series[0].data = _this.seriesdatalist2[nowXH];
-      _this.s3ChartOptions.series[0].markPoint.data[1].coord = [
-        _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
-      ];
-      _this.s3ChartOptions.series[0].markPoint.data[1].label["formatter"] =
-        _this.seltime;
-
-      _this.s3ChartOptions.series[0].markLine.data[0][0].coord = [
-        _this.seltime,
-        0,
-      ];
-      _this.s3ChartOptions.series[0].markLine.data[0][1].coord = [
-        _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
-      ];
+      this.s3ChartOptions.xAxis[0].data = _this.timelist;
+      // this.s3ChartOptions.title.text = _this.showcity;
+      this.s3ChartOptions.series[0].data = _this.seriesdatalist2[0][nowXH];
+      this.s3ChartOptions.series[1].data = _this.seriesdatalist2[1][nowXH];
 
       _this.s4ChartOptions.xAxis[0].data = _this.timelist;
-      _this.s4ChartOptions.series[0].data = _this.seriesdatalist2[nowXH];
-      _this.s4ChartOptions.series[0].markPoint.data[1].coord = [
-        _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
-      ];
-      _this.s4ChartOptions.series[0].markPoint.data[1].label["formatter"] =
-        _this.seltime;
+      _this.s4ChartOptions.series[0].data = _this.seriesdatalist2[2][nowXH];
 
-      _this.s4ChartOptions.series[0].markLine.data[0][0].coord = [
-        _this.seltime,
-        0,
-      ];
-      _this.s4ChartOptions.series[0].markLine.data[0][1].coord = [
-        _this.seltime,
-        _this.seriesdatalist2[nowXH][_this.timelist.indexOf(_this.seltime)],
-      ];
+
+      _this.s5ChartOptions.xAxis.data = _this.timelist;
+      _this.s5ChartOptions.series[0].data = _this.seriesdatalist2[3][nowXH];
+      _this.s5ChartOptions.series[1].data = _this.seriesdatalist2[3][nowXH];
+
     },
     //城市改变
     changeCity() {
@@ -871,12 +1229,17 @@ export default {
 }
 .cb_3 {
   width: 100%;
-  height: 50%;
+  height: 40%;
   float: left;
 }
 .cb_4 {
   width: 100%;
-  height: 50%;
+  height: 30%;
+  float: left;
+}
+.cb_5{
+  width: 100%;
+  height: 30%;
   float: left;
 }
 .card_tit {

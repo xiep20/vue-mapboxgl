@@ -11,15 +11,19 @@
     <div class="page_1">
       <sm-border type="border9" class="common-border cb_1">
         <div class="card_tit">
-          <span>[{{ this.seltime }}年]</span>{{ this.selstatistype }}
+          <span>[{{ this.seltime }}年]</span>
         </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
+      </sm-border>
+      <sm-border type="border1" class="common-border cb_2">
+        <sm-chart icon-class="" :options="s2_1ChartOptions"></sm-chart>
       </sm-border>
     </div>
     <div class="page_2">
       <sm-border type="border1" class="common-border cb_3">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>直接经济损失占GDP比重
+          <span style="color: #ff0000">[{{ this.showcity }}]</span
+          >直接经济损失占GDP比重
         </div>
         <sm-chart
           icon-class=""
@@ -29,7 +33,8 @@
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>十万人口受灾率
+          <span style="color: #ff0000">[{{ this.showcity }}]</span
+          >十万人口受灾率
         </div>
         <sm-chart
           icon-class=""
@@ -51,19 +56,6 @@
     >
     </sm-text>
 
-    <sm-radio-group
-      v-model="selstatistype"
-      class="statistype"
-      @change="timeradiochange"
-    >
-      <sm-radio-button
-        v-for="(item, i) in statistypelist"
-        :key="i"
-        :value="item"
-      >
-        {{ item }}
-      </sm-radio-button>
-    </sm-radio-group>
     <sm-radio-group
       v-model="seltime"
       class="timeline"
@@ -195,17 +187,22 @@ export default {
       },
       info: null,
       s2ChartOptions: {
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+        title: {
+          subtext: "",
+        },
+        tooltip: {},
+        legend: {
+          left: "right",
+          data: ["十万人口受灾率", "十万人口死亡失踪率"],
+          textStyle: {
+            color: "#ffffff",
           },
+          selected: {},
         },
         grid: {
           left: 75,
           right: 35,
-          top: 50,
+          top: 10,
           bottom: 50,
         },
         xAxis: {
@@ -252,21 +249,80 @@ export default {
 
         series: [
           {
+            name: "十万人口受灾率",
             type: "bar",
             color: new this.$echarts.graphic.LinearGradient(
               0,
               0,
               1,
               0,
-              ["rgba(253, 191, 25, 0.2)", "rgba(253, 191, 25, 1)"].map(
-                (color, offset) => ({
-                  color,
-                  offset,
-                })
-              )
+              ["#FFEB3B99", "#FF9800cc"].map((color, offset) => ({
+                color,
+                offset,
+              }))
             ),
-            barWidth: "40%",
+            barWidth: "20%",
             data: [],
+          },
+          {
+            name: "十万人口死亡失踪率",
+            type: "bar",
+            color: new this.$echarts.graphic.LinearGradient(
+              0,
+              0,
+              1,
+              0,
+              ["#03A9FF99", "#00BCD4cc"].map((color, offset) => ({
+                color,
+                offset,
+              }))
+            ),
+            barWidth: "20%",
+            data: [],
+          },
+        ],
+      },
+      s2_1ChartOptions: {
+        title: {
+          text: "直接经济损失占GDP比重前三",
+          subtext: "",
+          x: "center",
+          textStyle: {
+            color: "#ff0000",
+          },
+        },
+        color: ["#c14f60", "#d77169", "#efbb1a"],
+
+        series: [
+          {
+            name: "漏斗图",
+            type: "funnel",
+            x: "10%",
+            y: 60,
+            y2: 60,
+            width: "80%",
+            sort: "descending", // 'ascending', 'descending'
+            gap: 0,
+
+            data: [],
+            roseType: true,
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return params.name + " " + params.value + "";
+                },
+                position: "center",
+              },
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 0,
+                shadowBlur: 30,
+                shadowOffsetX: 0,
+                shadowOffsetY: 10,
+                shadowColor: "rgba(0, 0, 0, 0.5)",
+              },
+            },
           },
         ],
       },
@@ -706,11 +762,25 @@ export default {
 
     changeecharts1() {
       var _this = this;
-      var typebh = _this.statistypelist.indexOf(_this.selstatistype);
+      // var typebh = _this.statistypelist.indexOf(_this.selstatistype);
 
       _this.s2ChartOptions.series[0].data =
-        _this.seriesdatalist[typebh][_this.timelist.indexOf(_this.seltime)];
+        _this.seriesdatalist[0][_this.timelist.indexOf(_this.seltime)];
       _this.timelinechange(_this.timelist.indexOf(_this.seltime));
+      _this.s2ChartOptions.series[1].data =
+        _this.seriesdatalist[1][_this.timelist.indexOf(_this.seltime)];
+      _this.timelinechange(_this.timelist.indexOf(_this.seltime));
+
+      var td = [];
+      var tid = _this.seriesdatalist[2][_this.timelist.indexOf(_this.seltime)];
+      for (var i = 0; i < tid.length; i++) {
+        td.push({ value: tid[i], name: _this.citylist[i] });
+      }
+      var da = td.sort(function (a, b) {
+        return b.value - a.value;
+      });
+      da.length = 3;
+      _this.s2_1ChartOptions.series[0].data = da;
     },
     //
     timeradiochange() {
@@ -756,8 +826,19 @@ export default {
       }
       fc.push("#bebebe");
       window.map.setPaintProperty("geojsonid", "fill-color", fc);
-      this.s2ChartOptions.series[0].data =
-        this.seriesdatalist[typebh][currentIndex];
+      this.s2ChartOptions.series[0].data = this.seriesdatalist[0][currentIndex];
+      this.s2ChartOptions.series[1].data = this.seriesdatalist[1][currentIndex];
+
+      var td = [];
+      var tid = this.seriesdatalist[2][this.timelist.indexOf(this.seltime)];
+      for (var iii = 0; iii < tid.length; iii++) {
+        td.push({ value: tid[iii], name: this.citylist[iii] });
+      }
+      var da = td.sort(function (a, b) {
+        return b.value - a.value;
+      });
+      da.length = 3;
+      this.s2_1ChartOptions.series[0].data = da;
     },
 
     // 建成区面积echarts
@@ -914,7 +995,12 @@ export default {
 }
 .cb_1 {
   width: 100%;
-  height: 100%;
+  height: 60%;
+  float: left;
+}
+.cb_2 {
+  width: 100%;
+  height: 40%;
   float: left;
 }
 .cb_3 {
