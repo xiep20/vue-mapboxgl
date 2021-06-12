@@ -1,11 +1,6 @@
 <template>
   <div class="MapIndex">
-    <div class="page_0">
-      <div class="header-cen">
-        <h1>海南省城市可持续发展指标监测与评估系统</h1>
-      </div>
-      <menu2 Isactive="1"></menu2>
-    </div>
+    
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
     <div class="page_1">
@@ -19,7 +14,7 @@
     <div class="page_2">
       <sm-border type="border1" class="common-border cb_3">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>低保人口
+          <span style="color: #ddd">[{{ this.showcity }}]</span>低保人口
         </div>
         <sm-chart
           icon-class=""
@@ -29,7 +24,7 @@
       </sm-border>
       <sm-border type="border1" class="common-border cb_4">
         <div class="card_tit">
-          <span style="color: #ff0000">[{{ this.showcity }}]</span>低保人口
+          <span style="color: #ddd">[{{ this.showcity }}]</span>低保人口
         </div>
         <sm-chart
           icon-class=""
@@ -68,11 +63,11 @@
 </template>
 
 <script>
-import menu2 from "./../components/headermenu/menu2";
+// import menu2 from "./../components/headermenu/menu2";
 export default {
   name: "mapstatis1",
   computed: {},
-  components: { menu2 },
+  components: {  },
   data() {
     return {
       contitle: "低保人数",
@@ -102,11 +97,11 @@ export default {
             },
             citypolygon: {
               type: "geojson",
-              data: "data/hainan.json",
+              data: "/data/hainan.json",
             },
             citypoint: {
               type: "geojson",
-              data: "data/hainan_point.json",
+              data: "/data/hainan_point.json",
             },
           },
           layers: [
@@ -189,9 +184,9 @@ export default {
           },
         },
         grid: {
-          left: 75,
+          left: 120,
           right: 35,
-          top: 50,
+          top: 20,
           bottom: 50,
         },
         xAxis: {
@@ -344,7 +339,7 @@ export default {
     // 低保人口
     dibao() {
       var _this = this;
-      _this.$http.get("data/dibao.json").then((data) => {
+      _this.$http.get("/data/dibao.json").then((data) => {
         _this.info = data;
         _this.showecharts1();
         //第二个统计图
@@ -449,13 +444,13 @@ export default {
       }
       var sf = (maxnum - minnum) / 6;
       var colorarr = [
-        "#FFFF00",
-        "#FFE100",
-        "#FFC300",
-        "#FFA600",
-        "#FF8800",
-        "#FF7500",
-        "#FF6600",
+        "#00a8ff",
+        "#264ab2",
+        "#2633b2",
+        "#262cb2",
+        "#3626b2",
+        "#3926b2",
+        "#4d26b2",
       ];
       var fc = ["match", ["get", "name"]];
       for (var n = 0; n < this.seriesdatalist[currentIndex].length; n++) {
@@ -525,59 +520,35 @@ export default {
   height: 450px;
   z-index: 1000;
 }
-
-.page_0 {
-  width: 100%;
-  height: 75px;
-  background: #0d1f49;
-  font-size: 24px;
-  padding: 0 20px;
-}
-.page_0 .header-cen {
-  margin-left: 30%;
-  width: 30%;
-  background: url(../images/b.png) no-repeat center top;
-  height: 1rem;
-  background-size: 100% 100%;
-  text-align: center;
-  line-height: 1rem;
-  height: 75px;
-}
-.page_0 h1 {
-  font-size: 19pt;
-  color: #ffffff;
-  letter-spacing: 0.1rem;
-  text-shadow: 0 0 0.3rem #00d8ff;
-  padding-left: 0.15rem;
-  padding-top: 24px;
-}
+ 
 .mapCon {
   width: 100%;
-  height: calc(100% - 75px);
+  height:  100% - 17px;
 }
-.page_1 {
-  width: 26%;
-  height: calc(100% - 77px);
+
+.page_1 { 
   float: left;
-  position: absolute;
-  top: 76px;
-  left: 0px;
+  position: absolute; 
+  left: 10px;
   background-color: #223c7580;
   box-shadow: 3px 0px 0px 0px #03a9f440;
 }
 .page_2 {
-  width: 26%;
-  height: calc(100% - 89px);
   float: right;
   position: absolute;
-  top: 76px;
-  right: 0;
+  right: 10px;
   background-color: #223c7580;
   box-shadow: -3px 0px 0px 0px #03a9f440;
 }
+
+.page_1, .page_2{
+  width: 26%;
+  height: calc(100% - 20px);
+  top: 10px;
+}
 .showtext {
   position: absolute;
-  top: 100px;
+  top: 10px;
   left: 28%;
 }
 .showtext1 {
@@ -587,7 +558,7 @@ export default {
 }
 .showtext2 {
   position: absolute;
-  top: 100px;
+  top: 10px;
   right: 28%;
 }
 .cb_1 {
@@ -611,17 +582,17 @@ export default {
   /* width: 100%; */
   height: 33px;
   padding: 0 10px;
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 16px;
+  line-height: 14px;
   font-weight: 600;
   background-size: 100% 100%;
 }
 .card_tit span {
-  color: #ff0000;
+  color: #ddd;
 }
 .timeline {
   position: absolute;
-  top: 100px;
+  top: 10px;
   left: 27%;
 }
 .smchart {

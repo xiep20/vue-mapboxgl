@@ -1,11 +1,6 @@
 <template>
   <div class="MapIndex">
-    <div class="page_0">
-      <div class="header-cen">
-        <h1>海南省应对气候变化指标监测与评估系统</h1>
-      </div>
-      <menu3 Isactive="2"></menu3>
-    </div>
+    
     <sm-web-map :map-options="mapOptions" @load="mapload" class="mapCon">
     </sm-web-map>
     <div class="page_1">
@@ -80,11 +75,11 @@
 </template>
 
 <script>
-import menu3 from "./../components/headermenu/menu3";
+//import menu3 from "./../components/headermenu/menu3";
 export default {
   name: "mapstatis1",
   computed: {},
-  components: { menu3 },
+  components: {  },
   data() {
     
     return {
@@ -122,11 +117,11 @@ export default {
             },
             citypolygon: {
               type: "geojson",
-              data: "data/hainan.json",
+              data: "/data/hainan.json",
             },
             citypoint: {
               type: "geojson",
-              data: "data/hainan_point.json",
+              data: "/data/hainan_point.json",
             },
           },
           layers: [
@@ -148,10 +143,10 @@ export default {
               source: "citypolygon",
               paint: {
                 "fill-opacity": 0.8,
-                "fill-color": "#0D1F49",
+                "fill-color": "#5a71eb",
                 "fill-translate": [0, 0],
                 "fill-antialias": true,
-                "fill-outline-color": "#3fb1e3",
+                "fill-outline-color": "#5a71eb",
                 "fill-translate-anchor": "map",
               },
               layout: {
@@ -212,7 +207,7 @@ export default {
           left: 25,
           right: 35,
           top: 10,
-          bottom: 70,
+          bottom: 120,
         },
         xAxis: {
           type: 'category',
@@ -936,7 +931,7 @@ export default {
     // 客运量
     gatdata() {
       var _this = this;
-      _this.$http.get("data/1106.json").then((data) => {
+      _this.$http.get("/data/1106.json").then((data) => {
         _this.info = data;
         _this.showecharts1();
       });
@@ -1004,13 +999,13 @@ export default {
       }
       var sf = (maxnum - minnum) / 6;
       var colorarr = [
-        "#FFFF00",
-        "#FFE100",
-        "#FFC300",
-        "#FFA600",
-        "#FF8800",
-        "#FF7500",
-        "#FF6600",
+        "#00a8ff",
+        "#264ab2",
+        "#2633b2",
+        "#262cb2",
+        "#3626b2",
+        "#3926b2",
+        "#4d26b2",
       ];
       var fc = ["match", ["get", "name"]];
       for (var n = 0; n < this.seriesdatalist[currentIndex].length; n++) {
@@ -1149,58 +1144,35 @@ export default {
   z-index: 1000;
 }
 
-.page_0 {
-  width: 100%;
-  height: 75px;
-  background: #0d1f49;
-  font-size: 19px;
-  padding: 0 20px;
-}
-.page_0 .header-cen {
-  margin-left: 30%;
-  width: 30%;
-  background: url(../images/b.png) no-repeat center top;
-  height: 1rem;
-  background-size: 100% 100%;
-  text-align: center;
-  line-height: 1rem;
-  height: 75px;
-}
-.page_0 h1 {
-  font-size: 20pt;
-  color: #ffffff;
-  letter-spacing: 0.1rem;
-  text-shadow: 0 0 0.3rem #00d8ff;
-  padding-left: 0.15rem;
-  padding-top: 24px;
-}
+
 .mapCon {
   width: 100%;
-  height: calc(100% - 75px);
+  height:  100% - 17px;
 }
-.page_1 {
-  width: 26%;
-  height: calc(100% - 77px);
+
+.page_1 { 
   float: left;
-  position: absolute;
-  top: 76px;
-  left: 0px;
+  position: absolute; 
+  left: 10px;
   background-color: #223c7580;
   box-shadow: 3px 0px 0px 0px #03a9f440;
 }
 .page_2 {
-  width: 26%;
-  height: calc(100% - 77px);
   float: right;
   position: absolute;
-  top: 76px;
-  right: 0;
+  right: 10px;
   background-color: #223c7580;
   box-shadow: -3px 0px 0px 0px #03a9f440;
 }
+
+.page_1, .page_2{
+  width: 26%;
+  height: calc(100% - 20px);
+  top: 10px;
+}
 .showtext {
   position: absolute;
-  top: 100px;
+  top: 10px;
   left: 28%;
 }
 .showtext1 {
@@ -1210,7 +1182,7 @@ export default {
 }
 .showtext2 {
   position: absolute;
-  top: 100px;
+  top: 10px;
   right: 28%;
 }
 .cb_1 {
@@ -1239,17 +1211,17 @@ export default {
   /* width: 100%; */
   height: 33px;
   padding: 0 10px;
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 16px;
+  line-height: 14px;
   font-weight: 600;
   background-size: 100% 100%;
 }
 .card_tit span {
-  color: #ff0000;
+  color: #ddd;
 }
 .timeline {
   position: absolute;
-  top: 100px;
+  top: 10px;
   left: 27%;
 }
 .smchart {
