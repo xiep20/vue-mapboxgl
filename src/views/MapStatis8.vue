@@ -6,7 +6,7 @@
     <div class="page_1">
       <sm-border type="border1" class="common-border cb_1">
         <div class="card_tit">
-          <span>[{{ this.seltime }}年]</span> SO2排放量
+          <span>[{{ this.showcity }}年]</span> SO2排放量
         </div>
         <sm-chart icon-class="" :options="s2ChartOptions"></sm-chart>
       </sm-border>
@@ -61,16 +61,6 @@
       }"
     >
     </sm-text>
-
-    <sm-radio-group
-      v-model="seltime"
-      class="timeline"
-      @change="timeradiochange"
-    >
-      <sm-radio-button v-for="(item, i) in timelist" :key="i" :value="item">
-        {{ item }}
-      </sm-radio-button>
-    </sm-radio-group>
   </div>
 </template>
 
@@ -241,29 +231,21 @@ export default {
           type: "value",
           data: [],
           splitLine: {
-              show: false
-          },
-          splitArea: { show: false }, //保留网格区域
-          axisLine: {
+              show: true,
               lineStyle: {
-                  width: 3,
-                  color: {
-                      type: 'linear',
-                      x: 0,
-                      y: 0,
-                      x2: 0,
-                      y2: 1,
-                      colorStops: [{
-                          offset: 0,
-                          color: 'red'
-                      }, {
-                          offset: 1,
-                          color: 'blue'
-                      }],
-                      globalCoord: false // 缺省为 false
-                  }
-              }
-          },
+                color: "#7bd6c763",
+              },
+            },
+            splitArea: { show: false }, //保留网格区域
+            axisLine: {
+              show: true,
+              lineStyle: {
+                type: "solid",
+                color: "#2b2a51",
+                width: "0",
+              },
+            },
+          
           axisTick: {
               lineStyle: {
                   width: 3
@@ -283,7 +265,7 @@ export default {
             animationDuration: 2000,
             itemStyle: {
                 normal: {
-                    color: 'rgb(103, 99, 99)',
+                    color: 'rgb(187, 244, 50)',
                     shadowBlur: 2,
                     shadowColor: "rgba(0, 0, 0, .12)",
                     shadowOffsetX: 2,
@@ -293,7 +275,7 @@ export default {
             lineStyle: {
                 normal: {
                     width: 3,
-                    shadowColor: 'rgba(0,0,0,0.4)',
+                    shadowColor: 'rgba(255, 215, 0, 0.3)',
                     shadowBlur: 10,
                     shadowOffsetX: 4,
                     shadowOffsetY: 10
@@ -480,7 +462,6 @@ export default {
             data: []
         }]
       },
-      s2ChartOptions_2:{},
       s3ChartOptions: {
         tooltip: {
           trigger: "axis",
@@ -967,7 +948,7 @@ export default {
       _this.seriesdatalist2 = seriesdata2;
 
       _this.seltime = _this.timelist[0];
-      _this.s2ChartOptions.xAxis.data = ldata;
+      
       _this.changeecharts1();
       _this.changeCity();
       _this.getoptions2();
@@ -977,14 +958,14 @@ export default {
     changeecharts1() {
       var _this = this;
       _this.s2ChartOptions.series[0].data =
-        _this.seriesdatalist[_this.timelist.indexOf(_this.seltime)];
+        Object.values(_this.info['SO2'][_this.showcity]);
       _this.timelinechange(_this.timelist.indexOf(_this.seltime));
     },
     //
-    timeradiochange() {
-      var _this = this;
-      _this.changeecharts1();
-    },
+    //timeradiochange() {
+    //  var _this = this;
+    //  _this.changeecharts1();
+   // },
     timelinechange(currentIndex) {
       var minnum = 10000000000000000000000;
       var maxnum = -10000000000000000000000;
@@ -1014,13 +995,7 @@ export default {
         fc.push(colorarr[Math.floor((value2 - minnum) / sf)]);
       }
       fc.push("#bebebe");
-      window.map.setPaintProperty("geojsonid", "fill-color", fc);
-      this.s2ChartOptions.series = [
-        {
-          type: "line",
-          data: this.seriesdatalist[currentIndex],
-        },
-      ];
+      window.map.setPaintProperty("geojsonid", "fill-color", fc);     
     },
 
     // 建成区面积echarts
@@ -1030,6 +1005,8 @@ export default {
         return;
       }
       var nowXH = _this.citylist.indexOf(_this.showcity);
+      _this.s2ChartOptions.xAxis.data = _this.timelist;
+      _this.s2ChartOptions.series[0].data = Object.values(_this.info['SO2'][_this.showcity]);
 
       _this.s3ChartOptions.xAxis[0].data = _this.timelist;
       _this.s2ChartOptions_1.xAxis.data = _this.timelist;
